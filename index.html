@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>stehengeblieben.de – Neufahrzeuge zum Bestpreis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f5f0;
+      --red: #e63329;
+      --red-dark: #b52820;
+      --gray-100: #f0f0eb;
+      --gray-200: #e0e0da;
+      --gray-400: #a0a09a;
+      --gray-600: #606060;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --radius: 6px;
+      --radius-lg: 12px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-body); background: var(--white); color: var(--black); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: var(--font-body); border: none; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: var(--black); padding: 0 24px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { display: flex; align-items: baseline; gap: 0; cursor: pointer; }
+    .logo-black { font-family: var(--font-display); font-size: 1.6rem; color: var(--white); }
+    .logo-red { font-family: var(--font-display); font-size: 1.6rem; color: var(--red); }
+    .logo-dot { font-size: 0.75rem; color: var(--gray-400); margin-left: 3px; }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-link { color: var(--gray-400); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-link:hover { color: var(--white); }
+    .btn-primary {
+      background: var(--red); color: var(--white); font-weight: 600;
+      font-size: 0.88rem; padding: 10px 20px; border-radius: var(--radius);
+      border: none; cursor: pointer; transition: background 0.2s; display: inline-block;
+    }
+    .btn-primary:hover { background: var(--red-dark); }
+    .btn-secondary {
+      background: transparent; color: var(--black); font-weight: 500;
+      font-size: 0.88rem; padding: 9px 19px; border-radius: var(--radius);
+      border: 1.5px solid var(--gray-200); cursor: pointer; transition: all 0.2s; display: inline-block;
+    }
+    .btn-secondary:hover { border-color: var(--black); }
+
+    /* PAGES */
+    .page { display: none; padding-top: 64px; min-height: 100vh; }
+    .page.active { display: block; }
+
+    /* HERO */
+    .hero {
+      background: var(--black); min-height: calc(100vh - 64px);
+      display: flex; align-items: center; padding: 60px 24px 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 20% 50%, rgba(230,51,41,0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(230,51,41,0.05) 0%, transparent 40%);
+    }
+    .hero-inner { max-width: 1200px; margin: 0 auto; width: 100%; position: relative; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(230,51,41,0.15); border: 1px solid rgba(230,51,41,0.3);
+      border-radius: 20px; padding: 6px 14px; margin-bottom: 28px;
+    }
+    .hero-badge-dot { width: 6px; height: 6px; background: var(--red); border-radius: 50%; }
+    .hero-badge-text { font-size: 0.78rem; color: var(--red); font-weight: 600; letter-spacing: 0.06em; }
+    .hero h1 {
+      font-family: var(--font-display); font-size: clamp(3.5rem, 9vw, 7rem);
+      color: var(--white); line-height: 0.92; letter-spacing: 0.01em; margin-bottom: 24px;
+    }
+    .hero h1 span { color: var(--red); }
+    .hero p { font-size: 1.1rem; color: var(--gray-400); max-width: 500px; line-height: 1.7; margin-bottom: 36px; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-btns .btn-primary { font-size: 1rem; padding: 14px 28px; }
+    .hero-btns .btn-secondary { font-size: 1rem; padding: 14px 28px; color: var(--gray-400); border-color: rgba(255,255,255,0.15); }
+    .hero-btns .btn-secondary:hover { color: var(--white); border-color: rgba(255,255,255,0.4); background: transparent; }
+    .stats { display: flex; gap: 40px; margin-top: 56px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; }
+    .stat-val { font-family: var(--font-display); font-size: 2rem; color: var(--white); letter-spacing: 0.02em; }
+    .stat-label { font-size: 0.82rem; color: var(--gray-400); margin-top: 2px; }
+
+    /* HOW IT WORKS */
+    .section { padding: 72px 24px; }
+    .section-gray { background: var(--gray-100); }
+    .section-dark { background: var(--black); }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .section-title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 10px; }
+    .section-title.light { color: var(--white); }
+    .section-sub { color: var(--gray-600); margin-bottom: 48px; }
+    .section-sub.light { color: var(--gray-400); }
+    .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; }
+    .step-card { background: white; border-radius: var(--radius-lg); padding: 28px 24px; border: 1px solid var(--gray-200); }
+    .step-num { font-family: var(--font-display); font-size: 3rem; color: var(--red); opacity: 0.5; margin-bottom: 12px; }
+    .step-title { font-weight: 700; margin-bottom: 8px; font-size: 1rem; }
+    .step-desc { color: var(--gray-600); font-size: 0.88rem; line-height: 1.7; }
+
+    /* VEHICLE GRID */
+    .vehicles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
+    .vehicle-card {
+      background: white; border-radius: var(--radius-lg); overflow: hidden;
+      border: 1px solid var(--gray-200); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;
+    }
+    .vehicle-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.12); }
+    .vehicle-img {
+      aspect-ratio: 16/10; background: var(--gray-100);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; font-size: 3rem; color: var(--gray-400);
+    }
+    .discount-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: var(--red); color: white;
+      font-family: var(--font-display); font-size: 1.1rem;
+      padding: 4px 10px; border-radius: 3px; letter-spacing: 0.04em;
+    }
+    .urgent-badge {
+      position: absolute; top: 12px; right: 12px;
+      background: var(--black); color: white;
+      font-size: 0.7rem; font-weight: 600;
+      padding: 4px 8px; border-radius: 3px;
+    }
+    .vehicle-info { padding: 16px 18px 20px; }
+    .vehicle-name { font-family: var(--font-display); font-size: 1.25rem; letter-spacing: 0.02em; margin-bottom: 4px; }
+    .vehicle-variant { font-size: 0.82rem; color: var(--gray-600); margin-bottom: 10px; }
+    .tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
+    .tag {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em;
+      text-transform: uppercase; padding: 3px 7px; border-radius: 2px;
+    }
+    .tag-gray { background: var(--gray-200); color: var(--gray-600); }
+    .tag-dark { background: var(--black); color: white; }
+    .price-main { font-family: var(--font-display); font-size: 1.6rem; color: var(--red); }
+    .price-old { font-size: 0.82rem; color: var(--gray-400); text-decoration: line-through; margin-left: 8px; }
+    .price-saving { font-size: 0.78rem; color: var(--gray-400); margin-top: 3px; }
+
+    /* FILTERS */
+    .filters {
+      display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-end;
+      background: var(--gray-100); padding: 18px 22px;
+      border-radius: var(--radius-lg); margin-bottom: 28px;
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 5px; }
+    .filter-label { font-size: 0.72rem; font-weight: 600; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.05em; }
+    .filter-select {
+      padding: 8px 28px 8px 10px; border-radius: var(--radius);
+      border: 1.5px solid var(--gray-200); background: white;
+      font-family: var(--font-body); font-size: 0.88rem; cursor: pointer; min-width: 130px;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23606060' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 9px center;
+    }
+
+    /* DETAIL PAGE */
+    .detail-grid { display: grid; grid-template-columns: 1fr 360px; gap: 48px; align-items: start; }
+    .specs-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-radius: var(--radius-lg); overflow: hidden;
+      border: 1px solid var(--gray-200); gap: 1px; background: var(--gray-200);
+    }
+    .spec-item { background: white; padding: 12px 16px; }
+    .spec-key { font-size: 0.72rem; color: var(--gray-400); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
+    .spec-val { font-weight: 500; font-size: 0.92rem; }
+    .price-box { background: var(--black); border-radius: var(--radius-lg); padding: 26px; margin-bottom: 14px; color: var(--white); }
+    .price-box-old { font-size: 1rem; color: var(--gray-400); text-decoration: line-through; margin-bottom: 4px; }
+    .price-box-main { font-family: var(--font-display); font-size: 2.8rem; color: var(--red); line-height: 1; margin-bottom: 6px; }
+    .price-box-saving { font-size: 0.85rem; color: #7dde7d; margin-bottom: 16px; }
+    .price-box-note { font-size: 0.78rem; color: var(--gray-400); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; }
+
+    /* FORM */
+    .form-card { background: white; border-radius: var(--radius-lg); padding: 26px; border: 1px solid var(--gray-200); }
+    .form-card h3 { font-weight: 700; margin-bottom: 18px; font-size: 1.02rem; }
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--gray-600); margin-bottom: 5px; }
+    .form-input {
+      width: 100%; padding: 10px 12px; border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius); font-family: var(--font-body); font-size: 0.9rem;
+      transition: border-color 0.2s; outline: none;
+    }
+    .form-input:focus { border-color: var(--black); }
+    .form-textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--gray-200); border-radius: var(--radius); font-family: var(--font-body); font-size: 0.9rem; resize: vertical; outline: none; }
+    .form-textarea:focus { border-color: var(--black); }
+    .success-box { background: #f0fdf4; border: 1px solid #86efac; border-radius: var(--radius-lg); padding: 28px; text-align: center; }
+
+    /* FOOTER */
+    footer { background: var(--black); color: var(--gray-400); padding: 48px 24px 28px; margin-top: 0; }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 36px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+    .footer-col h4 { color: var(--white); font-size: 0.88rem; font-weight: 600; margin-bottom: 14px; }
+    .footer-col a { display: block; font-size: 0.83rem; margin-bottom: 9px; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; display: flex; justify-content: space-between; font-size: 0.78rem; flex-wrap: wrap; gap: 8px; }
+
+    /* DEALER PAGES */
+    .page-header { background: var(--black); padding: 48px 24px; }
+    .page-header h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4rem); color: var(--white); line-height: 0.95; }
+    .page-header h1 span { color: var(--red); }
+    .page-header p { color: var(--gray-400); margin-top: 12px; line-height: 1.7; max-width: 500px; }
+    .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 22px; }
+    .benefit-card { background: white; border-radius: var(--radius-lg); padding: 22px; border: 1px solid var(--gray-200); }
+    .benefit-icon { font-size: 1.8rem; margin-bottom: 10px; }
+    .benefit-title { font-weight: 700; margin-bottom: 7px; }
+    .benefit-desc { color: var(--gray-600); font-size: 0.87rem; line-height: 1.6; }
+
+    /* ADMIN */
+    .admin-tabs { display: flex; gap: 10px; flex-wrap: wrap; }
+    .admin-tab { padding: 8px 16px; border-radius: var(--radius); font-size: 0.85rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.2); color: white; background: transparent; cursor: pointer; transition: background 0.2s; }
+    .admin-tab.active { background: var(--red); border-color: var(--red); }
+    .admin-item { background: white; border-radius: var(--radius-lg); padding: 18px 22px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-left: 4px solid var(--gray-200); }
+    .admin-item.pending { border-left-color: var(--red); }
+    .admin-item.approved { border-left-color: #22c55e; }
+    .admin-item-name { font-weight: 700; font-size: 1rem; }
+    .admin-item-sub { font-size: 0.83rem; color: var(--gray-600); margin-top: 3px; }
+    .admin-item-meta { font-size: 0.73rem; color: var(--gray-400); margin-top: 3px; }
+    .admin-actions { display: flex; gap: 8px; }
+    .btn-approve { background: #22c55e; color: white; border: none; padding: 7px 14px; border-radius: var(--radius); font-weight: 600; font-size: 0.83rem; cursor: pointer; }
+    .btn-reject { background: #ef4444; color: white; border: none; padding: 7px 14px; border-radius: var(--radius); font-weight: 600; font-size: 0.83rem; cursor: pointer; }
+    .btn-sold { background: var(--black); color: white; border: none; padding: 7px 14px; border-radius: var(--radius); font-weight: 600; font-size: 0.83rem; cursor: pointer; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .detail-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="showPage('home')">
+    <span class="logo-black">stehen</span>
+    <span class="logo-red">geblieben</span>
+    <span class="logo-dot">.de</span>
+  </div>
+  <div class="nav-links">
+    <a class="nav-link" onclick="showPage('vehicles')">Alle Fahrzeuge</a>
+    <a class="nav-link" onclick="showPage('dealer-register')">Als Händler mitmachen</a>
+    <button class="btn-primary" onclick="showPage('dealer-upload')">Fahrzeug einstellen</button>
+  </div>
+</nav>
+
+<!-- ===== HOME PAGE ===== -->
+<div id="page-home" class="page active">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        <span class="hero-badge-text">NEUFAHRZEUGE MIT TAGESZULASSUNG</span>
+      </div>
+      <h1>BIS ZU 30%<br><span>UNTER</span><br>LISTENPREIS.</h1>
+      <p>Langzeitsteher direkt vom Händler. Neufahrzeuge mit Tageszulassung — bis zu einem Jahr alt, bis zu 30% günstiger. Kein Umweg, kein Aufpreis.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('vehicles')">Jetzt Fahrzeuge entdecken →</button>
+        <button class="btn-secondary" onclick="showPage('dealer-register')">Als Händler mitmachen</button>
+      </div>
+      <div class="stats">
+        <div><div class="stat-val">247+</div><div class="stat-label">Fahrzeuge verfügbar</div></div>
+        <div><div class="stat-val">Ø 8.400 €</div><div class="stat-label">Ersparnis pro Kauf</div></div>
+        <div><div class="stat-val">34</div><div class="stat-label">Partnerhändler</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section section-gray">
+    <div class="container">
+      <h2 class="section-title">SO FUNKTIONIERT ES</h2>
+      <p class="section-sub">Kein Verhandeln, kein Warten. Direkt zum Deal.</p>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <div class="step-title">Fahrzeug finden</div>
+          <div class="step-desc">Filtere nach Marke, Preis oder Nachlass. Alle Fahrzeuge sind geprüft und sofort verfügbar.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <div class="step-title">Anfrage senden</div>
+          <div class="step-desc">Interesse? Schick direkt eine Anfrage an den Händler — kostenlos, unverbindlich.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <div class="step-title">Deal abschließen</div>
+          <div class="step-desc">Der Händler meldet sich. Probefahrt, Kauf, fertig. Keine versteckten Gebühren.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Vehicles -->
+  <section class="section">
+    <div class="container">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:36px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <h2 class="section-title">AKTUELLE DEALS</h2>
+          <p class="section-sub" style="margin-bottom:0;">Täglich aktualisiert</p>
+        </div>
+        <button class="btn-secondary" onclick="showPage('vehicles')">Alle anzeigen →</button>
+      </div>
+      <div class="vehicles-grid" id="home-vehicles"></div>
+    </div>
+  </section>
+
+  <!-- Dealer CTA -->
+  <section class="section section-dark" style="text-align:center;">
+    <div style="max-width:600px; margin:0 auto;">
+      <h2 class="section-title light" style="margin-bottom:16px;">LANGZEITSTEHER?<br><span style="color:var(--red)">WIR VERKAUFEN SIE.</span></h2>
+      <p style="color:var(--gray-400); margin-bottom:32px; line-height:1.7;">Kein Risiko. Kein Abo. Du zahlst nur wenn wir verkaufen. Über 30 Händler vertrauen uns bereits.</p>
+      <button class="btn-primary" style="font-size:1rem; padding:14px 32px;" onclick="showPage('dealer-register')">Jetzt als Händler registrieren →</button>
+    </div>
+  </section>
+</div>
+
+<!-- ===== VEHICLES PAGE ===== -->
+<div id="page-vehicles" class="page">
+  <div class="page-header">
+    <div class="container">
+      <h1 style="font-family:var(--font-display); font-size:clamp(2.5rem,6vw,4rem); color:var(--white);">ALLE FAHRZEUGE</h1>
+      <p style="color:var(--gray-400); margin-top:8px;" id="vehicle-count">Alle verfügbaren Fahrzeuge</p>
+    </div>
+  </div>
+  <div class="section">
+    <div class="container">
+      <div class="filters">
+        <div class="filter-group">
+          <div class="filter-label">Marke</div>
+          <select class="filter-select" id="filter-brand" onchange="applyFilters()">
+            <option value="">Alle</option>
+            <option>Volkswagen</option><option>BMW</option><option>Mercedes</option>
+            <option>Audi</option><option>Porsche</option><option>Tesla</option>
+            <option>Skoda</option><option>Seat</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Kraftstoff</div>
+          <select class="filter-select" id="filter-fuel" onchange="applyFilters()">
+            <option value="">Alle</option>
+            <option>Benzin</option><option>Diesel</option><option>Elektro</option><option>Hybrid</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Sortierung</div>
+          <select class="filter-select" id="filter-sort" onchange="applyFilters()">
+            <option value="discount">Höchster Nachlass</option>
+            <option value="price_asc">Preis aufsteigend</option>
+            <option value="price_desc">Preis absteigend</option>
+          </select>
+        </div>
+        <button class="btn-secondary" onclick="resetFilters()" style="align-self:flex-end; padding:8px 14px; font-size:0.83rem;">Zurücksetzen</button>
+      </div>
+      <div class="vehicles-grid" id="vehicles-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== VEHICLE DETAIL PAGE ===== -->
+<div id="page-detail" class="page">
+  <div class="section">
+    <div class="container">
+      <a onclick="showPage('vehicles')" style="display:inline-flex; align-items:center; gap:6px; color:var(--gray-600); font-size:0.9rem; margin-bottom:28px; cursor:pointer;">← Zurück zur Übersicht</a>
+      <div class="detail-grid">
+        <div>
+          <div class="vehicle-img" id="detail-img" style="border-radius:var(--radius-lg); margin-bottom:24px; font-size:5rem;">🚗</div>
+          <h2 style="font-weight:700; margin-bottom:18px; font-size:1.05rem;">Fahrzeugdaten</h2>
+          <div class="specs-grid" id="detail-specs"></div>
+          <div style="margin-top:24px;">
+            <h2 style="font-weight:700; margin-bottom:10px; font-size:1.05rem;">Beschreibung</h2>
+            <p id="detail-desc" style="color:var(--gray-600); line-height:1.8; font-size:0.93rem;"></p>
+          </div>
+        </div>
+        <div style="position:sticky; top:80px;">
+          <div class="price-box" id="detail-price-box"></div>
+          <div class="form-card" id="detail-form-wrap">
+            <h3>Jetzt anfragen</h3>
+            <div class="form-group">
+              <label class="form-label">Ihr Name *</label>
+              <input class="form-input" id="inq-name" type="text" placeholder="Max Mustermann">
+            </div>
+            <div class="form-group">
+              <label class="form-label">E-Mail *</label>
+              <input class="form-input" id="inq-email" type="email" placeholder="max@email.de">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Telefon (optional)</label>
+              <input class="form-input" id="inq-phone" type="tel" placeholder="+49 ...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nachricht</label>
+              <textarea class="form-textarea" id="inq-msg" rows="3" placeholder="z.B. Wann ist eine Probefahrt möglich?"></textarea>
+            </div>
+            <button class="btn-primary" style="width:100%; padding:13px; font-size:0.95rem; justify-content:center;" onclick="submitInquiry()">Unverbindlich anfragen →</button>
+            <p style="font-size:0.72rem; color:var(--gray-400); margin-top:10px; text-align:center;">Kostenlos · Unverbindlich · Direkt zum Händler</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DEALER REGISTER ===== -->
+<div id="page-dealer-register" class="page">
+  <div class="page-header">
+    <div class="container">
+      <h1>ALS HÄNDLER<br><span>MITMACHEN</span></h1>
+      <p>Langzeitsteher weg, Kapital frei. Du zahlst nur wenn wir verkaufen — kein Abo, kein Risiko.</p>
+    </div>
+  </div>
+  <section class="section section-gray">
+    <div class="container">
+      <div class="benefits-grid">
+        <div class="benefit-card"><div class="benefit-icon">💶</div><div class="benefit-title">Nur bei Erfolg</div><div class="benefit-desc">Du zahlst eine kleine Success-Fee — aber nur wenn das Fahrzeug wirklich verkauft wird.</div></div>
+        <div class="benefit-card"><div class="benefit-icon">⚡</div><div class="benefit-title">Sofort live</div><div class="benefit-desc">Fahrzeug hochladen, wir prüfen innerhalb von 24h, dann ist es live.</div></div>
+        <div class="benefit-card"><div class="benefit-icon">🎯</div><div class="benefit-title">Kaufbereite Kunden</div><div class="benefit-desc">Unsere Besucher sind auf der Suche nach Deals — keine Besichtiger, echte Käufer.</div></div>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div style="max-width:520px; margin:0 auto; padding:0 24px;" id="dealer-reg-wrap">
+      <h2 style="font-family:var(--font-display); font-size:2rem; margin-bottom:8px;">REGISTRIERUNG</h2>
+      <p style="color:var(--gray-600); margin-bottom:28px; font-size:0.9rem;">Fülle das Formular aus — wir melden uns innerhalb 24h.</p>
+      <div class="form-group"><label class="form-label">Firmenname *</label><input class="form-input" id="reg-company" type="text" placeholder="Auto Müller GmbH"></div>
+      <div class="form-group"><label class="form-label">Ansprechpartner *</label><input class="form-input" id="reg-contact" type="text" placeholder="Max Müller"></div>
+      <div class="form-group"><label class="form-label">E-Mail *</label><input class="form-input" id="reg-email" type="email" placeholder="max@autohaus.de"></div>
+      <div class="form-group"><label class="form-label">Telefon</label><input class="form-input" id="reg-phone" type="tel" placeholder="+49 221 ..."></div>
+      <div class="form-group"><label class="form-label">Stadt / Region</label><input class="form-input" id="reg-city" type="text" placeholder="Köln"></div>
+      <button class="btn-primary" style="width:100%; padding:14px; font-size:1rem; margin-top:6px;" onclick="submitDealerReg()">Jetzt registrieren →</button>
+      <p style="font-size:0.72rem; color:var(--gray-400); margin-top:10px; text-align:center;">Kostenlos · Keine versteckten Kosten · Freischaltung innerhalb 24h</p>
+    </div>
+  </section>
+</div>
+
+<!-- ===== DEALER UPLOAD ===== -->
+<div id="page-dealer-upload" class="page">
+  <div class="page-header">
+    <div class="container">
+      <h1>FAHRZEUG<br><span>EINSTELLEN</span></h1>
+      <p>Alle Felder ausfüllen — Freischaltung innerhalb 24h.</p>
+    </div>
+  </div>
+  <section class="section">
+    <div style="max-width:660px; margin:0 auto; padding:0 24px;" id="upload-wrap">
+      <div style="margin-bottom:32px;">
+        <h2 style="font-family:var(--font-display); font-size:1.4rem; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid var(--gray-200);">01 — DEINE KONTAKTDATEN</h2>
+        <div class="form-group"><label class="form-label">Deine E-Mail (Händler-Konto) *</label><input class="form-input" id="up-email" type="email" placeholder="max@autohaus.de"></div>
+      </div>
+      <div style="margin-bottom:32px;">
+        <h2 style="font-family:var(--font-display); font-size:1.4rem; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid var(--gray-200);">02 — FAHRZEUGDATEN</h2>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+          <div class="form-group"><label class="form-label">Marke *</label>
+            <select class="form-input filter-select" id="up-brand">
+              <option value="">Bitte wählen</option>
+              <option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Volkswagen</option>
+              <option>Porsche</option><option>Tesla</option><option>Skoda</option><option>Seat</option>
+              <option>Ford</option><option>Opel</option><option>Toyota</option><option>Andere</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Modell *</label><input class="form-input" id="up-model" placeholder="z.B. Golf GTI"></div>
+          <div class="form-group"><label class="form-label">Variante</label><input class="form-input" id="up-variant" placeholder="z.B. 2.0 TSI DSG"></div>
+          <div class="form-group"><label class="form-label">Baujahr *</label><input class="form-input" id="up-year" type="number" value="2024" min="2023" max="2025"></div>
+          <div class="form-group"><label class="form-label">Erstzulassung *</label><input class="form-input" id="up-reg" type="date"></div>
+          <div class="form-group"><label class="form-label">Kilometerstand</label><input class="form-input" id="up-km" type="number" value="0" min="0"></div>
+          <div class="form-group"><label class="form-label">Kraftstoff</label>
+            <select class="form-input filter-select" id="up-fuel">
+              <option>Benzin</option><option>Diesel</option><option>Elektro</option><option>Hybrid</option><option>Plug-in-Hybrid</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Getriebe</label>
+            <select class="form-input filter-select" id="up-trans">
+              <option>Automatik</option><option>Schaltgetriebe</option><option>DSG</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column:span 2"><label class="form-label">Farbe</label><input class="form-input" id="up-color" placeholder="z.B. Midnight Blue Metallic"></div>
+        </div>
+      </div>
+      <div style="margin-bottom:32px;">
+        <h2 style="font-family:var(--font-display); font-size:1.4rem; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid var(--gray-200);">03 — PREISE</h2>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+          <div class="form-group"><label class="form-label">Listenpreis (€) *</label><input class="form-input" id="up-list" type="number" min="5000" placeholder="42500" oninput="calcDiscount()"></div>
+          <div class="form-group"><label class="form-label">Verkaufspreis (€) *</label><input class="form-input" id="up-sale" type="number" min="5000" placeholder="31900" oninput="calcDiscount()"></div>
+        </div>
+        <div id="discount-preview" style="display:none; background:var(--gray-100); padding:12px 16px; border-radius:var(--radius); margin-top:8px;"></div>
+        <div class="form-group" style="margin-top:14px;"><label class="form-label">Ablaufdatum Tageszulassung</label><input class="form-input" id="up-expires" type="date"></div>
+      </div>
+      <div style="margin-bottom:32px;">
+        <h2 style="font-family:var(--font-display); font-size:1.4rem; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid var(--gray-200);">04 — BESCHREIBUNG</h2>
+        <div class="form-group"><label class="form-label">Beschreibung</label><textarea class="form-textarea" id="up-desc" rows="4" placeholder="Ausstattung, Besonderheiten, Zustand..."></textarea></div>
+      </div>
+      <button class="btn-primary" style="width:100%; padding:15px; font-size:1rem;" onclick="submitVehicle()">Fahrzeug zur Prüfung einreichen →</button>
+      <p style="font-size:0.72rem; color:var(--gray-400); margin-top:10px; text-align:center;">Freischaltung innerhalb 24h · Du wirst per E-Mail informiert</p>
+    </div>
+  </section>
+</div>
+
+<!-- ===== ADMIN PAGE ===== -->
+<div id="page-admin" class="page">
+  <div id="admin-login" style="min-height:80vh; display:flex; align-items:center; justify-content:center; background:var(--black);">
+    <div style="background:white; padding:40px; border-radius:var(--radius-lg); width:100%; max-width:340px;">
+      <h1 style="font-family:var(--font-display); font-size:2rem; margin-bottom:22px;">ADMIN LOGIN</h1>
+      <input class="form-input" id="admin-pw" type="password" placeholder="Passwort" style="margin-bottom:14px;">
+      <button class="btn-primary" style="width:100%; padding:13px;" onclick="adminLogin()">Anmelden</button>
+    </div>
+  </div>
+  <div id="admin-panel" style="display:none; padding-bottom:40px;">
+    <div style="background:var(--black); padding:28px 24px;">
+      <div class="container" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+        <h1 style="font-family:var(--font-display); font-size:2rem; color:var(--white);">ADMIN</h1>
+        <div class="admin-tabs">
+          <button class="admin-tab active" onclick="showAdminTab('vehicles', this)">Fahrzeuge</button>
+          <button class="admin-tab" onclick="showAdminTab('dealers', this)">Händler</button>
+          <button class="admin-tab" onclick="showAdminTab('inquiries', this)">Anfragen</button>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="padding:32px 24px;">
+      <div id="admin-vehicles"></div>
+      <div id="admin-dealers" style="display:none;"></div>
+      <div id="admin-inquiries" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div style="margin-bottom:14px;">
+        <span style="font-family:var(--font-display); font-size:1.4rem; color:var(--white);">stehen</span>
+        <span style="font-family:var(--font-display); font-size:1.4rem; color:var(--red);">geblieben</span>
+        <span style="font-size:0.72rem; color:var(--gray-400); margin-left:2px;">.de</span>
+      </div>
+      <p style="font-size:0.83rem; line-height:1.7; max-width:220px;">Neufahrzeuge mit Tageszulassung. Bis zu 30% unter Listenpreis. Direkt vom Händler.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Für Käufer</h4>
+      <a onclick="showPage('vehicles')">Alle Fahrzeuge</a>
+      <a onclick="showPage('vehicles')">Elektrofahrzeuge</a>
+    </div>
+    <div class="footer-col">
+      <h4>Für Händler</h4>
+      <a onclick="showPage('dealer-register')">Jetzt registrieren</a>
+      <a onclick="showPage('dealer-upload')">Fahrzeug einstellen</a>
+    </div>
+    <div class="footer-col">
+      <h4>Rechtliches</h4>
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+      <a href="#">AGB</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 stehengeblieben.de — Alle Rechte vorbehalten</span>
+    <span style="color:var(--gray-600);">Made in Deutschland 🇩🇪</span>
+  </div>
+</footer>
+
+<script>
+// ===== DATA =====
+const VEHICLES = [
+  { id:1, brand:'Volkswagen', model:'Golf GTI', variant:'2.0 TSI DSG', year:2024, km:12, list:42500, sale:31900, fuel:'Benzin', trans:'Automatik', color:'Tornado Rot', desc:'Tageszulassung vom 15.01.2024. Fahrzeug in einwandfreiem Zustand, nicht privat genutzt. Vollausstattung inkl. Panoramadach, Navigation, LED-Matrix.', daysLeft:18 },
+  { id:2, brand:'BMW', model:'3er', variant:'320d xDrive Touring', year:2024, km:22, list:58900, sale:44200, fuel:'Diesel', trans:'Automatik', color:'Mineralweiß', desc:'Tageszulassung, top gepflegt. Sportline-Paket, Leder Dakota, Navigationssystem Professional.', daysLeft:45 },
+  { id:3, brand:'Tesla', model:'Model 3', variant:'Long Range AWD', year:2024, km:8, list:54990, sale:39900, fuel:'Elektro', trans:'Automatik', color:'Pearl White', desc:'Tageszulassung mit voller Herstellergarantie. Autopilot, Premium Soundsystem, 19" Felgen.', daysLeft:12 },
+  { id:4, brand:'Mercedes', model:'C-Klasse', variant:'C220d AMG Line', year:2024, km:31, list:62400, sale:48500, fuel:'Diesel', trans:'Automatik', color:'Obsidianschwarz', desc:'Tageszulassung AMG Line. Panoramadach, Burmester Soundsystem, 360° Kamera.', daysLeft:60 },
+  { id:5, brand:'Audi', model:'A4', variant:'40 TDI S-Line', year:2024, km:18, list:55100, sale:41800, fuel:'Diesel', trans:'DSG', color:'Navarra Blau', desc:'S-Line Paket, Matrix LED, Virtual Cockpit Plus, Assistenzpaket Tour.', daysLeft:28 },
+  { id:6, brand:'Skoda', model:'Octavia', variant:'RS 245 Combi', year:2024, km:5, list:38600, sale:28400, fuel:'Benzin', trans:'DSG', color:'Race Blau', desc:'RS 245 PS, Sportfahrwerk, Canton Soundsystem, Head-up Display. Top Zustand.', daysLeft:8 },
+];
+
+let dealers = [];
+let inquiries = [];
+let currentVehicleId = null;
+
+function discount(v) {
+  return (((v.list - v.sale) / v.list) * 100).toFixed(1);
+}
+function savings(v) {
+  return (v.list - v.sale).toLocaleString('de-DE');
+}
+function fmt(n) {
+  return Number(n).toLocaleString('de-DE');
+}
+
+// ===== ROUTING =====
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  window.scrollTo(0, 0);
+  if (page === 'home') renderHomeVehicles();
+  if (page === 'vehicles') renderVehiclesList();
+  if (page === 'admin') renderAdmin();
+}
+
+// ===== VEHICLE CARD =====
+function vehicleCard(v, onclick) {
+  const d = discount(v);
+  const urgent = v.daysLeft && v.daysLeft <= 30;
+  return `
+    <div class="vehicle-card" onclick="${onclick}">
+      <div class="vehicle-img">
+        🚗
+        <div class="discount-badge">-${d}%</div>
+        ${urgent ? `<div class="urgent-badge">⏱ Noch ${v.daysLeft} Tage</div>` : ''}
+      </div>
+      <div class="vehicle-info">
+        <div class="vehicle-name">${v.brand} ${v.model}</div>
+        <div class="vehicle-variant">${v.variant}</div>
+        <div class="tags">
+          <span class="tag tag-gray">${v.year}</span>
+          <span class="tag tag-gray">${v.fuel}</span>
+          <span class="tag tag-gray">${fmt(v.km)} km</span>
+          <span class="tag tag-dark">Tageszulassung</span>
+        </div>
+        <div>
+          <span class="price-main">${fmt(v.sale)} €</span>
+          <span class="price-old">${fmt(v.list)} €</span>
+        </div>
+        <div class="price-saving">Sie sparen ${savings(v)} €</div>
+      </div>
+    </div>`;
+}
+
+function renderHomeVehicles() {
+  document.getElementById('home-vehicles').innerHTML =
+    VEHICLES.slice(0, 6).map(v => vehicleCard(v, `showDetail(${v.id})`)).join('');
+}
+
+function renderVehiclesList() {
+  applyFilters();
+}
+
+function applyFilters() {
+  const brand = document.getElementById('filter-brand').value;
+  const fuel = document.getElementById('filter-fuel').value;
+  const sort = document.getElementById('filter-sort').value;
+  let list = [...VEHICLES];
+  if (brand) list = list.filter(v => v.brand === brand);
+  if (fuel) list = list.filter(v => v.fuel === fuel);
+  if (sort === 'discount') list.sort((a,b) => discount(b) - discount(a));
+  if (sort === 'price_asc') list.sort((a,b) => a.sale - b.sale);
+  if (sort === 'price_desc') list.sort((a,b) => b.sale - a.sale);
+  document.getElementById('vehicle-count').textContent = `${list.length} Fahrzeuge — alle mit Tageszulassung`;
+  document.getElementById('vehicles-list').innerHTML =
+    list.map(v => vehicleCard(v, `showDetail(${v.id})`)).join('');
+}
+
+function resetFilters() {
+  document.getElementById('filter-brand').value = '';
+  document.getElementById('filter-fuel').value = '';
+  document.getElementById('filter-sort').value = 'discount';
+  applyFilters();
+}
+
+// ===== DETAIL =====
+function showDetail(id) {
+  const v = VEHICLES.find(x => x.id === id);
+  currentVehicleId = id;
+  if (!v) return;
+  showPage('detail');
+
+  document.getElementById('detail-desc').textContent = v.desc;
+
+  const specs = [
+    ['Marke', v.brand], ['Modell', v.model], ['Variante', v.variant], ['Baujahr', v.year],
+    ['Kilometerstand', `${fmt(v.km)} km`], ['Kraftstoff', v.fuel],
+    ['Getriebe', v.trans], ['Farbe', v.color],
+    ['Zustand', 'Tageszulassung'], ['Verfügbar', v.daysLeft ? `Noch ${v.daysLeft} Tage` : 'Verfügbar'],
+  ];
+  document.getElementById('detail-specs').innerHTML = specs.map(([k, val]) =>
+    `<div class="spec-item"><div class="spec-key">${k}</div><div class="spec-val">${val}</div></div>`
+  ).join('');
+
+  const d = discount(v);
+  const s = savings(v);
+  const urgentHtml = v.daysLeft && v.daysLeft <= 30
+    ? `<div style="background:rgba(230,51,41,0.2); border:1px solid rgba(230,51,41,0.4); border-radius:4px; padding:8px 12px; font-size:0.82rem; color:var(--red); margin-bottom:14px;">⏱ Nur noch ${v.daysLeft} Tage verfügbar</div>` : '';
+  document.getElementById('detail-price-box').innerHTML = `
+    <div style="font-size:0.8rem; color:var(--gray-400); margin-bottom:4px;">Listenpreis</div>
+    <div class="price-box-old">${fmt(v.list)} €</div>
+    <div class="price-box-main">${fmt(v.sale)} €</div>
+    <div class="price-box-saving">✓ Sie sparen ${s} € (${d}%)</div>
+    ${urgentHtml}
+    <div class="price-box-note">Inkl. MwSt. · Direkt vom Händler · Keine Vermittlungsgebühr</div>
+  `;
+}
+
+function submitInquiry() {
+  const name = document.getElementById('inq-name').value;
+  const email = document.getElementById('inq-email').value;
+  if (!name || !email) { alert('Bitte Name und E-Mail angeben.'); return; }
+  const v = VEHICLES.find(x => x.id === currentVehicleId);
+  inquiries.push({ vehicle: `${v.brand} ${v.model}`, name, email, phone: document.getElementById('inq-phone').value, msg: document.getElementById('inq-msg').value, date: new Date().toLocaleDateString('de-DE') });
+  document.getElementById('detail-form-wrap').innerHTML = `
+    <div class="success-box">
+      <div style="font-size:2rem; margin-bottom:12px;">✅</div>
+      <h3 style="font-weight:700; margin-bottom:8px;">Anfrage gesendet!</h3>
+      <p style="color:var(--gray-600); font-size:0.9rem;">Der Händler meldet sich in der Regel innerhalb von 24 Stunden bei Ihnen.</p>
+    </div>`;
+}
+
+// ===== DEALER REG =====
+function submitDealerReg() {
+  const company = document.getElementById('reg-company').value;
+  const email = document.getElementById('reg-email').value;
+  if (!company || !email) { alert('Bitte Firmenname und E-Mail angeben.'); return; }
+  dealers.push({ company, contact: document.getElementById('reg-contact').value, email, phone: document.getElementById('reg-phone').value, city: document.getElementById('reg-city').value, approved: false, date: new Date().toLocaleDateString('de-DE') });
+  document.getElementById('dealer-reg-wrap').innerHTML = `
+    <div style="text-align:center; padding:40px 0;">
+      <div style="font-size:3rem; margin-bottom:16px;">🎉</div>
+      <h2 style="font-family:var(--font-display); font-size:2.2rem; margin-bottom:12px;">REGISTRIERUNG ERHALTEN</h2>
+      <p style="color:var(--gray-600); line-height:1.7;">Wir melden uns innerhalb von 24 Stunden. Danach kannst du sofort Fahrzeuge hochladen.</p>
+    </div>`;
+}
+
+// ===== VEHICLE UPLOAD =====
+function calcDiscount() {
+  const list = parseFloat(document.getElementById('up-list').value);
+  const sale = parseFloat(document.getElementById('up-sale').value);
+  const el = document.getElementById('discount-preview');
+  if (list && sale && list > sale) {
+    const d = (((list - sale) / list) * 100).toFixed(1);
+    const s = (list - sale).toLocaleString('de-DE');
+    el.style.display = 'block';
+    el.innerHTML = `Nachlass: <span style="font-family:var(--font-display); font-size:1.4rem; color:var(--red);">${d}%</span> <span style="color:var(--gray-600); font-size:0.85rem;">(${s} € Ersparnis)</span>`;
+  } else { el.style.display = 'none'; }
+}
+
+function submitVehicle() {
+  const email = document.getElementById('up-email').value;
+  const brand = document.getElementById('up-brand').value;
+  const model = document.getElementById('up-model').value;
+  if (!email || !brand || !model) { alert('Bitte E-Mail, Marke und Modell angeben.'); return; }
+  document.getElementById('upload-wrap').innerHTML = `
+    <div style="text-align:center; padding:60px 0;">
+      <div style="font-size:3rem; margin-bottom:16px;">✅</div>
+      <h2 style="font-family:var(--font-display); font-size:2.2rem; margin-bottom:12px;">FAHRZEUG EINGEREICHT</h2>
+      <p style="color:var(--gray-600); max-width:380px; margin:0 auto; line-height:1.7;">Wir prüfen dein Fahrzeug und schalten es innerhalb von 24 Stunden frei. Du bekommst eine E-Mail Bestätigung.</p>
+    </div>`;
+}
+
+// ===== ADMIN =====
+const ADMIN_PW = 'stehengeblieben2025';
+function adminLogin() {
+  if (document.getElementById('admin-pw').value === ADMIN_PW) {
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-panel').style.display = 'block';
+    renderAdmin();
+  } else { alert('Falsches Passwort'); }
+}
+
+function renderAdmin() {
+  renderAdminVehicles();
+  renderAdminDealers();
+  renderAdminInquiries();
+}
+
+function renderAdminVehicles() {
+  const el = document.getElementById('admin-vehicles');
+  el.innerHTML = `<h2 style="font-family:var(--font-display); font-size:1.4rem; margin-bottom:18px;">${VEHICLES.length} FAHRZEUGE LIVE</h2>` +
+    VEHICLES.map(v => `
+      <div class="admin-item approved">
+        <div>
+          <div class="admin-item-name">${v.brand} ${v.model} ${v.variant}</div>
+          <div class="admin-item-sub">${v.year} · ${v.fuel} · ${fmt(v.sale)} € (${discount(v)}% Nachlass)</div>
+          <div class="admin-item-meta">✅ Freigegeben · ${v.km} km</div>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-sold" onclick="alert('Als verkauft markiert!')">Als verkauft markieren</button>
+        </div>
+      </div>`).join('') +
+    (dealers.length === 0 && inquiries.length === 0 ? '' : '') +
+    dealers.filter(d => !d.approved).map((d, i) => `
+      <div class="admin-item pending">
+        <div>
+          <div class="admin-item-name">⏳ ${d.company} — Neues Fahrzeug in Prüfung</div>
+          <div class="admin-item-sub">${d.email}</div>
+        </div>
+      </div>`).join('');
+}
+
+function renderAdminDealers() {
+  const el = document.getElementById('admin-dealers');
+  if (dealers.length === 0) {
+    el.innerHTML = `<h2 style="font-family:var(--font-display); font-size:1.4rem; margin-bottom:18px;">HÄNDLER</h2><p style="color:var(--gray-400);">Noch keine Händler-Registrierungen eingegangen.</p>`;
+    return;
+  }
+  el.innerHTML = `<h2 style="font-family:var(--font-display); font-size:1.4rem; margin-bottom:18px;">${dealers.length} HÄNDLER</h2>` +
+    dealers.map((d, i) => `
+      <div class="admin-item ${d.approved ? 'approved' : 'pending'}">
+        <div>
+          <div class="admin-item-name">${d.company}</div>
+          <div class="admin-item-sub">${d.contact} · ${d.email} · ${d.phone} · ${d.city}</div>
+          <div class="admin-item-meta">Registriert: ${d.date} ${d.approved ? '· ✅ Freigegeben' : ''}</div>
+        </div>
+        ${!d.approved ? `<div class="admin-actions"><button class="btn-approve" onclick="approveDealer(${i})">Freigeben</button></div>` : ''}
+      </div>`).join('');
+}
+
+function renderAdminInquiries() {
+  const el = document.getElementById('admin-inquiries');
+  if (inquiries.length === 0) {
+    el.innerHTML = `<h2 style="font-family:var(--font-display); font-size:1.4rem; margin-bottom:18px;">ANFRAGEN</h2><p style="color:var(--gray-400);">Noch keine Anfragen eingegangen.</p>`;
+    return;
+  }
+  el.innerHTML = `<h2 style="font-family:var(--font-display); font-size:1.4rem; margin-bottom:18px;">${inquiries.length} ANFRAGEN</h2>` +
+    inquiries.map(i => `
+      <div class="admin-item approved">
+        <div>
+          <div class="admin-item-name">${i.name} → ${i.vehicle}</div>
+          <div class="admin-item-sub">${i.email} · ${i.phone}</div>
+          ${i.msg ? `<div class="admin-item-meta">"${i.msg}"</div>` : ''}
+          <div class="admin-item-meta">${i.date}</div>
+        </div>
+      </div>`).join('');
+}
+
+function approveDealer(i) {
+  dealers[i].approved = true;
+  renderAdminDealers();
+}
+
+function showAdminTab(tab, btn) {
+  ['vehicles','dealers','inquiries'].forEach(t => {
+    document.getElementById('admin-' + t).style.display = t === tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Init
+renderHomeVehicles();
+</script>
+</body>
+</html>
