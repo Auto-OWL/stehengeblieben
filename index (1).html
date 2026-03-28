@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html class="light" lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>stehengeblieben.de — The Editorial Showroom</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-container-lowest":"#ffffff","on-secondary":"#ffffff","secondary":"#775a19","on-surface-variant":"#44474d","primary-container":"#0d1c32","secondary-container":"#fed488","on-background":"#191c1d","surface-container-low":"#f3f4f5","surface-container-highest":"#e1e3e4","secondary-fixed":"#ffdea5","surface-container-high":"#e7e8e9","outline-variant":"#c5c6cd","on-primary-container":"#76849f","on-primary":"#ffffff","on-tertiary-container":"#457efa","tertiary-container":"#001847","on-surface":"#191c1d","primary":"#000000","error":"#ba1a1a","background":"#f8f9fa","outline":"#75777e","surface-variant":"#e1e3e4","surface":"#f8f9fa","surface-container":"#edeeef","on-secondary-container":"#785a1a"},fontFamily:{headline:["Manrope"],body:["Inter"],label:["Inter"]},borderRadius:{DEFAULT:"0.125rem",lg:"0.25rem",xl:"0.5rem",full:"0.75rem"}}}}
+</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}
+.glass-nav{background:rgba(248,249,250,0.92);backdrop-filter:blur(20px);}
+.metallic-gradient{background:linear-gradient(135deg,#0d1c32 0%,#000000 100%);}
+body{font-family:'Inter',sans-serif;}
+h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
+[data-page]{display:none;}
+[data-page].active{display:block;}
+.card-hover{transition:transform 0.3s ease,box-shadow 0.3s ease;}
+.card-hover:hover{transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,0.08);}
+.admin-tab{transition:background 0.2s;}
+</style>
+</head>
+<body class="bg-surface text-on-surface font-body">
+
+<!-- NAV -->
+<nav class="fixed top-0 w-full z-50 glass-nav">
+  <div class="flex justify-between items-center px-6 md:px-8 h-20 max-w-screen-2xl mx-auto">
+    <div class="brand text-xl font-black tracking-tighter text-primary cursor-pointer" onclick="nav('home')">stehengeblieben.de</div>
+    <div class="hidden md:flex gap-x-8 font-headline font-bold tracking-tight text-sm">
+      <button onclick="nav('inventory')" class="text-on-surface-variant hover:text-primary transition-colors">Fahrzeuge</button>
+      <button onclick="nav('dealer-register')" class="text-on-surface-variant hover:text-primary transition-colors">Händler werden</button>
+      <button onclick="scrollHow()" class="text-on-surface-variant hover:text-primary transition-colors">So funktioniert's</button>
+    </div>
+    <div class="flex items-center gap-3">
+      <button onclick="nav('dealer-portal')" class="hidden md:block metallic-gradient text-on-primary px-5 py-2.5 rounded font-headline font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all active:scale-95">Händler Portal</button>
+      <button onclick="toggleMobile()" class="md:hidden p-2 rounded-lg hover:bg-surface-container-low"><span class="material-symbols-outlined">menu</span></button>
+    </div>
+  </div>
+  <div class="bg-surface-container-low h-px w-full"></div>
+  <div id="mobile-menu" class="hidden bg-surface px-6 py-4 space-y-3 border-b border-surface-container-low">
+    <button onclick="nav('inventory');toggleMobile()" class="block w-full text-left font-headline font-bold text-sm py-2 text-on-surface-variant">Fahrzeuge</button>
+    <button onclick="nav('dealer-register');toggleMobile()" class="block w-full text-left font-headline font-bold text-sm py-2 text-on-surface-variant">Händler werden</button>
+    <button onclick="nav('dealer-portal');toggleMobile()" class="block w-full metallic-gradient text-white font-headline font-bold text-xs uppercase tracking-widest py-3 rounded text-center">Händler Portal</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div data-page="home" class="active">
+  <!-- Hero -->
+  <section class="pt-20 min-h-screen bg-primary-container">
+    <div class="max-w-screen-2xl mx-auto px-6 md:px-8 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[calc(100vh-80px)]">
+      <div class="space-y-8">
+        <div class="inline-flex items-center gap-2 bg-on-tertiary-container/10 border border-on-tertiary-container/20 px-4 py-2 rounded-full">
+          <span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
+          <span class="text-on-tertiary-container font-bold text-xs uppercase tracking-widest">Neufahrzeuge · Tageszulassung · Sofort verfügbar</span>
+        </div>
+        <h1 class="font-headline font-black text-6xl md:text-8xl tracking-tighter text-white leading-[0.88]">The<br/><span class="text-secondary-fixed">Editorial</span><br/>Showroom.</h1>
+        <p class="text-on-primary-container text-lg leading-relaxed max-w-md">Langzeitsteher direkt vom Händler. Neufahrzeuge mit Tageszulassung — bis zu einem Jahr alt, bis zu <span class="text-secondary-fixed font-bold">30% unter Listenpreis.</span></p>
+        <div class="flex flex-wrap gap-4">
+          <button onclick="nav('inventory')" class="metallic-gradient text-on-primary px-8 py-4 rounded font-headline font-extrabold text-sm uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 shadow-xl shadow-black/30">
+            <span class="material-symbols-outlined text-sm">directions_car</span>Fahrzeuge entdecken
+          </button>
+          <button onclick="nav('dealer-register')" class="bg-white/10 border border-white/20 text-white px-8 py-4 rounded font-headline font-bold text-sm uppercase tracking-widest hover:bg-white/20 transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">handshake</span>Als Händler mitmachen
+          </button>
+        </div>
+        <div class="flex gap-10 pt-6 border-t border-white/10">
+          <div><div class="font-headline font-black text-3xl text-white">247+</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Fahrzeuge live</div></div>
+          <div><div class="font-headline font-black text-3xl text-secondary-fixed">Ø 8.400 €</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Ersparnis</div></div>
+          <div><div class="font-headline font-black text-3xl text-white">34</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Partnerhändler</div></div>
+        </div>
+      </div>
+      <!-- Hero Card Preview -->
+      <div class="hidden lg:block">
+        <div class="bg-white/5 border border-white/10 rounded-xl p-1">
+          <div class="bg-primary-container/50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center relative">
+            <span class="material-symbols-outlined text-white/10" style="font-size:160px">directions_car</span>
+            <div class="absolute bottom-5 left-5 bg-secondary-container text-on-secondary-container px-4 py-2 rounded font-headline font-extrabold text-xl">-27% Nachlass</div>
+            <div class="absolute top-5 right-5 bg-black/60 backdrop-blur-sm text-white px-4 py-3 rounded space-y-1">
+              <div class="text-xs text-white/60 uppercase tracking-widest">stehengeblieben Preis</div>
+              <div class="font-headline font-black text-2xl">39.900 €</div>
+              <div class="text-white/60 text-sm line-through">54.990 €</div>
+            </div>
+            <div class="absolute bottom-5 right-5 bg-tertiary-container text-on-tertiary-container px-3 py-1.5 rounded font-bold text-xs uppercase tracking-widest flex items-center gap-1">
+              <span class="material-symbols-outlined text-xs">schedule</span>Noch 12 Tage
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured -->
+  <section class="py-20">
+    <div class="max-w-screen-2xl mx-auto px-6 md:px-8">
+      <div class="flex justify-between items-end mb-12">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-3">Tagesaktuelle Angebote</p>
+          <h2 class="font-headline font-black text-4xl md:text-5xl tracking-tighter">Aktuelle Deals.</h2>
+        </div>
+        <button onclick="nav('inventory')" class="hidden md:flex items-center gap-2 text-on-surface-variant font-bold text-sm hover:text-primary transition-colors">
+          Alle anzeigen <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="home-cards"></div>
+      <button onclick="nav('inventory')" class="md:hidden mt-8 w-full py-4 border border-outline-variant rounded font-headline font-bold text-sm uppercase tracking-widest hover:bg-surface-container-low transition-colors">Alle Fahrzeuge</button>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how-section" class="py-20 bg-surface-container-low">
+    <div class="max-w-screen-2xl mx-auto px-6 md:px-8">
+      <div class="text-center mb-16">
+        <p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-3">Der Prozess</p>
+        <h2 class="font-headline font-black text-4xl md:text-5xl tracking-tighter">So einfach geht's.</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-surface-container-lowest p-8 rounded-xl space-y-4 border border-outline-variant/10">
+          <div class="w-12 h-12 bg-primary text-on-primary rounded flex items-center justify-center"><span class="material-symbols-outlined">search</span></div>
+          <div class="font-headline font-black text-xs uppercase tracking-widest text-on-surface-variant">Schritt 01</div>
+          <h3 class="font-headline font-black text-2xl tracking-tighter">Fahrzeug finden</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Filter nach Marke, Preis oder Nachlass. Alle Fahrzeuge haben Tageszulassung und sind sofort verfügbar.</p>
+        </div>
+        <div class="bg-surface-container-lowest p-8 rounded-xl space-y-4 border border-outline-variant/10">
+          <div class="w-12 h-12 bg-tertiary-container text-on-tertiary-container rounded flex items-center justify-center"><span class="material-symbols-outlined">mail</span></div>
+          <div class="font-headline font-black text-xs uppercase tracking-widest text-on-surface-variant">Schritt 02</div>
+          <h3 class="font-headline font-black text-2xl tracking-tighter">Anfrage senden</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Interesse? Direkte unverbindliche Anfrage an den Händler — kostenlos, keine Verpflichtung.</p>
+        </div>
+        <div class="bg-primary-container text-on-primary p-8 rounded-xl space-y-4">
+          <div class="w-12 h-12 bg-white/10 rounded flex items-center justify-center"><span class="material-symbols-outlined text-secondary-fixed">handshake</span></div>
+          <div class="font-headline font-black text-xs uppercase tracking-widest text-on-primary-container">Schritt 03</div>
+          <h3 class="font-headline font-black text-2xl tracking-tighter text-white">Deal abschließen</h3>
+          <p class="text-on-primary-container text-sm leading-relaxed">Der Händler meldet sich. Probefahrt, Kauf — keine Vermittlungsgebühr für dich als Käufer.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dealer CTA -->
+  <section class="py-20 bg-primary">
+    <div class="max-w-screen-2xl mx-auto px-6 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div class="space-y-6">
+        <p class="text-xs font-bold uppercase tracking-widest text-on-primary-container">Für Autohändler</p>
+        <h2 class="font-headline font-black text-5xl md:text-6xl tracking-tighter text-white leading-[0.9]">Langzeitsteher?<br/><span class="text-secondary-fixed">Wir verkaufen sie.</span></h2>
+        <p class="text-on-primary-container text-lg leading-relaxed max-w-md">Kein Abo. Kein Risiko. Du zahlst eine kleine Success-Fee — aber <strong class="text-white">nur wenn wir verkaufen.</strong></p>
+        <button onclick="nav('dealer-register')" class="bg-secondary-fixed text-on-background px-8 py-4 rounded font-headline font-extrabold text-sm uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all flex items-center gap-2">
+          Jetzt registrieren <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </button>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-white/5 border border-white/10 rounded-xl p-6 space-y-2"><span class="material-symbols-outlined text-secondary-fixed">payments</span><h4 class="font-headline font-bold text-white">Nur bei Erfolg</h4><p class="text-on-primary-container text-sm">Success-Fee ausschließlich bei erfolgtem Verkauf.</p></div>
+        <div class="bg-white/5 border border-white/10 rounded-xl p-6 space-y-2"><span class="material-symbols-outlined text-secondary-fixed">bolt</span><h4 class="font-headline font-bold text-white">Sofort live</h4><p class="text-on-primary-container text-sm">Freischaltung innerhalb von 24 Stunden.</p></div>
+        <div class="bg-white/5 border border-white/10 rounded-xl p-6 space-y-2"><span class="material-symbols-outlined text-secondary-fixed">person_search</span><h4 class="font-headline font-bold text-white">Echte Käufer</h4><p class="text-on-primary-container text-sm">Kaufbereite Kunden, die aktiv nach Deals suchen.</p></div>
+        <div class="bg-white/5 border border-white/10 rounded-xl p-6 space-y-2"><span class="material-symbols-outlined text-secondary-fixed">shield</span><h4 class="font-headline font-bold text-white">Kein Risiko</h4><p class="text-on-primary-container text-sm">Kein Abo, keine Mindestlaufzeit.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-primary-container py-16 px-6 md:px-8">
+    <div class="max-w-screen-2xl mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div class="col-span-2 md:col-span-1 space-y-4">
+          <div class="brand font-black text-xl text-white">stehengeblieben.de</div>
+          <p class="text-on-primary-container text-sm leading-relaxed">Neufahrzeuge mit Tageszulassung. Bis zu 30% unter Listenpreis. Direkt vom Händler.</p>
+        </div>
+        <div class="space-y-3"><h4 class="font-headline font-bold text-xs uppercase tracking-widest text-on-primary-container mb-2">Für Käufer</h4><button onclick="nav('inventory')" class="block text-sm text-on-primary-container hover:text-white transition-colors mb-2">Alle Fahrzeuge</button></div>
+        <div class="space-y-3"><h4 class="font-headline font-bold text-xs uppercase tracking-widest text-on-primary-container mb-2">Für Händler</h4><button onclick="nav('dealer-register')" class="block text-sm text-on-primary-container hover:text-white transition-colors mb-2">Registrieren</button><button onclick="nav('dealer-upload')" class="block text-sm text-on-primary-container hover:text-white transition-colors mb-2">Fahrzeug einstellen</button></div>
+        <div class="space-y-3"><h4 class="font-headline font-bold text-xs uppercase tracking-widest text-on-primary-container mb-2">Rechtliches</h4><a href="#" class="block text-sm text-on-primary-container hover:text-white transition-colors mb-2">Impressum</a><a href="#" class="block text-sm text-on-primary-container hover:text-white transition-colors mb-2">Datenschutz</a><a href="#" class="block text-sm text-on-primary-container hover:text-white transition-colors">AGB</a></div>
+      </div>
+      <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <span class="text-on-primary-container text-xs">© 2025 stehengeblieben.de — The Editorial Showroom</span>
+        <span class="text-on-primary-container text-xs uppercase tracking-widest">Made in Deutschland 🇩🇪</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- INVENTORY -->
+<div data-page="inventory">
+  <div class="pt-20">
+    <div class="bg-primary-container py-16 px-6 md:px-8">
+      <div class="max-w-screen-2xl mx-auto">
+        <nav class="flex items-center gap-2 text-xs font-bold text-on-primary-container mb-6 uppercase tracking-widest">
+          <button onclick="nav('home')" class="hover:text-white">Home</button>
+          <span class="material-symbols-outlined text-xs">chevron_right</span>
+          <span class="text-secondary-fixed">Fahrzeuge</span>
+        </nav>
+        <h1 class="font-headline font-black text-5xl md:text-7xl tracking-tighter text-white leading-[0.9] uppercase">Alle<br/>Fahrzeuge.</h1>
+        <p class="text-on-primary-container mt-4" id="inv-count">Alle verfügbaren Fahrzeuge mit Tageszulassung</p>
+      </div>
+    </div>
+    <div class="max-w-screen-2xl mx-auto px-6 md:px-8 py-12 flex flex-col md:flex-row gap-12">
+      <!-- Sidebar -->
+      <aside class="w-full md:w-64 flex-shrink-0 space-y-8">
+        <div><h2 class="font-headline font-extrabold text-2xl tracking-tighter mb-1">Filter</h2><p class="text-sm text-on-surface-variant">Kuratiertes Inventar</p></div>
+        <div class="space-y-3"><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Hersteller</label><div class="relative"><select id="f-brand" onchange="applyFilters()" class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm appearance-none font-medium focus:ring-1 focus:ring-primary/20"><option value="">Alle</option><option>Volkswagen</option><option>BMW</option><option>Mercedes</option><option>Audi</option><option>Porsche</option><option>Tesla</option><option>Skoda</option><option>Seat / Cupra</option></select><span class="material-symbols-outlined absolute right-3 top-3 text-on-surface-variant pointer-events-none text-sm">expand_more</span></div></div>
+        <div class="space-y-3"><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Kraftstoff</label><div class="relative"><select id="f-fuel" onchange="applyFilters()" class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm appearance-none font-medium focus:ring-1 focus:ring-primary/20"><option value="">Alle</option><option>Benzin</option><option>Diesel</option><option>Elektro</option><option>Hybrid</option></select><span class="material-symbols-outlined absolute right-3 top-3 text-on-surface-variant pointer-events-none text-sm">expand_more</span></div></div>
+        <div class="space-y-3"><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Sortierung</label><div class="relative"><select id="f-sort" onchange="applyFilters()" class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm appearance-none font-medium focus:ring-1 focus:ring-primary/20"><option value="discount">Höchster Nachlass</option><option value="price_asc">Preis aufsteigend</option><option value="price_desc">Preis absteigend</option><option value="urgent">Dringlichkeit</option></select><span class="material-symbols-outlined absolute right-3 top-3 text-on-surface-variant pointer-events-none text-sm">expand_more</span></div></div>
+        <div class="space-y-3">
+          <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Verfügbarkeit</label>
+          <label class="flex items-center gap-3 bg-surface-container-highest px-4 py-3 rounded-lg cursor-pointer hover:bg-surface-container-high transition-colors"><input type="radio" name="urgency" value="" onchange="applyFilters()" class="accent-primary" checked><span class="text-sm font-medium">Alle Fahrzeuge</span></label>
+          <label class="flex items-center gap-3 bg-error/5 border border-error/20 px-4 py-3 rounded-lg cursor-pointer hover:bg-error/10 transition-colors"><input type="radio" name="urgency" value="urgent" onchange="applyFilters()" class="accent-error"><span class="text-sm font-medium text-error">⏱ Läuft bald ab</span></label>
+        </div>
+        <button onclick="resetFilters()" class="w-full py-3 border border-outline-variant rounded text-xs font-bold uppercase tracking-widest text-on-surface-variant hover:bg-surface-container-low transition-colors">Filter zurücksetzen</button>
+      </aside>
+      <div class="flex-1"><div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="inv-grid"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div data-page="detail">
+  <div class="pt-20">
+    <div class="max-w-screen-2xl mx-auto px-6 md:px-8 py-12">
+      <button onclick="nav('inventory')" class="flex items-center gap-2 text-on-surface-variant hover:text-primary font-bold text-sm mb-8 transition-colors">
+        <span class="material-symbols-outlined text-sm">arrow_back</span>Zurück zur Übersicht
+      </button>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div class="lg:col-span-8 space-y-10">
+          <!-- Gallery -->
+          <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-12 md:col-span-8 bg-surface-container-low rounded-xl overflow-hidden aspect-video flex items-center justify-center relative">
+              <span class="material-symbols-outlined text-on-surface-variant" style="font-size:100px">directions_car</span>
+              <div id="d-disc-badge" class="absolute bottom-5 left-5 bg-secondary-container text-on-secondary-container px-4 py-2 rounded font-headline font-extrabold text-lg"></div>
+              <div id="d-urg-badge" class="absolute top-5 right-5 bg-error text-white px-3 py-1.5 rounded font-bold text-xs uppercase tracking-widest hidden"></div>
+            </div>
+            <div class="col-span-12 md:col-span-4 grid grid-rows-3 gap-4 min-h-[200px]">
+              <div class="bg-surface-container-low rounded-xl flex items-center justify-center text-on-surface-variant text-xs font-bold uppercase tracking-widest">Innenraum</div>
+              <div class="bg-surface-container-low rounded-xl flex items-center justify-center text-on-surface-variant text-xs font-bold uppercase tracking-widest">Heck</div>
+              <div class="bg-primary-container rounded-xl flex items-center justify-center text-on-tertiary-container text-xs font-bold uppercase tracking-widest">+ Fotos</div>
+            </div>
+          </div>
+          <!-- Info -->
+          <div class="space-y-4">
+            <div class="flex items-center gap-3"><span class="text-secondary font-headline font-bold tracking-widest text-xs uppercase">Tageszulassung · Neufahrzeug</span><div class="h-px flex-grow bg-outline-variant opacity-20"></div></div>
+            <h1 id="d-title" class="font-headline font-black text-4xl md:text-5xl tracking-tighter"></h1>
+            <div id="d-tags" class="flex flex-wrap gap-5 text-on-surface-variant font-medium text-sm"></div>
+          </div>
+          <!-- Value -->
+          <div class="bg-surface-container-low rounded-xl p-8 space-y-6">
+            <h3 class="font-headline font-extrabold text-2xl">Exklusives Preisvorteil-Angebot</h3>
+            <p class="text-on-surface-variant leading-relaxed" id="d-desc"></p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-secondary"><span class="block text-xs uppercase font-bold text-on-surface-variant mb-1">Listenpreis</span><span class="text-xl font-headline font-bold text-on-surface-variant line-through" id="d-list"></span></div>
+              <div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-on-tertiary-container"><span class="block text-xs uppercase font-bold text-on-tertiary-container mb-1">stehengeblieben Preis</span><span class="text-2xl font-headline font-black text-primary" id="d-sale"></span></div>
+              <div class="bg-tertiary-container p-5 rounded-lg text-on-tertiary-container"><span class="block text-xs uppercase font-bold mb-1">Ihre Ersparnis</span><span class="text-2xl font-headline font-black" id="d-saving"></span></div>
+            </div>
+          </div>
+          <!-- Specs -->
+          <div class="space-y-4">
+            <h3 class="font-headline font-extrabold text-2xl">Technische Daten</h3>
+            <div id="d-specs" class="grid grid-cols-1 md:grid-cols-2 gap-x-12"></div>
+          </div>
+        </div>
+        <!-- Sticky Right -->
+        <div class="lg:col-span-4">
+          <div class="sticky top-24 space-y-5">
+            <div class="bg-surface-container-lowest p-8 rounded-xl shadow-xl border border-outline-variant/15 space-y-6">
+              <div><span class="text-sm font-bold text-secondary uppercase tracking-widest">Aktives Angebot</span><div class="flex items-baseline gap-2 mt-2"><span class="font-headline font-black text-4xl" id="d-price-main"></span><span class="text-sm text-on-surface-variant">inkl. MwSt.</span></div></div>
+              <div id="d-days-box" class="hidden items-center gap-2 py-2 px-3 bg-error/5 border border-error/20 rounded text-error text-xs font-bold uppercase tracking-widest"></div>
+              <div class="space-y-3">
+                <button onclick="openInquiry()" class="w-full metallic-gradient text-on-primary py-4 font-headline font-extrabold text-sm rounded hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg">
+                  <span class="material-symbols-outlined text-sm">verified</span>Dieses Angebot sichern
+                </button>
+                <button onclick="openInquiry()" class="w-full bg-surface-container-high text-primary py-4 font-headline font-bold text-sm rounded hover:bg-surface-container-highest transition-all flex items-center justify-center gap-2">
+                  <span class="material-symbols-outlined text-sm">mail</span>Händler kontaktieren
+                </button>
+              </div>
+              <div class="pt-4 border-t border-outline-variant/10 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-center">Keine Vermittlungsgebühr · Direkt vom Händler</div>
+            </div>
+            <div class="bg-surface-container-high p-5 rounded-xl flex items-start gap-3">
+              <span class="material-symbols-outlined text-secondary mt-0.5">lightbulb</span>
+              <div class="text-sm"><p class="font-bold mb-1">Experten-Einschätzung</p><p class="text-on-surface-variant leading-relaxed">Fahrzeuge mit diesem Nachlass werden in der Regel innerhalb von 5 Tagen verkauft.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Inquiry Modal -->
+  <div id="inq-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div id="inq-modal-inner" class="bg-surface-container-lowest rounded-xl shadow-2xl w-full max-w-md p-8 space-y-5">
+      <div class="flex justify-between items-start">
+        <div><h3 class="font-headline font-black text-2xl tracking-tighter">Anfrage senden</h3><p class="text-on-surface-variant text-sm mt-1">Kostenlos · Unverbindlich</p></div>
+        <button onclick="closeInq()" class="p-2 hover:bg-surface-container-low rounded-lg transition-colors"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Ihr Name *</label><input id="inq-name" type="text" placeholder="Max Mustermann" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+      <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">E-Mail *</label><input id="inq-email" type="email" placeholder="max@email.de" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+      <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Telefon</label><input id="inq-phone" type="tel" placeholder="+49 ..." class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+      <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Nachricht</label><textarea id="inq-msg" rows="3" placeholder="z.B. Wann ist eine Probefahrt möglich?" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20 resize-none"></textarea></div>
+      <button onclick="submitInq()" class="w-full metallic-gradient text-on-primary py-4 font-headline font-extrabold text-sm rounded hover:opacity-90 active:scale-95 transition-all">Unverbindlich anfragen →</button>
+      <p class="text-xs text-on-surface-variant text-center">Direkt an den Händler · Keine Gebühren</p>
+    </div>
+  </div>
+</div>
+
+<!-- DEALER REGISTER -->
+<div data-page="dealer-register">
+  <div class="pt-20">
+    <div class="bg-primary-container py-16 px-6 md:px-8">
+      <div class="max-w-screen-2xl mx-auto">
+        <nav class="flex items-center gap-2 text-xs font-bold text-on-primary-container mb-6 uppercase tracking-widest"><button onclick="nav('home')" class="hover:text-white">Home</button><span class="material-symbols-outlined text-xs">chevron_right</span><span class="text-secondary-fixed">Händler werden</span></nav>
+        <h1 class="font-headline font-black text-5xl md:text-7xl tracking-tighter text-white leading-[0.9] uppercase">Als Händler<br/><span class="text-secondary-fixed">mitmachen.</span></h1>
+        <p class="text-on-primary-container mt-4 max-w-lg">Langzeitsteher weg, Kapital frei. Keine Vorauszahlung, kein Abo.</p>
+      </div>
+    </div>
+    <div class="bg-surface-container-low py-14 px-6 md:px-8">
+      <div class="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 space-y-3"><span class="material-symbols-outlined text-secondary">payments</span><h3 class="font-headline font-bold text-lg">Nur bei Erfolg</h3><p class="text-on-surface-variant text-sm leading-relaxed">Du zahlst ausschließlich eine kleine Success-Fee wenn das Fahrzeug tatsächlich verkauft wurde.</p></div>
+        <div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 space-y-3"><span class="material-symbols-outlined text-on-tertiary-container">bolt</span><h3 class="font-headline font-bold text-lg">Sofort live</h3><p class="text-on-surface-variant text-sm leading-relaxed">Fahrzeug hochladen, wir prüfen innerhalb von 24 Stunden — dann ist es live.</p></div>
+        <div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 space-y-3"><span class="material-symbols-outlined text-secondary">person_search</span><h3 class="font-headline font-bold text-lg">Kaufbereite Kunden</h3><p class="text-on-surface-variant text-sm leading-relaxed">Unsere Besucher suchen aktiv nach Deals. Keine Schaulustigen — echte Käufer.</p></div>
+      </div>
+    </div>
+    <div class="max-w-lg mx-auto px-6 py-16">
+      <div id="reg-wrap">
+        <h2 class="font-headline font-black text-3xl tracking-tighter mb-2">Registrierung</h2>
+        <p class="text-on-surface-variant text-sm mb-8">Füll das Formular aus — wir melden uns innerhalb von 24 Stunden.</p>
+        <div class="space-y-5">
+          <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Firmenname *</label><input id="reg-company" type="text" placeholder="Auto Müller GmbH" class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+          <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Ansprechpartner *</label><input id="reg-contact" type="text" placeholder="Max Müller" class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+          <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">E-Mail *</label><input id="reg-email" type="email" placeholder="max@autohaus.de" class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+          <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Telefon</label><input id="reg-phone" type="tel" placeholder="+49 221 ..." class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+          <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Stadt / Region</label><input id="reg-city" type="text" placeholder="Köln" class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+          <button onclick="submitReg()" class="w-full metallic-gradient text-on-primary py-4 font-headline font-extrabold text-sm uppercase tracking-widest rounded hover:opacity-90 active:scale-95 transition-all mt-2">Jetzt registrieren →</button>
+          <p class="text-xs text-on-surface-variant text-center">Kostenlos · Keine versteckten Kosten · Freischaltung in 24h</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DEALER UPLOAD -->
+<div data-page="dealer-upload">
+  <div class="pt-20 flex min-h-screen">
+    <aside class="hidden lg:flex h-screen w-64 fixed left-0 top-0 bg-surface-container-low flex-col p-6 z-10 pt-24">
+      <div class="mb-6"><div class="font-headline font-extrabold text-primary text-lg">Dealer Portal</div><p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-1">Verifizierter Händler</p></div>
+      <nav class="flex-1 space-y-1">
+        <a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined text-xl">dashboard</span>Dashboard</a>
+        <a class="flex items-center gap-3 px-4 py-3 bg-surface-container-lowest text-primary font-bold rounded-lg shadow-sm text-sm cursor-pointer"><span class="material-symbols-outlined text-xl">add_circle</span>Fahrzeug einstellen</a>
+        <a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined text-xl">directions_car</span>Inventar</a>
+        <a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined text-xl">person_search</span>Leads</a>
+      </nav>
+    </aside>
+    <main class="lg:ml-64 flex-1 p-6 md:p-12 max-w-4xl">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div>
+          <nav class="flex items-center gap-2 text-xs font-bold text-on-surface-variant mb-4 uppercase tracking-widest"><span>Inventar</span><span class="material-symbols-outlined text-xs">chevron_right</span><span class="text-primary">Neues Fahrzeug</span></nav>
+          <h1 class="font-headline font-black text-4xl md:text-6xl tracking-tighter leading-[0.9] uppercase">The <span class="text-outline">Editorial</span><br/>Showroom Listing</h1>
+        </div>
+        <div class="flex gap-3">
+          <button onclick="nav('home')" class="px-6 py-3 bg-surface-container-high text-on-surface-variant font-headline font-extrabold text-xs uppercase tracking-widest rounded hover:bg-surface-container-highest active:scale-95 transition-all">Verwerfen</button>
+          <button onclick="submitUpload()" class="px-8 py-3 metallic-gradient text-on-primary font-headline font-extrabold text-xs uppercase tracking-widest rounded shadow-xl hover:opacity-90 active:scale-95 transition-all">Veröffentlichen</button>
+        </div>
+      </div>
+      <div id="upload-wrap" class="space-y-10">
+        <section class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-8 md:p-10">
+          <div class="flex items-center justify-between mb-8"><h3 class="font-headline font-black text-2xl uppercase tracking-tighter">Fahrzeugdaten</h3><span class="text-xs bg-primary text-white px-3 py-1.5 rounded font-black uppercase tracking-widest">Pflichtfelder</span></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Hersteller *</label><select id="up-brand" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20 appearance-none"><option value="">Bitte wählen</option><option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Volkswagen</option><option>Porsche</option><option>Tesla</option><option>Skoda</option><option>Seat / Cupra</option><option>Andere</option></select></div>
+            <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Modell *</label><input id="up-model" type="text" placeholder="z.B. Golf GTI" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+            <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Variante</label><input id="up-variant" type="text" placeholder="z.B. 2.0 TSI DSG" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+            <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Erstzulassung Datum *</label><input id="up-reg" type="date" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+            <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Kilometerstand</label><div class="relative flex items-center"><input id="up-km" type="number" value="0" min="0" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20"><span class="absolute right-5 font-black text-xs text-on-surface-variant tracking-widest">KM</span></div></div>
+            <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Kraftstoff</label><select id="up-fuel" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20 appearance-none"><option>Benzin</option><option>Diesel</option><option>Elektro</option><option>Hybrid</option><option>Plug-in-Hybrid</option></select></div>
+            <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Getriebe</label><select id="up-trans" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20 appearance-none"><option>Automatik</option><option>Schaltgetriebe</option><option>DSG</option></select></div>
+            <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Farbe</label><input id="up-color" type="text" placeholder="z.B. Midnight Blue Metallic" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+          </div>
+        </section>
+        <section class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-8 md:p-10">
+          <div class="flex items-center justify-between mb-8"><h3 class="font-headline font-black text-2xl uppercase tracking-tighter">Preisgestaltung</h3><span class="text-xs border border-primary text-primary px-3 py-1.5 rounded font-black uppercase tracking-widest">Smart Pricing</span></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Listenpreis (€) *</label><input id="up-list" type="number" min="5000" placeholder="42500" oninput="calcDisc()" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+            <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Verkaufspreis (€) *</label><input id="up-sale" type="number" min="5000" placeholder="31900" oninput="calcDisc()" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+          </div>
+          <div id="disc-preview" class="hidden mt-6 grid grid-cols-3 gap-4">
+            <div class="bg-surface-container-low p-4 rounded-lg border-l-4 border-secondary"><div class="text-xs font-bold uppercase text-on-surface-variant mb-1">Nachlass</div><div id="dp-pct" class="font-headline font-black text-2xl text-secondary"></div></div>
+            <div class="bg-tertiary-container p-4 rounded-lg text-on-tertiary-container"><div class="text-xs font-bold uppercase mb-1">Ersparnis</div><div id="dp-save" class="font-headline font-black text-2xl"></div></div>
+            <div class="bg-surface-container-low p-4 rounded-lg"><div class="text-xs font-bold uppercase text-on-surface-variant mb-1">Attraktivität</div><div class="font-headline font-black text-xl text-primary">Stark ✓</div></div>
+          </div>
+          <div class="mt-6"><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Ablaufdatum Tageszulassung</label><input id="up-expires" type="date" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+        </section>
+        <section class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-8 md:p-10">
+          <h3 class="font-headline font-black text-2xl uppercase tracking-tighter mb-8">Beschreibung &amp; Medien</h3>
+          <textarea id="up-desc" rows="5" placeholder="Ausstattung, Besonderheiten, Zustand, Extras..." class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20 resize-none mb-6"></textarea>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="col-span-2 aspect-video bg-surface-container-high rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-surface-container-highest transition-colors border-2 border-dashed border-outline-variant group"><span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors text-3xl">photo_camera</span><span class="text-xs font-black mt-2 uppercase tracking-widest text-on-surface-variant">Hauptbild hochladen</span></div>
+            <div class="aspect-square bg-surface-container-high rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-surface-container-highest transition-colors border border-dashed border-outline-variant group"><span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">add_photo_alternate</span><span class="text-xs font-black mt-1 uppercase tracking-widest text-on-surface-variant">Innenraum</span></div>
+            <div class="aspect-square bg-surface-container-high rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-surface-container-highest transition-colors border border-dashed border-outline-variant group"><span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">add_photo_alternate</span><span class="text-xs font-black mt-1 uppercase tracking-widest text-on-surface-variant">Weitere</span></div>
+          </div>
+        </section>
+        <section class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-8">
+          <h3 class="font-headline font-black text-xl uppercase tracking-tighter mb-6">Händler-E-Mail *</h3>
+          <input id="up-email" type="email" placeholder="max@autohaus.de" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20">
+        </section>
+        <button onclick="submitUpload()" class="w-full metallic-gradient text-on-primary py-5 font-headline font-extrabold text-sm uppercase tracking-widest rounded hover:opacity-90 active:scale-95 transition-all mb-8">Fahrzeug zur Prüfung einreichen →</button>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- DEALER PORTAL -->
+<div data-page="dealer-portal">
+  <main class="min-h-screen flex items-center justify-center pt-28 pb-12 px-4">
+    <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 bg-surface-container-lowest rounded-xl overflow-hidden shadow-2xl border border-surface-container-highest">
+      <div class="hidden md:flex flex-col justify-end p-12 relative bg-primary-container overflow-hidden">
+        <div class="absolute inset-0 metallic-gradient opacity-80"></div>
+        <div class="relative z-10 text-white space-y-4">
+          <div class="brand font-black text-3xl tracking-tighter">stehengeblieben.de</div>
+          <p class="text-on-primary-container text-lg leading-relaxed max-w-sm">The Editorial Showroom. Professionelles Inventar-Management und Lead-Tracking.</p>
+          <div class="flex gap-6 pt-4 border-t border-white/10">
+            <div><div class="font-headline font-black text-2xl text-secondary-fixed">34</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Partner</div></div>
+            <div><div class="font-headline font-black text-2xl text-secondary-fixed">247+</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Listings</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="p-8 md:p-16 flex flex-col justify-center">
+        <div class="mb-10"><h1 class="font-headline font-extrabold text-3xl tracking-tighter mb-2">Dealer Portal</h1><p class="text-on-surface-variant text-sm">Zugangsdaten eingeben um Inventar und Leads zu verwalten.</p></div>
+        <div class="space-y-5">
+          <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Benutzername</label><input id="portal-user" type="text" placeholder="dealer@stehengeblieben.de" class="w-full bg-surface-container-high border-none rounded px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+          <div>
+            <div class="flex justify-between items-center mb-2"><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Passwort</label><a href="#" class="text-xs font-bold uppercase tracking-widest text-on-tertiary-container hover:underline">Vergessen?</a></div>
+            <div class="relative"><input id="portal-pw" type="password" placeholder="••••••••" class="w-full bg-surface-container-high border-none rounded px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20 pr-12"><span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant cursor-pointer text-xl">visibility</span></div>
+          </div>
+          <button onclick="alert('Demo-Modus: In der finalen Version erhält jeder Händler eigene Zugangsdaten.')" class="w-full metallic-gradient text-on-primary py-4 rounded font-headline font-extrabold uppercase tracking-widest text-xs hover:opacity-90 active:scale-95 transition-all shadow-lg">Anmelden</button>
+        </div>
+        <div class="mt-10 pt-8 border-t border-surface-container-highest">
+          <div class="bg-surface-container-high/50 p-5 rounded-lg flex items-start gap-4">
+            <div class="bg-primary/5 p-2 rounded"><span class="material-symbols-outlined text-primary text-xl">handshake</span></div>
+            <div><p class="font-bold text-sm mb-1">Noch kein Partner?</p><p class="text-on-surface-variant text-xs mb-3">Werde Teil unseres Händler-Netzwerks.</p><button onclick="nav('dealer-register')" class="inline-flex items-center gap-2 text-on-tertiary-container font-extrabold text-xs uppercase tracking-widest hover:underline">Als Händler registrieren <span class="material-symbols-outlined text-sm">arrow_forward</span></button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ADMIN -->
+<div data-page="admin">
+  <div id="admin-login-screen" class="min-h-screen flex items-center justify-center bg-primary-container pt-20">
+    <div class="bg-surface-container-lowest rounded-xl p-10 w-full max-w-sm shadow-2xl space-y-5">
+      <h1 class="font-headline font-black text-3xl tracking-tighter">Admin Login</h1>
+      <input id="admin-pw-input" type="password" placeholder="Passwort" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium">
+      <button onclick="doAdminLogin()" class="w-full metallic-gradient text-on-primary py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all">Anmelden</button>
+    </div>
+  </div>
+  <div id="admin-main" class="hidden min-h-screen pt-20">
+    <div class="bg-primary-container py-8 px-6 md:px-8">
+      <div class="max-w-screen-2xl mx-auto flex justify-between items-center flex-wrap gap-4">
+        <h1 class="font-headline font-black text-3xl text-white tracking-tighter">Admin Panel</h1>
+        <div class="flex gap-2">
+          <button onclick="showAdmTab('av',this)" class="admin-tab bg-primary border-primary px-4 py-2 rounded text-xs font-bold uppercase tracking-widest border text-white">Fahrzeuge</button>
+          <button onclick="showAdmTab('ad',this)" class="admin-tab border border-white/20 px-4 py-2 rounded text-xs font-bold uppercase tracking-widest text-white">Händler</button>
+          <button onclick="showAdmTab('ai',this)" class="admin-tab border border-white/20 px-4 py-2 rounded text-xs font-bold uppercase tracking-widest text-white">Anfragen</button>
+        </div>
+      </div>
+    </div>
+    <div class="max-w-screen-2xl mx-auto px-6 md:px-8 py-10">
+      <div id="av"><h2 class="font-headline font-black text-2xl tracking-tighter mb-6">Fahrzeuge</h2><div id="av-list"></div></div>
+      <div id="ad" class="hidden"><h2 class="font-headline font-black text-2xl tracking-tighter mb-6">Händler-Registrierungen</h2><div id="ad-list"></div></div>
+      <div id="ai" class="hidden"><h2 class="font-headline font-black text-2xl tracking-tighter mb-6">Käufer-Anfragen</h2><div id="ai-list"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// DATA
+const VEHICLES=[
+  {id:1,brand:'Volkswagen',model:'Golf GTI',variant:'2.0 TSI DSG',year:2024,km:12,list:42500,sale:31900,fuel:'Benzin',trans:'Automatik',color:'Tornado Rot',desc:'Tageszulassung vom 15.01.2024. Fahrzeug in einwandfreiem Zustand, nicht privat genutzt. Vollausstattung inkl. Panoramadach, Navigation, LED-Matrix, DCC-Fahrwerk.',daysLeft:18},
+  {id:2,brand:'BMW',model:'3er',variant:'320d xDrive Touring',year:2024,km:22,list:58900,sale:44200,fuel:'Diesel',trans:'Automatik',color:'Mineralweiß',desc:'Tageszulassung, gepflegt. Sportline-Paket, Leder Dakota, Navigationssystem Professional, Driving Assistant Plus.',daysLeft:45},
+  {id:3,brand:'Tesla',model:'Model 3',variant:'Long Range AWD',year:2024,km:8,list:54990,sale:39900,fuel:'Elektro',trans:'Automatik',color:'Pearl White',desc:'Tageszulassung mit voller Herstellergarantie. Autopilot, Premium Soundsystem, 19 Zoll Felgen.',daysLeft:12},
+  {id:4,brand:'Mercedes',model:'C-Klasse',variant:'C220d AMG Line',year:2024,km:31,list:62400,sale:48500,fuel:'Diesel',trans:'Automatik',color:'Obsidianschwarz',desc:'Tageszulassung AMG Line Edition. Panoramadach, Burmester Soundsystem, 360 Grad Kamera, MBUX.',daysLeft:60},
+  {id:5,brand:'Audi',model:'A4',variant:'40 TDI S-Line',year:2024,km:18,list:55100,sale:41800,fuel:'Diesel',trans:'DSG',color:'Navarra Blau',desc:'S-Line Paket komplett, Matrix LED, Virtual Cockpit Plus, Assistenzpaket Tour und City.',daysLeft:28},
+  {id:6,brand:'Skoda',model:'Octavia',variant:'RS 245 Combi',year:2024,km:5,list:38600,sale:28400,fuel:'Benzin',trans:'DSG',color:'Race Blau',desc:'RS 245 PS Sportfahrwerk, Canton Soundsystem, Head-up Display. Perfekter Zustand.',daysLeft:8},
+];
+let DEALERS=[],INQUIRIES=[],CUR=null;
+const ADMIN_PASS='stehengeblieben2025';
+
+function disc(v){return(((v.list-v.sale)/v.list)*100).toFixed(1);}
+function fmt(n){return Number(n).toLocaleString('de-DE');}
+function savamt(v){return fmt(v.list-v.sale);}
+
+// NAV
+function nav(p){
+  document.querySelectorAll('[data-page]').forEach(x=>x.classList.remove('active'));
+  const el=document.querySelector('[data-page="'+p+'"]');
+  if(el)el.classList.add('active');
+  window.scrollTo(0,0);
+  if(p==='home')renderHome();
+  if(p==='inventory')renderInv();
+  if(p==='admin')renderAdm();
+}
+function toggleMobile(){document.getElementById('mobile-menu').classList.toggle('hidden');}
+function scrollHow(){nav('home');setTimeout(()=>document.getElementById('how-section')?.scrollIntoView({behavior:'smooth'}),100);}
+
+// CARD
+function mkCard(v,fn){
+  const d=disc(v),urg=v.daysLeft&&v.daysLeft<=30;
+  return`<div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/10 card-hover cursor-pointer" onclick="${fn}">
+    <div class="relative overflow-hidden aspect-video bg-surface-container-low flex items-center justify-center">
+      <span class="material-symbols-outlined text-on-surface-variant" style="font-size:80px">directions_car</span>
+      <div class="absolute bottom-4 left-4 bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded font-headline font-extrabold text-base">-${d}%</div>
+      ${urg?`<div class="absolute top-4 right-4 bg-error text-white px-2.5 py-1 rounded font-bold text-xs uppercase tracking-widest">⏱ ${v.daysLeft} Tage</div>`:''}
+    </div>
+    <div class="p-6 space-y-3">
+      <div><div class="font-headline font-black text-xl tracking-tighter">${v.brand} ${v.model}</div><div class="text-on-surface-variant text-sm mt-0.5">${v.variant}</div></div>
+      <div class="flex flex-wrap gap-2">
+        <span class="bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide">${v.year}</span>
+        <span class="bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide">${v.fuel}</span>
+        <span class="bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide">${fmt(v.km)} km</span>
+        <span class="bg-tertiary-container text-on-tertiary-container px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide">Tageszulassung</span>
+      </div>
+      <div class="pt-2 border-t border-outline-variant/10 flex items-baseline justify-between">
+        <div><span class="font-headline font-black text-3xl text-primary">${fmt(v.sale)} €</span><span class="text-on-surface-variant text-sm line-through ml-2">${fmt(v.list)} €</span></div>
+        <span class="text-secondary text-sm font-bold">-${savamt(v)} €</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderHome(){document.getElementById('home-cards').innerHTML=VEHICLES.slice(0,6).map(v=>mkCard(v,`showDet(${v.id})`)).join('');}
+
+function renderInv(){applyFilters();}
+function applyFilters(){
+  const b=document.getElementById('f-brand')?.value||'';
+  const f=document.getElementById('f-fuel')?.value||'';
+  const s=document.getElementById('f-sort')?.value||'discount';
+  const u=document.querySelector('input[name="urgency"]:checked')?.value||'';
+  let l=[...VEHICLES];
+  if(b)l=l.filter(v=>v.brand===b);
+  if(f)l=l.filter(v=>v.fuel===f);
+  if(u==='urgent')l=l.filter(v=>v.daysLeft&&v.daysLeft<=30);
+  if(s==='discount')l.sort((a,b)=>disc(b)-disc(a));
+  if(s==='price_asc')l.sort((a,b)=>a.sale-b.sale);
+  if(s==='price_desc')l.sort((a,b)=>b.sale-a.sale);
+  if(s==='urgent')l.sort((a,b)=>(a.daysLeft||999)-(b.daysLeft||999));
+  const g=document.getElementById('inv-grid');
+  if(g)g.innerHTML=l.map(v=>mkCard(v,`showDet(${v.id})`)).join('');
+  const c=document.getElementById('inv-count');
+  if(c)c.textContent=`${l.length} Fahrzeuge — alle mit Tageszulassung`;
+}
+function resetFilters(){
+  const fb=document.getElementById('f-brand'),ff=document.getElementById('f-fuel'),fs=document.getElementById('f-sort');
+  if(fb)fb.value='';if(ff)ff.value='';if(fs)fs.value='discount';
+  const r=document.querySelectorAll('input[name="urgency"]');if(r[0])r[0].checked=true;
+  applyFilters();
+}
+
+// DETAIL
+function showDet(id){
+  const v=VEHICLES.find(x=>x.id===id);CUR=v;if(!v)return;nav('detail');
+  document.getElementById('d-title').textContent=`${v.brand} ${v.model} ${v.variant}`;
+  document.getElementById('d-desc').textContent=v.desc;
+  document.getElementById('d-list').textContent=`${fmt(v.list)} €`;
+  document.getElementById('d-sale').textContent=`${fmt(v.sale)} €`;
+  document.getElementById('d-saving').textContent=`${savamt(v)} €`;
+  document.getElementById('d-disc-badge').textContent=`-${disc(v)}% Nachlass`;
+  document.getElementById('d-price-main').textContent=`${fmt(v.sale)} €`;
+  document.getElementById('d-tags').innerHTML=`
+    <div class="flex items-center gap-2"><span class="material-symbols-outlined text-base">speed</span><span>${fmt(v.km)} km</span></div>
+    <div class="flex items-center gap-2"><span class="material-symbols-outlined text-base">settings</span><span>${v.trans}</span></div>
+    <div class="flex items-center gap-2"><span class="material-symbols-outlined text-base">local_gas_station</span><span>${v.fuel}</span></div>
+    <div class="flex items-center gap-2"><span class="material-symbols-outlined text-base">palette</span><span>${v.color}</span></div>`;
+  const sp=[['Hersteller',v.brand],['Modell',v.model],['Variante',v.variant],['Baujahr',v.year],['Kilometerstand',`${fmt(v.km)} km`],['Kraftstoff',v.fuel],['Getriebe',v.trans],['Farbe',v.color],['Zustand','Tageszulassung'],['Verfügbar',v.daysLeft?`Noch ${v.daysLeft} Tage`:'Verfügbar']];
+  document.getElementById('d-specs').innerHTML=sp.map(([k,vl])=>`<div class="flex justify-between py-3 border-b border-outline-variant/10"><span class="text-on-surface-variant">${k}</span><span class="font-bold">${vl}</span></div>`).join('');
+  const db=document.getElementById('d-days-box');
+  if(v.daysLeft&&v.daysLeft<=30){db.classList.remove('hidden');db.classList.add('flex');db.innerHTML=`<span class="material-symbols-outlined text-sm mr-1">schedule</span>Nur noch ${v.daysLeft} Tage verfügbar`;}else{db.classList.add('hidden');db.classList.remove('flex');}
+  const ub=document.getElementById('d-urg-badge');
+  if(v.daysLeft&&v.daysLeft<=30){ub.classList.remove('hidden');ub.textContent=`⏱ ${v.daysLeft} Tage`;}else{ub.classList.add('hidden');}
+}
+
+// INQUIRY
+function openInquiry(){const m=document.getElementById('inq-modal');m.classList.remove('hidden');m.classList.add('flex');}
+function closeInq(){const m=document.getElementById('inq-modal');m.classList.add('hidden');m.classList.remove('flex');}
+document.getElementById('inq-modal').addEventListener('click',function(e){if(e.target===this)closeInq();});
+function submitInq(){
+  const n=document.getElementById('inq-name').value,e=document.getElementById('inq-email').value;
+  if(!n||!e){alert('Bitte Name und E-Mail angeben.');return;}
+  if(CUR)INQUIRIES.push({vehicle:`${CUR.brand} ${CUR.model}`,name:n,email:e,phone:document.getElementById('inq-phone').value,msg:document.getElementById('inq-msg').value,date:new Date().toLocaleDateString('de-DE')});
+  document.getElementById('inq-modal-inner').innerHTML=`<div class="text-center py-4 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h3 class="font-headline font-black text-2xl">Anfrage gesendet!</h3><p class="text-on-surface-variant">Der Händler meldet sich innerhalb von 24 Stunden.</p><button onclick="closeInq()" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all">Schließen</button></div>`;
+}
+
+// DEALER REG
+function submitReg(){
+  const c=document.getElementById('reg-company').value,e=document.getElementById('reg-email').value;
+  if(!c||!e){alert('Bitte Firmenname und E-Mail angeben.');return;}
+  DEALERS.push({company:c,contact:document.getElementById('reg-contact').value,email:e,phone:document.getElementById('reg-phone').value,city:document.getElementById('reg-city').value,approved:false,date:new Date().toLocaleDateString('de-DE')});
+  document.getElementById('reg-wrap').innerHTML=`<div class="text-center py-10 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h2 class="font-headline font-black text-3xl tracking-tighter">Registrierung erhalten!</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir melden uns innerhalb von 24 Stunden. Danach kannst du sofort Fahrzeuge hochladen.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all">Zurück zur Startseite</button></div>`;
+}
+
+// UPLOAD
+function calcDisc(){
+  const l=parseFloat(document.getElementById('up-list').value),s=parseFloat(document.getElementById('up-sale').value),el=document.getElementById('disc-preview');
+  if(l&&s&&l>s){el.classList.remove('hidden');document.getElementById('dp-pct').textContent=`${(((l-s)/l)*100).toFixed(1)}%`;document.getElementById('dp-save').textContent=`${fmt(l-s)} €`;}
+  else el.classList.add('hidden');
+}
+function submitUpload(){
+  const b=document.getElementById('up-brand').value,m=document.getElementById('up-model').value;
+  if(!b||!m){alert('Bitte Hersteller und Modell angeben.');return;}
+  document.getElementById('upload-wrap').innerHTML=`<div class="text-center py-20 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h2 class="font-headline font-black text-4xl tracking-tighter">Fahrzeug eingereicht.</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir prüfen dein Fahrzeug und schalten es innerhalb von 24 Stunden frei.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all mt-4">Zurück zur Startseite</button></div>`;
+}
+
+// ADMIN
+function doAdminLogin(){
+  if(document.getElementById('admin-pw-input').value===ADMIN_PASS){document.getElementById('admin-login-screen').classList.add('hidden');document.getElementById('admin-main').classList.remove('hidden');renderAdm();}
+  else alert('Falsches Passwort');
+}
+function renderAdm(){
+  document.getElementById('av-list').innerHTML=VEHICLES.map(v=>`<div class="bg-surface-container-lowest rounded-xl p-5 mb-3 flex justify-between items-center flex-wrap gap-3 border-l-4 border-green-400 shadow-sm"><div><div class="font-headline font-bold text-base">${v.brand} ${v.model} ${v.variant}</div><div class="text-on-surface-variant text-sm mt-1">${v.year} · ${v.fuel} · ${fmt(v.sale)} € (${disc(v)}% Nachlass)</div><div class="text-on-surface-variant text-xs mt-1">✅ Live · ${v.km} km${v.daysLeft?` · Noch ${v.daysLeft} Tage`:''}</div></div><button onclick="alert('Als verkauft markiert!')" class="metallic-gradient text-on-primary px-4 py-2 rounded text-xs font-bold uppercase tracking-widest hover:opacity-80">Verkauft markieren</button></div>`).join('');
+  document.getElementById('ad-list').innerHTML=DEALERS.length?DEALERS.map((d,i)=>`<div class="bg-surface-container-lowest rounded-xl p-5 mb-3 flex justify-between items-center flex-wrap gap-3 border-l-4 ${d.approved?'border-green-400':'border-secondary'} shadow-sm"><div><div class="font-headline font-bold">${d.company}</div><div class="text-on-surface-variant text-sm mt-1">${d.contact} · ${d.email} · ${d.city}</div><div class="text-on-surface-variant text-xs mt-1">${d.date} ${d.approved?'· ✅ Freigegeben':''}</div></div>${!d.approved?`<button onclick="DEALERS[${i}].approved=true;renderAdm()" class="bg-green-500 text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-widest hover:opacity-80">Freigeben</button>`:''}</div>`).join(''):`<p class="text-on-surface-variant">Noch keine Registrierungen.</p>`;
+  document.getElementById('ai-list').innerHTML=INQUIRIES.length?INQUIRIES.map(i=>`<div class="bg-surface-container-lowest rounded-xl p-5 mb-3 border-l-4 border-on-tertiary-container shadow-sm"><div class="font-headline font-bold">${i.name} → ${i.vehicle}</div><div class="text-on-surface-variant text-sm mt-1">${i.email}${i.phone?' · '+i.phone:''}</div>${i.msg?`<div class="text-on-surface-variant text-sm mt-2 italic">"${i.msg}"</div>`:''}<div class="text-on-surface-variant text-xs mt-2">${i.date}</div></div>`).join(''):`<p class="text-on-surface-variant">Noch keine Anfragen.</p>`;
+}
+function showAdmTab(t,btn){
+  ['av','ad','ai'].forEach(x=>{document.getElementById(x).classList.toggle('hidden',x!==t);});
+  document.querySelectorAll('.admin-tab').forEach(b=>{b.classList.remove('bg-primary','border-primary');b.classList.add('border-white/20');});
+  btn.classList.add('bg-primary','border-primary');btn.classList.remove('border-white/20');
+}
+// Init
+renderHome();
+</script>
+</body>
+</html>
