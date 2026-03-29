@@ -140,25 +140,150 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
     </div>
   </section>
 
-  <!-- Dealer CTA -->
+ <!-- ===== DEALER CTA + PRICING ===== -->
+  <!-- ERSETZE ALLES zwischen "DEALER CTA" Kommentar und dem naechsten Section-Ende -->
   <section class="py-20 bg-primary">
-    <div class="max-w-screen-2xl mx-auto px-6 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-      <div class="space-y-6">
-        <p class="text-xs font-bold uppercase tracking-widest text-on-primary-container">Für Autohändler</p>
-        <h2 class="font-headline font-black text-5xl md:text-6xl tracking-tighter text-white leading-[0.9]">Langzeitsteher?<br/><span class="text-secondary-fixed">Wir verkaufen sie.</span></h2>
-        <p class="text-on-primary-container text-lg leading-relaxed max-w-md">Kein Abo. Kein Risiko. Du zahlst eine kleine Success-Fee — aber <strong class="text-white">nur wenn wir verkaufen.</strong></p>
-        <button onclick="nav('dealer-register')" class="bg-secondary-fixed text-on-background px-8 py-4 rounded font-headline font-extrabold text-sm uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all flex items-center gap-2">
-          Jetzt registrieren <span class="material-symbols-outlined text-sm">arrow_forward</span>
-        </button>
+    <div class="max-w-screen-2xl mx-auto px-6 md:px-8">
+ 
+      <!-- Headline -->
+      <div class="text-center mb-16">
+        <p class="text-xs font-bold uppercase tracking-widest text-on-primary-container mb-3">Fuer Autohaendler</p>
+        <h2 class="font-headline font-black text-4xl md:text-6xl tracking-tighter text-white leading-[0.9] mb-6">
+          Langzeitsteher?<br/><span style="color:#ffdea5">Wir verkaufen sie.
+        </span></h2>
+        <p style="color:#76849f" class="text-lg max-w-xl mx-auto leading-relaxed">
+          Kein Boosting. Kein Budget-Vorteil. Dein Preisnachlass entscheidet wo du stehst &mdash; nicht dein Werbebudget.
+        </p>
       </div>
-      <div class="grid grid-cols-2 gap-4">
-        <div class="bg-white/5 border border-white/10 rounded-xl p-6 space-y-2"><span class="material-symbols-outlined text-secondary-fixed">payments</span><h4 class="font-headline font-bold text-white">Nur bei Erfolg</h4><p class="text-on-primary-container text-sm">Success-Fee ausschließlich bei erfolgtem Verkauf.</p></div>
-        <div class="bg-white/5 border border-white/10 rounded-xl p-6 space-y-2"><span class="material-symbols-outlined text-secondary-fixed">bolt</span><h4 class="font-headline font-bold text-white">Sofort live</h4><p class="text-on-primary-container text-sm">Freischaltung innerhalb von 24 Stunden.</p></div>
-        <div class="bg-white/5 border border-white/10 rounded-xl p-6 space-y-2"><span class="material-symbols-outlined text-secondary-fixed">person_search</span><h4 class="font-headline font-bold text-white">Echte Käufer</h4><p class="text-on-primary-container text-sm">Kaufbereite Kunden, die aktiv nach Deals suchen.</p></div>
-        <div class="bg-white/5 border border-white/10 rounded-xl p-6 space-y-2"><span class="material-symbols-outlined text-secondary-fixed">shield</span><h4 class="font-headline font-bold text-white">Kein Risiko</h4><p class="text-on-primary-container text-sm">Kein Abo, keine Mindestlaufzeit.</p></div>
+ 
+      <!-- Pricing Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
+ 
+        <!-- Starter -->
+        <div style="background:#0d1c32; border:1px solid rgba(255,255,255,0.08); border-radius:0.5rem; padding:28px 24px; display:flex; flex-direction:column;">
+          <div style="font-family:'Manrope',sans-serif; font-size:0.7rem; font-weight:800; letter-spacing:0.12em; color:#76849f; text-transform:uppercase; margin-bottom:12px;">Starter</div>
+          <div style="font-family:'Manrope',sans-serif; font-size:2.4rem; font-weight:900; color:#ffffff; line-height:1; margin-bottom:4px;">39 <span style="font-size:1rem; font-weight:400; color:#76849f">€/Monat</span></div>
+          <div style="font-size:0.82rem; color:#76849f; margin-bottom:20px;">bis zu 5 Fahrzeuge</div>
+          <div style="width:100%; height:1px; background:rgba(255,255,255,0.08); margin-bottom:20px;"></div>
+          <ul style="list-style:none; padding:0; margin:0 0 24px 0; flex:1;">
+            <li style="display:flex; align-items:flex-start; gap:8px; margin-bottom:10px; font-size:0.88rem; color:#a0a09a;">
+              <span style="color:#ffdea5; margin-top:1px; flex-shrink:0;">&#10003;</span> 5 Fahrzeuge gleichzeitig
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:8px; margin-bottom:10px; font-size:0.88rem; color:#a0a09a;">
+              <span style="color:#ffdea5; margin-top:1px; flex-shrink:0;">&#10003;</span> Identische Darstellung
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:8px; margin-bottom:10px; font-size:0.88rem; color:#a0a09a;">
+              <span style="color:#ffdea5; margin-top:1px; flex-shrink:0;">&#10003;</span> Sortierung nach Nachlass
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:8px; font-size:0.88rem; color:#a0a09a;">
+              <span style="color:#ffdea5; margin-top:1px; flex-shrink:0;">&#10003;</span> Direkte Kaeufer-Anfragen
+            </li>
+          </ul>
+          <a onclick="nav('dealer-register')" style="display:block; text-align:center; background:transparent; border:1.5px solid rgba(255,255,255,0.2); color:#ffffff; font-family:'Manrope',sans-serif; font-weight:700; font-size:0.8rem; letter-spacing:0.06em; text-transform:uppercase; padding:11px; border-radius:0.25rem; cursor:pointer; transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.5)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">
+            30 Tage kostenlos
+          </a>
+        </div>
+ 
+        <!-- Standard -->
+        <div style="background:#0d1c32; border:1px solid rgba(255,255,255,0.08); border-radius:0.5rem; padding:28px 24px; display:flex; flex-direction:column;">
+          <div style="font-family:'Manrope',sans-serif; font-size:0.7rem; font-weight:800; letter-spacing:0.12em; color:#76849f; text-transform:uppercase; margin-bottom:12px;">Standard</div>
+          <div style="font-family:'Manrope',sans-serif; font-size:2.4rem; font-weight:900; color:#ffffff; line-height:1; margin-bottom:4px;">79 <span style="font-size:1rem; font-weight:400; color:#76849f">€/Monat</span></div>
+          <div style="font-size:0.82rem; color:#76849f; margin-bottom:20px;">bis zu 15 Fahrzeuge</div>
+          <div style="width:100%; height:1px; background:rgba(255,255,255,0.08); margin-bottom:20px;"></div>
+          <ul style="list-style:none; padding:0; margin:0 0 24px 0; flex:1;">
+            <li style="display:flex; align-items:flex-start; gap:8px; margin-bottom:10px; font-size:0.88rem; color:#a0a09a;">
+              <span style="color:#ffdea5; margin-top:1px; flex-shrink:0;">&#10003;</span> 15 Fahrzeuge gleichzeitig
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:8px; margin-bottom:10px; font-size:0.88rem; color:#a0a09a;">
+              <span style="color:#ffdea5; margin-top:1px; flex-shrink:0;">&#10003;</span> Identische Darstellung
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:8px; margin-bottom:10px; font-size:0.88rem; color:#a0a09a;">
+              <span style="color:#ffdea5; margin-top:1px; flex-shrink:0;">&#10003;</span> Sortierung nach Nachlass
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:8px; font-size:0.88rem; color:#a0a09a;">
+              <span style="color:#ffdea5; margin-top:1px; flex-shrink:0;">&#10003;</span> Direkte Kaeufer-Anfragen
+            </li>
+          </ul>
+          <a onclick="nav('dealer-register')" style="display:block; text-align:center; background:transparent; border:1.5px solid rgba(255,255,255,0.2); color:#ffffff; font-family:'Manrope',sans-serif; font-weight:700; font-size:0.8rem; letter-spacing:0.06em; text-transform:uppercase; padding:11px; border-radius:0.25rem; cursor:pointer; transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.5)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">
+            30 Tage kostenlos
+          </a>
+        </div>
+ 
+        <!-- Pro (highlighted) -->
+        <div style="background:#ffffff; border:2px solid #ffdea5; border-radius:0.5rem; padding:28px 24px; display:flex; flex-direction:column; position:relative;">
+          <div style="position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:#ffdea5; color:#0d1c32; font-family:'Manrope',sans-serif; font-size:0.65rem; font-weight:900; letter-spacing:0.1em; text-transform:uppercase; padding:4px 14px; border-radius:20px; white-space:nowrap;">Beliebteste Wahl</div>
+          <div style="font-family:'Manrope',sans-serif; font-size:0.7rem; font-weight:800; letter-spacing:0.12em; color:#44474d; text-transform:uppercase; margin-bottom:12px;">Pro</div>
+          <div style="font-family:'Manrope',sans-serif; font-size:2.4rem; font-weight:900; color:#000000; line-height:1; margin-bottom:4px;">129 <span style="font-size:1rem; font-weight:400; color:#76849f">€/Monat</span></div>
+          <div style="font-size:0.82rem; color:#44474d; margin-bottom:20px;">bis zu 30 Fahrzeuge</div>
+          <div style="width:100%; height:1px; background:#e1e3e4; margin-bottom:20px;"></div>
+          <ul style="list-style:none; padding:0; margin:0 0 24px 0; flex:1;">
+            <li style="display:flex; align-items:flex-start; gap:8px; margin-bottom:10px; font-size:0.88rem; color:#44474d;">
+              <span style="color:#000000; font-weight:700; margin-top:1px; flex-shrink:0;">&#10003;</span> 30 Fahrzeuge gleichzeitig
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:8px; margin-bottom:10px; font-size:0.88rem; color:#44474d;">
+              <span style="color:#000000; font-weight:700; margin-top:1px; flex-shrink:0;">&#10003;</span> Identische Darstellung
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:8px; margin-bottom:10px; font-size:0.88rem; color:#44474d;">
+              <span style="color:#000000; font-weight:700; margin-top:1px; flex-shrink:0;">&#10003;</span> Sortierung nach Nachlass
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:8px; font-size:0.88rem; color:#44474d;">
+              <span style="color:#000000; font-weight:700; margin-top:1px; flex-shrink:0;">&#10003;</span> Direkte Kaeufer-Anfragen
+            </li>
+          </ul>
+          <a onclick="nav('dealer-register')" style="display:block; text-align:center; background:linear-gradient(135deg,#0d1c32 0%,#000000 100%); border:none; color:#ffffff; font-family:'Manrope',sans-serif; font-weight:800; font-size:0.8rem; letter-spacing:0.06em; text-transform:uppercase; padding:13px; border-radius:0.25rem; cursor:pointer;">
+            30 Tage kostenlos
+          </a>
+        </div>
+ 
+        <!-- Unlimited -->
+        <div style="background:#0d1c32; border:1px solid rgba(255,255,255,0.08); border-radius:0.5rem; padding:28px 24px; display:flex; flex-direction:column;">
+          <div style="font-family:'Manrope',sans-serif; font-size:0.7rem; font-weight:800; letter-spacing:0.12em; color:#76849f; text-transform:uppercase; margin-bottom:12px;">Unlimited</div>
+          <div style="font-family:'Manrope',sans-serif; font-size:2.4rem; font-weight:900; color:#ffffff; line-height:1; margin-bottom:4px;">199 <span style="font-size:1rem; font-weight:400; color:#76849f">€/Monat</span></div>
+          <div style="font-size:0.82rem; color:#76849f; margin-bottom:20px;">unbegrenzte Fahrzeuge</div>
+          <div style="width:100%; height:1px; background:rgba(255,255,255,0.08); margin-bottom:20px;"></div>
+          <ul style="list-style:none; padding:0; margin:0 0 24px 0; flex:1;">
+            <li style="display:flex; align-items:flex-start; gap:8px; margin-bottom:10px; font-size:0.88rem; color:#a0a09a;">
+              <span style="color:#ffdea5; margin-top:1px; flex-shrink:0;">&#10003;</span> Unbegrenzte Fahrzeuge
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:8px; margin-bottom:10px; font-size:0.88rem; color:#a0a09a;">
+              <span style="color:#ffdea5; margin-top:1px; flex-shrink:0;">&#10003;</span> Identische Darstellung
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:8px; margin-bottom:10px; font-size:0.88rem; color:#a0a09a;">
+              <span style="color:#ffdea5; margin-top:1px; flex-shrink:0;">&#10003;</span> Sortierung nach Nachlass
+            </li>
+            <li style="display:flex; align-items:flex-start; gap:8px; font-size:0.88rem; color:#a0a09a;">
+              <span style="color:#ffdea5; margin-top:1px; flex-shrink:0;">&#10003;</span> Direkte Kaeufer-Anfragen
+            </li>
+          </ul>
+          <a onclick="nav('dealer-register')" style="display:block; text-align:center; background:transparent; border:1.5px solid rgba(255,255,255,0.2); color:#ffffff; font-family:'Manrope',sans-serif; font-weight:700; font-size:0.8rem; letter-spacing:0.06em; text-transform:uppercase; padding:11px; border-radius:0.25rem; cursor:pointer; transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.5)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">
+            30 Tage kostenlos
+          </a>
+        </div>
+ 
       </div>
+ 
+      <!-- Fairness Statement -->
+      <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:0.5rem; padding:28px 32px; display:flex; align-items:flex-start; gap:20px; max-width:900px; margin:0 auto;">
+        <div style="flex-shrink:0; width:40px; height:40px; background:rgba(253,212,136,0.12); border-radius:0.25rem; display:flex; align-items:center; justify-content:center;">
+          <span style="color:#ffdea5; font-size:1.1rem;">&#9651;</span>
+        </div>
+        <div>
+          <div style="font-family:'Manrope',sans-serif; font-weight:800; color:#ffffff; margin-bottom:6px; font-size:0.95rem;">Kein Boosting. Kein Budget-Vorteil. Niemals.</div>
+          <div style="font-size:0.88rem; color:#76849f; line-height:1.7;">
+            Die Reihenfolge auf stehengeblieben.de wird ausschliesslich durch den Preisnachlass bestimmt &mdash; nicht durch Werbebudgets. Ein kleines Autohaus mit 28% Nachlass steht immer ueber einem grossen mit 22%. Das ist unser Versprechen an jeden Haendler auf dieser Plattform.
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Fine print -->
+      <p style="text-align:center; font-size:0.78rem; color:#76849f; margin-top:20px;">
+        Alle Preise zzgl. gesetzl. MwSt. &middot; Monatlich kuendbar &middot; 30 Tage kostenlos testen &mdash; keine Kreditkarte erforderlich
+      </p>
+ 
     </div>
   </section>
+  <!-- ===== END DEALER CTA + PRICING ===== -->
+ 
 
   <!-- Footer -->
   <footer class="bg-primary-container py-16 px-6 md:px-8">
