@@ -761,11 +761,15 @@ function fmt(n){return Number(n).toLocaleString('de-DE');}
 function savamt(v){return fmt(v.list-v.sale);}
 
 // NAV
-function nav(p){
+async function nav(p){
   document.querySelectorAll('[data-page]').forEach(x=>x.classList.remove('active'));
   const el=document.querySelector('[data-page="'+p+'"]');
   if(el)el.classList.add('active');
   window.scrollTo(0,0);
+  // Wenn Fahrzeuge noch nicht geladen — jetzt laden
+  if((p==='home'||p==='inventory') && VEHICLES.length===0){
+    await loadVehicles();
+  }
   if(p==='home')renderHome();
   if(p==='inventory')renderInv();
   if(p==='admin')renderAdm();
@@ -908,11 +912,12 @@ async function submitUpload(){
   // Manuelles Fahrzeug in Supabase speichern
   const l=parseFloat(document.getElementById('up-list').value)||0;
   const s=parseFloat(document.getElementById('up-sale').value)||0;
+  const regVal = document.getElementById('up-reg').value||'';
   const vehicle = {
     brand: b,
     model: m,
-    variant: document.getElementById('up-variant').value||'',
-    first_registration: document.getElementById('up-reg').value||null,
+    variant: document.getElementById('up-variant').value||null,
+    first_registration: regVal ? regVal : null,
     mileage: parseInt(document.getElementById('up-km').value)||0,
     fuel_type: document.getElementById('up-fuel').value||'Benzin',
     transmission: document.getElementById('up-trans').value||'Automatik',
@@ -1006,19 +1011,25 @@ async function uploadCSV(csvText, filename) {
     csvImportSuccess = true;
     showCSVStatus('success', null, null, result);
     if (result.vehicles && result.vehicles.length > 0) {
+      // Datum bereinigen: nur YYYY-MM-DD oder null
+      function cleanDate(d) {
+        if (!d) return null;
+        const m = String(d).replace(/['"]/g,'').trim().match(/^(\d{4}-\d{2}-\d{2})/);
+        return m ? m[1] : null;
+      }
       const rows = result.vehicles.map(v => ({
-        brand: v.brand || '',
-        model: v.model || '',
-        variant: v.description || '',
-        first_registration: v.first_registration || null,
+        brand: v.brand || 'Unbekannt',
+        model: v.model || 'Unbekannt',
+        variant: v.description || null,
+        first_registration: cleanDate(v.first_registration || v.registration_date),
         mileage: parseInt(v.mileage) || 0,
         fuel_type: v.fuel_type || 'Benzin',
         transmission: v.transmission || 'Automatik',
-        color: v.color || '',
+        color: v.color || null,
         list_price: parseFloat(v.list_price) || 0,
         price: parseFloat(v.price) || 0,
         discount_pct: parseFloat(v.discount_pct) || 0,
-        description: v.description || '',
+        description: v.description || null,
         is_day_registration: v.is_day_registration || false,
         status: 'active',
         source: 'csv_import',
