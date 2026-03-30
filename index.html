@@ -621,7 +621,7 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
   </div>
 </div>
 
-<!-- DEALER PORTAL -->
+<!-- DEALER PORTAL LOGIN -->
 <div data-page="dealer-portal">
   <main class="min-h-screen flex items-center justify-center pt-28 pb-12 px-4">
     <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 bg-surface-container-lowest rounded-xl overflow-hidden shadow-2xl border border-surface-container-highest">
@@ -637,24 +637,174 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
         </div>
       </div>
       <div class="p-8 md:p-16 flex flex-col justify-center">
-        <div class="mb-10"><h1 class="font-headline font-extrabold text-3xl tracking-tighter mb-2">Dealer Portal</h1><p class="text-on-surface-variant text-sm">Zugangsdaten eingeben um Inventar und Leads zu verwalten.</p></div>
-        <div class="space-y-5">
-          <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Benutzername</label><input id="portal-user" type="text" placeholder="dealer@stehengeblieben.de" class="w-full bg-surface-container-high border-none rounded px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
-          <div>
-            <div class="flex justify-between items-center mb-2"><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Passwort</label><a href="#" class="text-xs font-bold uppercase tracking-widest text-on-tertiary-container hover:underline">Vergessen?</a></div>
-            <div class="relative"><input id="portal-pw" type="password" placeholder="••••••••" class="w-full bg-surface-container-high border-none rounded px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20 pr-12"><span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant cursor-pointer text-xl">visibility</span></div>
+        <!-- Login Tab -->
+        <div id="portal-login-view">
+          <div class="mb-8"><h1 class="font-headline font-extrabold text-3xl tracking-tighter mb-2">Dealer Portal</h1><p class="text-on-surface-variant text-sm">Mit deinem Account einloggen.</p></div>
+          <div id="portal-error" class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm font-medium"></div>
+          <div class="space-y-4">
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">E-Mail</label><input id="portal-user" type="email" placeholder="dealer@autohaus.de" class="w-full bg-surface-container-high border-none rounded px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+            <div>
+              <div class="flex justify-between items-center mb-2"><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Passwort</label><button onclick="showPortalReset()" class="text-xs font-bold uppercase tracking-widest text-on-tertiary-container hover:underline">Vergessen?</button></div>
+              <input id="portal-pw" type="password" placeholder="••••••••" class="w-full bg-surface-container-high border-none rounded px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20">
+            </div>
+            <button onclick="portalLogin()" class="w-full metallic-gradient text-on-primary py-4 rounded font-headline font-extrabold uppercase tracking-widest text-xs hover:opacity-90 active:scale-95 transition-all shadow-lg">Anmelden →</button>
+            <button onclick="showPortalSignup()" class="w-full border border-outline-variant py-3 rounded font-headline font-bold uppercase tracking-widest text-xs hover:bg-surface-container-low transition-colors">Noch kein Account? Registrieren</button>
           </div>
-          <button onclick="alert('Demo-Modus: In der finalen Version erhält jeder Händler eigene Zugangsdaten.')" class="w-full metallic-gradient text-on-primary py-4 rounded font-headline font-extrabold uppercase tracking-widest text-xs hover:opacity-90 active:scale-95 transition-all shadow-lg">Anmelden</button>
         </div>
-        <div class="mt-10 pt-8 border-t border-surface-container-highest">
-          <div class="bg-surface-container-high/50 p-5 rounded-lg flex items-start gap-4">
-            <div class="bg-primary/5 p-2 rounded"><span class="material-symbols-outlined text-primary text-xl">handshake</span></div>
-            <div><p class="font-bold text-sm mb-1">Noch kein Partner?</p><p class="text-on-surface-variant text-xs mb-3">Werde Teil unseres Händler-Netzwerks.</p><button onclick="nav('dealer-register')" class="inline-flex items-center gap-2 text-on-tertiary-container font-extrabold text-xs uppercase tracking-widest hover:underline">Als Händler registrieren <span class="material-symbols-outlined text-sm">arrow_forward</span></button></div>
+        <!-- Signup Tab -->
+        <div id="portal-signup-view" class="hidden">
+          <div class="mb-8"><h1 class="font-headline font-extrabold text-3xl tracking-tighter mb-2">Account erstellen</h1><p class="text-on-surface-variant text-sm">Kostenlos registrieren — 30 Tage gratis.</p></div>
+          <div id="portal-signup-error" class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm font-medium"></div>
+          <div class="space-y-4">
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Firmenname</label><input id="signup-company" type="text" placeholder="Auto Müller GmbH" class="w-full bg-surface-container-high border-none rounded px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">E-Mail</label><input id="signup-email" type="email" placeholder="max@autohaus.de" class="w-full bg-surface-container-high border-none rounded px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Passwort</label><input id="signup-pw" type="password" placeholder="Mindestens 6 Zeichen" class="w-full bg-surface-container-high border-none rounded px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+            <button onclick="portalSignup()" class="w-full metallic-gradient text-on-primary py-4 rounded font-headline font-extrabold uppercase tracking-widest text-xs hover:opacity-90 active:scale-95 transition-all shadow-lg">Account erstellen →</button>
+            <button onclick="showPortalLogin()" class="w-full border border-outline-variant py-3 rounded font-headline font-bold uppercase tracking-widest text-xs hover:bg-surface-container-low transition-colors">Zurück zum Login</button>
+          </div>
+        </div>
+        <!-- Reset Tab -->
+        <div id="portal-reset-view" class="hidden">
+          <div class="mb-8"><h1 class="font-headline font-extrabold text-3xl tracking-tighter mb-2">Passwort zurücksetzen</h1><p class="text-on-surface-variant text-sm">Wir senden dir einen Reset-Link.</p></div>
+          <div class="space-y-4">
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">E-Mail</label><input id="reset-email" type="email" placeholder="max@autohaus.de" class="w-full bg-surface-container-high border-none rounded px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+            <button onclick="portalReset()" class="w-full metallic-gradient text-on-primary py-4 rounded font-headline font-extrabold uppercase tracking-widest text-xs hover:opacity-90 active:scale-95 transition-all shadow-lg">Reset-Link senden →</button>
+            <button onclick="showPortalLogin()" class="w-full border border-outline-variant py-3 rounded font-headline font-bold uppercase tracking-widest text-xs hover:bg-surface-container-low transition-colors">Zurück zum Login</button>
           </div>
         </div>
       </div>
     </div>
   </main>
+</div>
+
+<!-- DEALER DASHBOARD -->
+<div data-page="dealer-dashboard">
+  <div class="pt-20 flex min-h-screen">
+    <aside class="hidden lg:flex h-screen w-64 fixed left-0 top-0 bg-surface-container-low flex-col p-6 z-10 pt-24">
+      <div class="mb-6">
+        <div id="dash-company" class="font-headline font-extrabold text-primary text-lg">Dealer Portal</div>
+        <p id="dash-email" class="text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-1 truncate"></p>
+      </div>
+      <nav class="flex-1 space-y-1">
+        <a onclick="showDealerTab('dashboard')" id="dtab-dashboard" class="dealer-tab active-tab flex items-center gap-3 px-4 py-3 bg-surface-container-lowest text-primary font-bold rounded-lg shadow-sm text-sm cursor-pointer"><span class="material-symbols-outlined text-xl">dashboard</span>Dashboard</a>
+        <a onclick="showDealerTab('upload')" id="dtab-upload" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined text-xl">add_circle</span>Fahrzeug einstellen</a>
+        <a onclick="showDealerTab('inventory')" id="dtab-inventory" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined text-xl">directions_car</span>Mein Inventar</a>
+        <a onclick="showDealerTab('leads')" id="dtab-leads" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined text-xl">person_search</span>Leads</a>
+      </nav>
+      <button onclick="portalLogout()" class="flex items-center gap-2 px-4 py-3 text-on-surface-variant hover:text-error text-sm font-medium transition-colors mt-4">
+        <span class="material-symbols-outlined text-xl">logout</span>Abmelden
+      </button>
+    </aside>
+    <main class="lg:ml-64 flex-1 p-6 md:p-10">
+      <!-- DASHBOARD TAB -->
+      <div id="dealer-tab-dashboard">
+        <h1 class="font-headline font-black text-3xl tracking-tighter mb-8">Dashboard</h1>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+          <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10">
+            <div class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Aktive Fahrzeuge</div>
+            <div id="kpi-active" class="font-headline font-black text-3xl">—</div>
+          </div>
+          <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10">
+            <div class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Offene Leads</div>
+            <div id="kpi-leads" class="font-headline font-black text-3xl">—</div>
+          </div>
+          <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10">
+            <div class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Ø Nachlass</div>
+            <div id="kpi-discount" class="font-headline font-black text-3xl text-secondary">—</div>
+          </div>
+          <div class="bg-primary-container rounded-xl p-5">
+            <div class="text-xs font-bold uppercase tracking-widest text-on-primary-container mb-2">Mein Paket</div>
+            <div id="kpi-plan" class="font-headline font-black text-3xl text-secondary-fixed">Starter</div>
+          </div>
+        </div>
+        <h2 class="font-headline font-black text-xl tracking-tighter mb-4">Letzte Leads</h2>
+        <div id="dash-leads-preview" class="space-y-3 mb-10"></div>
+        <h2 class="font-headline font-black text-xl tracking-tighter mb-4">Meine Fahrzeuge</h2>
+        <div id="dash-vehicles-preview" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+      </div>
+      <!-- UPLOAD TAB -->
+      <div id="dealer-tab-upload" class="hidden">
+        <h1 class="font-headline font-black text-3xl tracking-tighter mb-8">Fahrzeug einstellen</h1>
+        <div id="dealer-upload-wrap" class="space-y-8 max-w-3xl">
+          <!-- DMS Import -->
+          <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-8">
+            <div class="flex items-center gap-3 mb-6">
+              <span class="material-symbols-outlined text-on-tertiary-container">upload_file</span>
+              <div><h3 class="font-headline font-black text-xl uppercase tracking-tighter">DMS Import</h3><p class="text-on-surface-variant text-sm">Autrado · Audaris · Loco-Soft · Mobile.de CSV</p></div>
+            </div>
+            <div id="dealer-csv-dropzone" class="border-2 border-dashed border-outline-variant rounded-xl p-8 text-center cursor-pointer hover:border-on-tertiary-container hover:bg-surface-container-low transition-all" onclick="document.getElementById('dealer-csv-input').click()" ondragover="event.preventDefault()" ondrop="handleDealerCSVDrop(event)">
+              <span class="material-symbols-outlined text-on-surface-variant mb-3 block" style="font-size:40px">cloud_upload</span>
+              <p class="font-bold mb-1">CSV-Datei ablegen oder klicken</p>
+              <p class="text-on-surface-variant text-sm">.csv und .txt werden unterstützt</p>
+              <input id="dealer-csv-input" type="file" accept=".csv,.txt" class="hidden" onchange="handleDealerCSVFile(this.files[0])">
+            </div>
+            <div id="dealer-csv-status" class="hidden mt-4"></div>
+          </div>
+          <!-- Trennlinie -->
+          <div class="flex items-center gap-4"><div class="flex-1 h-px bg-outline-variant opacity-30"></div><span class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">oder manuell</span><div class="flex-1 h-px bg-outline-variant opacity-30"></div></div>
+          <!-- Manuelles Formular -->
+          <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-8 space-y-6">
+            <h3 class="font-headline font-black text-xl uppercase tracking-tighter">Fahrzeugdaten</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Hersteller *</label><select id="d-up-brand" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"><option value="">Bitte wählen</option><option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Volkswagen</option><option>Porsche</option><option>Tesla</option><option>Skoda</option><option>Seat / Cupra</option><option>Ford</option><option>Toyota</option><option>Hyundai</option><option>Andere</option></select></div>
+              <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Modell *</label><input id="d-up-model" type="text" placeholder="z.B. Golf GTI" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"></div>
+              <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Variante</label><input id="d-up-variant" type="text" placeholder="z.B. 2.0 TSI DSG" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"></div>
+              <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Erstzulassung</label><input id="d-up-reg" type="date" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"></div>
+              <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Kilometerstand</label><input id="d-up-km" type="number" value="0" min="0" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"></div>
+              <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Kraftstoff</label><select id="d-up-fuel" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"><option>Benzin</option><option>Diesel</option><option>Elektro</option><option>Hybrid</option><option>Plug-in-Hybrid</option></select></div>
+              <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Getriebe</label><select id="d-up-trans" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"><option>Automatik</option><option>Schaltgetriebe</option><option>DSG</option></select></div>
+              <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Farbe</label><input id="d-up-color" type="text" placeholder="z.B. Midnight Blue" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"></div>
+            </div>
+          </div>
+          <!-- Preise -->
+          <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-8 space-y-6">
+            <h3 class="font-headline font-black text-xl uppercase tracking-tighter">Preisgestaltung</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Listenpreis (€) *</label><input id="d-up-list" type="number" min="0" placeholder="42500" oninput="dealerCalcDisc()" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"></div>
+              <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Verkaufspreis (€) *</label><input id="d-up-sale" type="number" min="0" placeholder="31900" oninput="dealerCalcDisc()" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"></div>
+            </div>
+            <div id="d-disc-preview" class="hidden grid grid-cols-3 gap-4">
+              <div class="bg-surface-container-low p-4 rounded-lg border-l-4 border-secondary"><div class="text-xs font-bold uppercase text-on-surface-variant mb-1">Nachlass</div><div id="d-dp-pct" class="font-headline font-black text-2xl text-secondary"></div></div>
+              <div class="bg-tertiary-container p-4 rounded-lg text-on-tertiary-container"><div class="text-xs font-bold uppercase mb-1">Ersparnis</div><div id="d-dp-save" class="font-headline font-black text-2xl"></div></div>
+              <div class="bg-surface-container-low p-4 rounded-lg"><div class="text-xs font-bold uppercase text-on-surface-variant mb-1">Attraktivität</div><div class="font-headline font-black text-xl text-primary">Stark ✓</div></div>
+            </div>
+            <div><label class="flex items-center gap-3 cursor-pointer"><input id="d-up-dayref" type="checkbox" class="accent-primary w-4 h-4"><span class="font-bold text-sm">Tageszulassung</span></label></div>
+          </div>
+          <!-- Bilder -->
+          <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-8 space-y-4">
+            <h3 class="font-headline font-black text-xl uppercase tracking-tighter">Bilder</h3>
+            <p class="text-on-surface-variant text-sm">Bis zu 8 Bilder — erstes Bild wird als Hauptbild verwendet</p>
+            <div id="image-upload-grid" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div onclick="document.getElementById('img-input').click()" class="aspect-square bg-surface-container-high rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-surface-container-highest transition-colors border-2 border-dashed border-outline-variant">
+                <span class="material-symbols-outlined text-outline text-3xl">add_photo_alternate</span>
+                <span class="text-xs font-bold mt-2 uppercase tracking-widest text-on-surface-variant">Bild hinzufügen</span>
+              </div>
+            </div>
+            <input id="img-input" type="file" accept="image/*" multiple class="hidden" onchange="handleImageUpload(this.files)">
+          </div>
+          <!-- Beschreibung -->
+          <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-8">
+            <h3 class="font-headline font-black text-xl uppercase tracking-tighter mb-4">Beschreibung</h3>
+            <textarea id="d-up-desc" rows="4" placeholder="Ausstattung, Besonderheiten, Zustand..." class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium resize-none"></textarea>
+          </div>
+          <button onclick="dealerSubmitUpload()" class="w-full metallic-gradient text-on-primary py-5 font-headline font-extrabold text-sm uppercase tracking-widest rounded hover:opacity-90 active:scale-95 transition-all">Fahrzeug einreichen →</button>
+        </div>
+      </div>
+      <!-- INVENTAR TAB -->
+      <div id="dealer-tab-inventory" class="hidden">
+        <div class="flex justify-between items-center mb-8">
+          <h1 class="font-headline font-black text-3xl tracking-tighter">Mein Inventar</h1>
+          <button onclick="showDealerTab('upload')" class="metallic-gradient text-on-primary px-6 py-3 rounded font-headline font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2"><span class="material-symbols-outlined text-sm">add</span>Fahrzeug hinzufügen</button>
+        </div>
+        <div id="dealer-inventory-list" class="space-y-4"></div>
+      </div>
+      <!-- LEADS TAB -->
+      <div id="dealer-tab-leads" class="hidden">
+        <h1 class="font-headline font-black text-3xl tracking-tighter mb-8">Leads</h1>
+        <div id="dealer-leads-list" class="space-y-4"></div>
+      </div>
+    </main>
+  </div>
 </div>
 
 <!-- ADMIN -->
@@ -743,7 +893,7 @@ async function loadVehicles() {
       discount_pct: parseFloat(v.discount_pct) || 0,
     }));
     renderHome();
-    if (document.querySelector('[data-page="inventory"].active')) renderInv();
+    renderInv();
     if (document.querySelector('[data-page="admin"].active')) renderAdm();
   } catch(err) {
     console.warn('Supabase load error:', err.message);
@@ -962,6 +1112,440 @@ function showAdmTab(t,btn){
 }
 // Init — Fahrzeuge aus Supabase laden
 loadVehicles();
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DEALER AUTH + PORTAL
+// ══════════════════════════════════════════════════════════════════════════════
+let CURRENT_USER = null;
+let DEALER_IMAGES = []; // uploaded image URLs
+
+// Auth State beim Start prüfen
+async function checkAuthState() {
+  try {
+    const r = await fetch(SUPA_URL + '/auth/v1/user', {
+      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + (localStorage.getItem('sb_token') || '') }
+    });
+    if (r.ok) {
+      const u = await r.json();
+      if (u.id) { CURRENT_USER = u; updateNavForAuth(); }
+    }
+  } catch(e) {}
+}
+
+function updateNavForAuth() {
+  // Nav-Button nach Login aktualisieren
+  const btns = document.querySelectorAll('[data-page-link="dealer-portal"]');
+  btns.forEach(btn => {
+    btn.textContent = 'Mein Portal';
+    btn.setAttribute('onclick', "nav('dealer-dashboard')");
+  });
+}
+
+// Login
+async function portalLogin() {
+  const email = document.getElementById('portal-user').value.trim();
+  const pw = document.getElementById('portal-pw').value;
+  const errEl = document.getElementById('portal-error');
+  errEl.classList.add('hidden');
+  if (!email || !pw) { errEl.textContent = 'Bitte E-Mail und Passwort eingeben.'; errEl.classList.remove('hidden'); return; }
+  try {
+    const r = await fetch(SUPA_URL + '/auth/v1/token?grant_type=password', {
+      method: 'POST',
+      headers: { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pw })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error_description || data.msg || 'Login fehlgeschlagen');
+    localStorage.setItem('sb_token', data.access_token);
+    CURRENT_USER = data.user;
+    await nav('dealer-dashboard');
+  } catch(e) {
+    errEl.textContent = e.message;
+    errEl.classList.remove('hidden');
+  }
+}
+
+// Signup
+async function portalSignup() {
+  const company = document.getElementById('signup-company').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const pw = document.getElementById('signup-pw').value;
+  const errEl = document.getElementById('portal-signup-error');
+  errEl.classList.add('hidden');
+  if (!company || !email || !pw) { errEl.textContent = 'Bitte alle Felder ausfüllen.'; errEl.classList.remove('hidden'); return; }
+  if (pw.length < 6) { errEl.textContent = 'Passwort muss mindestens 6 Zeichen haben.'; errEl.classList.remove('hidden'); return; }
+  try {
+    const r = await fetch(SUPA_URL + '/auth/v1/signup', {
+      method: 'POST',
+      headers: { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pw, data: { company } })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error_description || data.msg || 'Registrierung fehlgeschlagen');
+    // Auto-login nach Signup
+    localStorage.setItem('sb_token', data.access_token);
+    CURRENT_USER = data.user;
+    // Händler in dealers Tabelle speichern
+    try { await db.insert('dealers', [{ company, email, approved: true }]); } catch(e) {}
+    await nav('dealer-dashboard');
+  } catch(e) {
+    errEl.textContent = e.message;
+    errEl.classList.remove('hidden');
+  }
+}
+
+// Logout
+async function portalLogout() {
+  try {
+    await fetch(SUPA_URL + '/auth/v1/logout', {
+      method: 'POST',
+      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + (localStorage.getItem('sb_token') || '') }
+    });
+  } catch(e) {}
+  localStorage.removeItem('sb_token');
+  CURRENT_USER = null;
+  nav('home');
+}
+
+// Password Reset
+async function portalReset() {
+  const email = document.getElementById('reset-email').value.trim();
+  if (!email) { alert('Bitte E-Mail eingeben.'); return; }
+  try {
+    await fetch(SUPA_URL + '/auth/v1/recover', {
+      method: 'POST',
+      headers: { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    alert('Reset-Link wurde gesendet! Prüfe deine E-Mails.');
+    showPortalLogin();
+  } catch(e) { alert('Fehler: ' + e.message); }
+}
+
+// View switcher
+function showPortalLogin() {
+  document.getElementById('portal-login-view').classList.remove('hidden');
+  document.getElementById('portal-signup-view').classList.add('hidden');
+  document.getElementById('portal-reset-view').classList.add('hidden');
+}
+function showPortalSignup() {
+  document.getElementById('portal-login-view').classList.add('hidden');
+  document.getElementById('portal-signup-view').classList.remove('hidden');
+  document.getElementById('portal-reset-view').classList.add('hidden');
+}
+function showPortalReset() {
+  document.getElementById('portal-login-view').classList.add('hidden');
+  document.getElementById('portal-signup-view').classList.add('hidden');
+  document.getElementById('portal-reset-view').classList.remove('hidden');
+}
+
+// ── DEALER DASHBOARD ─────────────────────────────────────────────────────────
+async function loadDealerDashboard() {
+  if (!CURRENT_USER) { nav('dealer-portal'); return; }
+  const email = CURRENT_USER.email;
+  const company = CURRENT_USER.user_metadata?.company || email;
+  document.getElementById('dash-company').textContent = company;
+  document.getElementById('dash-email').textContent = email;
+
+  // Meine Fahrzeuge laden
+  try {
+    const token = localStorage.getItem('sb_token') || '';
+    const vehicles = await fetch(SUPA_URL + '/rest/v1/vehicles?dealer_email=eq.' + encodeURIComponent(email) + '&select=*&order=created_at.desc', {
+      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + token }
+    }).then(r => r.json());
+
+    const active = (vehicles || []).filter(v => v.status === 'active');
+    const avgDisc = active.length ? (active.reduce((s,v) => s + (parseFloat(v.discount_pct)||0), 0) / active.length).toFixed(1) : 0;
+    document.getElementById('kpi-active').textContent = active.length;
+    document.getElementById('kpi-discount').textContent = avgDisc + '%';
+
+    // Fahrzeug-Vorschau
+    const vPrev = document.getElementById('dash-vehicles-preview');
+    if (active.length === 0) {
+      vPrev.innerHTML = `<div class="col-span-3 text-center py-10 text-on-surface-variant"><p class="font-bold mb-2">Noch keine Fahrzeuge</p><button onclick="showDealerTab('upload')" class="metallic-gradient text-on-primary px-6 py-2 rounded font-headline font-bold text-xs uppercase tracking-widest hover:opacity-90">Erstes Fahrzeug einstellen →</button></div>`;
+    } else {
+      vPrev.innerHTML = active.slice(0,3).map(v => `
+        <div class="bg-surface-container-lowest rounded-xl p-4 border border-outline-variant/10">
+          <div class="aspect-video bg-surface-container-low rounded-lg mb-3 flex items-center justify-center overflow-hidden">
+            ${v.image_url ? `<img src="${v.image_url}" class="w-full h-full object-cover rounded-lg">` : '<span class="material-symbols-outlined text-on-surface-variant" style="font-size:48px">directions_car</span>'}
+          </div>
+          <div class="font-headline font-bold">${v.brand} ${v.model}</div>
+          <div class="text-sm text-on-surface-variant">${v.variant||''}</div>
+          <div class="flex justify-between mt-2">
+            <span class="text-secondary font-bold">${parseFloat(v.price||0).toLocaleString('de-DE')} €</span>
+            <span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded text-xs font-bold">-${v.discount_pct||0}%</span>
+          </div>
+        </div>`).join('');
+    }
+
+    // Inventar Tab befüllen
+    const invList = document.getElementById('dealer-inventory-list');
+    if ((vehicles||[]).length === 0) {
+      invList.innerHTML = `<div class="text-center py-10 text-on-surface-variant"><p class="font-bold mb-2">Noch keine Fahrzeuge eingestellt</p><button onclick="showDealerTab('upload')" class="metallic-gradient text-on-primary px-6 py-2 rounded font-headline font-bold text-xs uppercase tracking-widest">Jetzt einstellen →</button></div>`;
+    } else {
+      invList.innerHTML = (vehicles||[]).map(v => `
+        <div class="bg-surface-container-lowest rounded-xl p-5 flex justify-between items-center flex-wrap gap-3 border border-outline-variant/10 border-l-4 ${v.status==='active'?'border-l-green-500':v.status==='sold'?'border-l-secondary':'border-l-outline-variant'}">
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-12 bg-surface-container-low rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+              ${v.image_url ? `<img src="${v.image_url}" class="w-full h-full object-cover rounded-lg">` : '<span class="material-symbols-outlined text-on-surface-variant">directions_car</span>'}
+            </div>
+            <div>
+              <div class="font-headline font-bold">${v.brand} ${v.model} ${v.variant||''}</div>
+              <div class="text-sm text-on-surface-variant">${parseFloat(v.price||0).toLocaleString('de-DE')} € · -${v.discount_pct||0}% · ${v.fuel_type||''}</div>
+              <div class="text-xs mt-1">
+                <span class="px-2 py-0.5 rounded font-bold uppercase tracking-widest ${v.status==='active'?'bg-green-100 text-green-700':v.status==='sold'?'bg-secondary-container text-on-secondary-container':'bg-surface-container-high text-on-surface-variant'}">${v.status==='active'?'Live':v.status==='sold'?'Verkauft':'In Prüfung'}</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="markVehicleSold(${v.id})" class="px-3 py-1.5 bg-surface-container-high text-on-surface-variant rounded text-xs font-bold uppercase tracking-widest hover:bg-surface-container-highest transition-colors">Als verkauft</button>
+            <button onclick="deleteVehicle(${v.id})" class="px-3 py-1.5 border border-error/30 text-error rounded text-xs font-bold uppercase tracking-widest hover:bg-error/5 transition-colors">Löschen</button>
+          </div>
+        </div>`).join('');
+    }
+  } catch(e) { console.warn('Dashboard load error:', e); }
+
+  // Leads laden
+  try {
+    const leads = await db.select('inquiries', 'select=*&order=created_at.desc');
+    document.getElementById('kpi-leads').textContent = (leads||[]).length;
+
+    const renderLead = (l) => `
+      <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10 border-l-4 border-l-on-tertiary-container">
+        <div class="flex justify-between items-start flex-wrap gap-2">
+          <div>
+            <div class="font-headline font-bold">${l.name} <span class="text-on-surface-variant font-normal">→</span> ${l.vehicle||'Fahrzeug'}</div>
+            <div class="text-sm text-on-surface-variant mt-1">${l.email}${l.phone?' · '+l.phone:''}</div>
+            ${l.message?`<div class="text-sm mt-2 text-on-surface italic">"${l.message}"</div>`:''}
+          </div>
+          <div class="text-xs text-on-surface-variant">${new Date(l.created_at).toLocaleDateString('de-DE')}</div>
+        </div>
+      </div>`;
+
+    document.getElementById('dash-leads-preview').innerHTML = (leads||[]).slice(0,3).map(renderLead).join('') || '<p class="text-on-surface-variant">Noch keine Leads eingegangen.</p>';
+    document.getElementById('dealer-leads-list').innerHTML = (leads||[]).map(renderLead).join('') || '<div class="text-center py-10 text-on-surface-variant"><p class="font-bold">Noch keine Leads</p><p class="text-sm mt-1">Wenn Käufer Anfragen senden, erscheinen sie hier.</p></div>';
+  } catch(e) { console.warn('Leads load error:', e); }
+}
+
+// Dealer Tab switcher
+function showDealerTab(tab) {
+  ['dashboard','upload','inventory','leads'].forEach(t => {
+    document.getElementById('dealer-tab-' + t).classList.toggle('hidden', t !== tab);
+    const btn = document.getElementById('dtab-' + t);
+    if (btn) {
+      btn.classList.toggle('bg-surface-container-lowest', t === tab);
+      btn.classList.toggle('text-primary', t === tab);
+      btn.classList.toggle('font-bold', t === tab);
+      btn.classList.toggle('shadow-sm', t === tab);
+      btn.classList.toggle('text-on-surface-variant', t !== tab);
+    }
+  });
+}
+
+// Fahrzeug als verkauft markieren
+async function markVehicleSold(id) {
+  if (!confirm('Fahrzeug als verkauft markieren?')) return;
+  try {
+    const token = localStorage.getItem('sb_token') || '';
+    await fetch(SUPA_URL + '/rest/v1/vehicles?id=eq.' + id, {
+      method: 'PATCH',
+      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'sold' })
+    });
+    await loadDealerDashboard();
+  } catch(e) { alert('Fehler: ' + e.message); }
+}
+
+// Fahrzeug löschen
+async function deleteVehicle(id) {
+  if (!confirm('Fahrzeug wirklich löschen?')) return;
+  try {
+    const token = localStorage.getItem('sb_token') || '';
+    await fetch(SUPA_URL + '/rest/v1/vehicles?id=eq.' + id, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + token }
+    });
+    await loadDealerDashboard();
+  } catch(e) { alert('Fehler: ' + e.message); }
+}
+
+// ── BILDER UPLOAD ─────────────────────────────────────────────────────────────
+async function handleImageUpload(files) {
+  const token = localStorage.getItem('sb_token') || '';
+  const grid = document.getElementById('image-upload-grid');
+  for (const file of Array.from(files)) {
+    if (DEALER_IMAGES.length >= 8) break;
+    const ext = file.name.split('.').pop();
+    const path = `vehicles/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+    try {
+      // Upload zu Supabase Storage
+      const r = await fetch(SUPA_URL + '/storage/v1/object/vehicle-images/' + path, {
+        method: 'POST',
+        headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + token, 'Content-Type': file.type },
+        body: file
+      });
+      if (!r.ok) throw new Error('Upload fehlgeschlagen');
+      const publicUrl = SUPA_URL + '/storage/v1/object/public/vehicle-images/' + path;
+      DEALER_IMAGES.push(publicUrl);
+      // Vorschau einfügen
+      const div = document.createElement('div');
+      div.className = 'aspect-square rounded-xl overflow-hidden relative group';
+      div.innerHTML = `<img src="${publicUrl}" class="w-full h-full object-cover"><button onclick="removeImage('${publicUrl}',this.parentElement)" class="absolute top-1 right-1 bg-black/60 text-white rounded-full w-6 h-6 text-xs hidden group-hover:flex items-center justify-center">✕</button>`;
+      grid.insertBefore(div, grid.firstChild);
+    } catch(e) {
+      console.warn('Image upload error:', e);
+      // Fallback: lokale Vorschau
+      const url = URL.createObjectURL(file);
+      DEALER_IMAGES.push(url);
+      const div = document.createElement('div');
+      div.className = 'aspect-square rounded-xl overflow-hidden';
+      div.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+      grid.insertBefore(div, grid.firstChild);
+    }
+  }
+}
+
+function removeImage(url, el) {
+  DEALER_IMAGES = DEALER_IMAGES.filter(u => u !== url);
+  el.remove();
+}
+
+// ── DEALER UPLOAD FORMULAR ───────────────────────────────────────────────────
+function dealerCalcDisc() {
+  const l = parseFloat(document.getElementById('d-up-list').value);
+  const s = parseFloat(document.getElementById('d-up-sale').value);
+  const el = document.getElementById('d-disc-preview');
+  if (l && s && l > s) {
+    el.classList.remove('hidden');
+    document.getElementById('d-dp-pct').textContent = (((l-s)/l)*100).toFixed(1) + '%';
+    document.getElementById('d-dp-save').textContent = fmt(l-s) + ' €';
+  } else { el.classList.add('hidden'); }
+}
+
+async function dealerSubmitUpload() {
+  if (!CURRENT_USER) { nav('dealer-portal'); return; }
+  const b = document.getElementById('d-up-brand').value;
+  const m = document.getElementById('d-up-model').value;
+  const l = parseFloat(document.getElementById('d-up-list').value) || 0;
+  const s = parseFloat(document.getElementById('d-up-sale').value) || 0;
+  if (!b || !m) { alert('Bitte Hersteller und Modell angeben.'); return; }
+  if (!l || !s) { alert('Bitte Listenpreis und Verkaufspreis angeben.'); return; }
+  const vehicle = {
+    brand: b, model: m,
+    variant: document.getElementById('d-up-variant').value || null,
+    first_registration: document.getElementById('d-up-reg').value || null,
+    mileage: parseInt(document.getElementById('d-up-km').value) || 0,
+    fuel_type: document.getElementById('d-up-fuel').value,
+    transmission: document.getElementById('d-up-trans').value,
+    color: document.getElementById('d-up-color').value || null,
+    list_price: l, price: s,
+    discount_pct: l > 0 ? Math.round(((l-s)/l)*100*10)/10 : 0,
+    description: document.getElementById('d-up-desc').value || null,
+    is_day_registration: document.getElementById('d-up-dayref').checked,
+    dealer_email: CURRENT_USER.email,
+    image_url: DEALER_IMAGES.length > 0 ? DEALER_IMAGES[0] : null,
+    status: 'active',
+    source: 'manual',
+  };
+  try {
+    await db.insert('vehicles', [vehicle]);
+    DEALER_IMAGES = [];
+    await loadDealerDashboard();
+    showDealerTab('inventory');
+    // Reset form
+    ['d-up-brand','d-up-model','d-up-variant','d-up-reg','d-up-km','d-up-fuel','d-up-trans','d-up-color','d-up-list','d-up-sale','d-up-desc'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = el.tagName === 'SELECT' ? el.options[0].value : '';
+    });
+    document.getElementById('image-upload-grid').innerHTML = `<div onclick="document.getElementById('img-input').click()" class="aspect-square bg-surface-container-high rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-surface-container-highest transition-colors border-2 border-dashed border-outline-variant"><span class="material-symbols-outlined text-outline text-3xl">add_photo_alternate</span><span class="text-xs font-bold mt-2 uppercase tracking-widest text-on-surface-variant">Bild hinzufügen</span></div>`;
+  } catch(e) { alert('Fehler beim Speichern: ' + e.message); }
+}
+
+// ── DEALER CSV ────────────────────────────────────────────────────────────────
+function handleDealerCSVDrop(event) {
+  event.preventDefault();
+  const file = event.dataTransfer.files[0];
+  if (file) handleDealerCSVFile(file);
+}
+
+async function handleDealerCSVFile(file) {
+  if (!file || !file.name.match(/\.(csv|txt)$/i)) {
+    showDealerCSVStatus('error', 'Bitte .csv oder .txt Datei wählen'); return;
+  }
+  showDealerCSVStatus('loading', 'Lese Datei…');
+  const text = await file.text();
+  await dealerUploadCSV(text);
+}
+
+async function dealerUploadCSV(csvText) {
+  showDealerCSVStatus('loading', 'Importiere Fahrzeuge…');
+  const token = localStorage.getItem('sb_token') || '';
+  try {
+    const r = await fetch('/api/import-csv', {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/csv', 'Authorization': 'Bearer ' + token },
+      body: csvText
+    });
+    const result = await r.json();
+    if (!r.ok) { showDealerCSVStatus('error', result.error || 'Import fehlgeschlagen'); return; }
+    if (result.vehicles && result.vehicles.length > 0) {
+      function cleanDate(d) {
+        if (!d) return null;
+        const m = String(d).replace(/['"]/g,'').trim().match(/^(\d{4}-\d{2}-\d{2})/);
+        return m ? m[1] : null;
+      }
+      const rows = result.vehicles.map(v => ({
+        brand: v.brand||'Unbekannt', model: v.model||'Unbekannt',
+        variant: v.description||null,
+        first_registration: cleanDate(v.first_registration),
+        mileage: parseInt(v.mileage)||0,
+        fuel_type: v.fuel_type||'Benzin',
+        transmission: v.transmission||'Automatik',
+        color: v.color||null,
+        list_price: parseFloat(v.list_price)||0,
+        price: parseFloat(v.price)||0,
+        discount_pct: parseFloat(v.discount_pct)||0,
+        description: v.description||null,
+        is_day_registration: v.is_day_registration||false,
+        dealer_email: CURRENT_USER?.email||null,
+        status: 'active', source: 'csv_import',
+      }));
+      await db.insert('vehicles', rows);
+      await loadVehicles();
+      await loadDealerDashboard();
+    }
+    showDealerCSVStatus('success', null, null, result);
+  } catch(e) { showDealerCSVStatus('error', 'Fehler: ' + e.message); }
+}
+
+function showDealerCSVStatus(type, msg, details, result) {
+  const el = document.getElementById('dealer-csv-status');
+  el.classList.remove('hidden');
+  const colors = { loading:'border-blue-200 bg-blue-50 text-blue-700', success:'border-green-200 bg-green-50 text-green-700', error:'border-red-200 bg-red-50 text-red-700' };
+  if (type === 'success') {
+    el.innerHTML = `<div class="border rounded-lg p-4 ${colors.success}"><p class="font-bold">✓ ${result.imported} Fahrzeuge importiert · Ø ${result.summary?.avg_discount||0}% Nachlass · ${result.summary?.day_registrations||0} Tageszulassungen</p></div>`;
+  } else if (type === 'error') {
+    el.innerHTML = `<div class="border rounded-lg p-4 ${colors.error}"><p class="font-bold">${msg}</p></div>`;
+  } else {
+    el.innerHTML = `<div class="border rounded-lg p-4 ${colors.loading}"><p class="font-bold">${msg}</p></div>`;
+  }
+}
+
+// ── NAV OVERRIDE für Dashboard ────────────────────────────────────────────────
+const _origNav = nav;
+// Wenn dealer-dashboard aufgerufen, Dashboard laden
+const _navPatched = async function(p) {
+  if (p === 'dealer-dashboard') {
+    if (!CURRENT_USER) { await _origNav('dealer-portal'); return; }
+  }
+  await _origNav(p);
+  if (p === 'dealer-dashboard') await loadDealerDashboard();
+};
+// nav global überschreiben
+window.nav = _navPatched;
+
+// Auth bei Seitenstart prüfen
+checkAuthState();
 
 // ─── Drag & Drop Handler ─────────────────────────────────────────────────────
 function handleCSVDrop(event) {
