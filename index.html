@@ -756,9 +756,9 @@ async function loadVehicles() {
   }
 }
 
-function disc(v){return(((v.list-v.sale)/v.list)*100).toFixed(1);}
+function disc(v){if(!v.list||v.list<=0)return(v.discount_pct||0).toFixed(1);return(((v.list-v.sale)/v.list)*100).toFixed(1);}
 function fmt(n){return Number(n).toLocaleString('de-DE');}
-function savamt(v){return fmt(v.list-v.sale);}
+function savamt(v){const s=v.list-v.sale;return s>0?fmt(s):'k.A.';}
 
 // NAV
 async function nav(p){
@@ -789,7 +789,7 @@ function mkCard(v,fn){
     <div class="p-6 space-y-3">
       <div><div class="font-headline font-black text-xl tracking-tighter">${v.brand} ${v.model}</div><div class="text-on-surface-variant text-sm mt-0.5">${v.variant}</div></div>
       <div class="flex flex-wrap gap-2">
-        <span class="bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide">${v.year}</span>
+        <span class="bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide">${v.year||2024}</span>
         <span class="bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide">${v.fuel}</span>
         <span class="bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide">${fmt(v.km)} km</span>
         <span class="bg-tertiary-container text-on-tertiary-container px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide">Tageszulassung</span>
@@ -802,7 +802,12 @@ function mkCard(v,fn){
   </div>`;
 }
 
-function renderHome(){document.getElementById('home-cards').innerHTML=VEHICLES.slice(0,6).map(v=>mkCard(v,`showDet(${v.id})`)).join('');}
+function renderHome(){
+  const el=document.getElementById('home-cards');
+  if(!el)return;
+  if(VEHICLES.length===0){el.innerHTML='<p class="text-on-surface-variant col-span-3 text-center py-10">Fahrzeuge werden geladen…</p>';return;}
+  el.innerHTML=VEHICLES.slice(0,6).map(v=>mkCard(v,`showDet(${v.id})`)).join('');
+}
 
 function renderInv(){applyFilters();}
 function applyFilters(){
@@ -819,7 +824,10 @@ function applyFilters(){
   if(s==='price_desc')l.sort((a,b)=>b.sale-a.sale);
   if(s==='urgent')l.sort((a,b)=>(a.daysLeft||999)-(b.daysLeft||999));
   const g=document.getElementById('inv-grid');
-  if(g)g.innerHTML=l.map(v=>mkCard(v,`showDet(${v.id})`)).join('');
+  if(g){
+    if(l.length===0){g.innerHTML='<p class="text-on-surface-variant col-span-3 text-center py-10">Keine Fahrzeuge gefunden.</p>';}
+    else{g.innerHTML=l.map(v=>mkCard(v,`showDet(${v.id})`)).join('');}
+  }
   const c=document.getElementById('inv-count');
   if(c)c.textContent=`${l.length} Fahrzeuge — alle mit Tageszulassung`;
 }
