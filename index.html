@@ -5,6 +5,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>stehengeblieben.de — Tageszulassungen zu unschlagbaren Preisen.</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
@@ -686,17 +687,56 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
 </div>
 
 <script>
-// DATA
-const VEHICLES=[
-  {id:1,brand:'Volkswagen',model:'Golf GTI',variant:'2.0 TSI DSG',year:2024,km:12,list:42500,sale:31900,fuel:'Benzin',trans:'Automatik',color:'Tornado Rot',desc:'Tageszulassung vom 15.01.2024. Fahrzeug in einwandfreiem Zustand, nicht privat genutzt. Vollausstattung inkl. Panoramadach, Navigation, LED-Matrix, DCC-Fahrwerk.',daysLeft:18},
-  {id:2,brand:'BMW',model:'3er',variant:'320d xDrive Touring',year:2024,km:22,list:58900,sale:44200,fuel:'Diesel',trans:'Automatik',color:'Mineralweiß',desc:'Tageszulassung, gepflegt. Sportline-Paket, Leder Dakota, Navigationssystem Professional, Driving Assistant Plus.',daysLeft:45},
-  {id:3,brand:'Tesla',model:'Model 3',variant:'Long Range AWD',year:2024,km:8,list:54990,sale:39900,fuel:'Elektro',trans:'Automatik',color:'Pearl White',desc:'Tageszulassung mit voller Herstellergarantie. Autopilot, Premium Soundsystem, 19 Zoll Felgen.',daysLeft:12},
-  {id:4,brand:'Mercedes',model:'C-Klasse',variant:'C220d AMG Line',year:2024,km:31,list:62400,sale:48500,fuel:'Diesel',trans:'Automatik',color:'Obsidianschwarz',desc:'Tageszulassung AMG Line Edition. Panoramadach, Burmester Soundsystem, 360 Grad Kamera, MBUX.',daysLeft:60},
-  {id:5,brand:'Audi',model:'A4',variant:'40 TDI S-Line',year:2024,km:18,list:55100,sale:41800,fuel:'Diesel',trans:'DSG',color:'Navarra Blau',desc:'S-Line Paket komplett, Matrix LED, Virtual Cockpit Plus, Assistenzpaket Tour und City.',daysLeft:28},
-  {id:6,brand:'Skoda',model:'Octavia',variant:'RS 245 Combi',year:2024,km:5,list:38600,sale:28400,fuel:'Benzin',trans:'DSG',color:'Race Blau',desc:'RS 245 PS Sportfahrwerk, Canton Soundsystem, Head-up Display. Perfekter Zustand.',daysLeft:8},
-];
-let DEALERS=[],INQUIRIES=[],CUR=null;
-const ADMIN_PASS='stehengeblieben2025';
+// ── SUPABASE ──────────────────────────────────────────────────────────────────
+const SUPA_URL = 'https://clbhgauhguhevmcczawv.supabase.co';
+const SUPA_KEY = 'sb_publishable_PaIDKjbjdmn0lejx_PS_zQ_7fdCpPKV';
+const { createClient } = supabase;
+const db = createClient(SUPA_URL, SUPA_KEY);
+
+// DATA — wird aus Supabase geladen
+let VEHICLES = [];
+let DEALERS = [], INQUIRIES = [], CUR = null;
+const ADMIN_PASS = 'stehengeblieben2025';
+
+// ── Fahrzeuge aus Supabase laden ───────────────────────────────────────────────
+async function loadVehicles() {
+  try {
+    const { data, error } = await db
+      .from('vehicles')
+      .select('*')
+      .eq('status', 'active')
+      .order('discount_pct', { ascending: false });
+    if (error) throw error;
+    // Supabase-Felder auf internes Format mappen
+    VEHICLES = (data || []).map((v, i) => ({
+      id: v.id || i+1,
+      brand: v.brand || '',
+      model: v.model || '',
+      variant: v.variant || v.description || '',
+      year: v.year || (v.first_registration ? new Date(v.first_registration).getFullYear() : 2024),
+      km: v.mileage || v.km || 0,
+      list: parseFloat(v.list_price) || 0,
+      sale: parseFloat(v.price) || 0,
+      fuel: v.fuel_type || v.fuel || 'Benzin',
+      trans: v.transmission || 'Automatik',
+      color: v.color || '',
+      desc: v.description || v.variant || '',
+      daysLeft: v.days_left || null,
+      discount_pct: parseFloat(v.discount_pct) || 0,
+    }));
+    renderHome();
+    if (document.querySelector('[data-page="inventory"].active')) renderInv();
+    if (document.querySelector('[data-page="admin"].active')) renderAdm();
+  } catch(err) {
+    console.warn('Supabase load error:', err.message);
+    // Fallback: Demo-Daten wenn DB leer oder nicht erreichbar
+    VEHICLES = [
+      {id:1,brand:'Volkswagen',model:'Golf GTI',variant:'2.0 TSI DSG',year:2024,km:12,list:42500,sale:31900,fuel:'Benzin',trans:'Automatik',color:'Tornado Rot',desc:'Tageszulassung vom 15.01.2024. Demo-Fahrzeug.',daysLeft:18},
+      {id:2,brand:'BMW',model:'3er',variant:'320d xDrive',year:2024,km:22,list:58900,sale:44200,fuel:'Diesel',trans:'Automatik',color:'Mineralweiß',desc:'Demo-Fahrzeug.',daysLeft:45},
+    ];
+    renderHome();
+  }
+}
 
 function disc(v){return(((v.list-v.sale)/v.list)*100).toFixed(1);}
 function fmt(n){return Number(n).toLocaleString('de-DE');}
@@ -795,18 +835,26 @@ function showDet(id){
 function openInquiry(){const m=document.getElementById('inq-modal');m.classList.remove('hidden');m.classList.add('flex');}
 function closeInq(){const m=document.getElementById('inq-modal');m.classList.add('hidden');m.classList.remove('flex');}
 document.getElementById('inq-modal').addEventListener('click',function(e){if(e.target===this)closeInq();});
-function submitInq(){
+async function submitInq(){
   const n=document.getElementById('inq-name').value,e=document.getElementById('inq-email').value;
   if(!n||!e){alert('Bitte Name und E-Mail angeben.');return;}
-  if(CUR)INQUIRIES.push({vehicle:`${CUR.brand} ${CUR.model}`,name:n,email:e,phone:document.getElementById('inq-phone').value,msg:document.getElementById('inq-msg').value,date:new Date().toLocaleDateString('de-DE')});
+  const inqData={vehicle:CUR?`${CUR.brand} ${CUR.model}`:'',vehicle_id:CUR?.id||null,name:n,email:e,phone:document.getElementById('inq-phone').value,message:document.getElementById('inq-msg').value};
+  if(CUR)INQUIRIES.push({...inqData,date:new Date().toLocaleDateString('de-DE')});
+  try{await db.from('inquiries').insert([inqData]);}catch(err){console.warn('Inquiry save failed:',err);}
   document.getElementById('inq-modal-inner').innerHTML=`<div class="text-center py-4 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h3 class="font-headline font-black text-2xl">Anfrage gesendet!</h3><p class="text-on-surface-variant">Der Händler meldet sich innerhalb von 24 Stunden.</p><button onclick="closeInq()" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all">Schließen</button></div>`;
 }
 
 // DEALER REG
-function submitReg(){
+async function submitReg(){
   const c=document.getElementById('reg-company').value,e=document.getElementById('reg-email').value;
   if(!c||!e){alert('Bitte Firmenname und E-Mail angeben.');return;}
-  DEALERS.push({company:c,contact:document.getElementById('reg-contact').value,email:e,phone:document.getElementById('reg-phone').value,city:document.getElementById('reg-city').value,approved:false,date:new Date().toLocaleDateString('de-DE')});
+  const dealer={company:c,contact:document.getElementById('reg-contact').value,email:e,phone:document.getElementById('reg-phone').value,city:document.getElementById('reg-city').value,approved:false};
+  // Supabase speichern
+  try {
+    const {error} = await db.from('dealers').insert([dealer]);
+    if(error) console.warn('Dealer save error:', error.message);
+  } catch(err) { console.warn('Dealer save failed:', err); }
+  DEALERS.push({...dealer,date:new Date().toLocaleDateString('de-DE')});
   document.getElementById('reg-wrap').innerHTML=`<div class="text-center py-10 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h2 class="font-headline font-black text-3xl tracking-tighter">Registrierung erhalten!</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir melden uns innerhalb von 24 Stunden. Danach kannst du sofort Fahrzeuge hochladen.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all">Zurück zur Startseite</button></div>`;
 }
 
@@ -819,7 +867,7 @@ function calcDisc(){
 // Flag: wird auf true gesetzt wenn CSV erfolgreich importiert wurde
 let csvImportSuccess = false;
 
-function submitUpload(){
+async function submitUpload(){
   // CSV wurde erfolgreich importiert → direkt Bestätigung zeigen
   if(csvImportSuccess){
     document.getElementById('upload-wrap').innerHTML=`<div class="text-center py-20 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h2 class="font-headline font-black text-4xl tracking-tighter">Fahrzeuge eingereicht.</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir pr&uuml;fen die importierten Fahrzeuge und schalten sie innerhalb von 24 Stunden frei.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all mt-4">Zur&uuml;ck zur Startseite</button></div>`;
@@ -840,6 +888,31 @@ function submitUpload(){
     errBox.scrollIntoView({behavior:'smooth', block:'center'});
     return;
   }
+  // Manuelles Fahrzeug in Supabase speichern
+  const l=parseFloat(document.getElementById('up-list').value)||0;
+  const s=parseFloat(document.getElementById('up-sale').value)||0;
+  const vehicle = {
+    brand: b,
+    model: m,
+    variant: document.getElementById('up-variant').value||'',
+    first_registration: document.getElementById('up-reg').value||null,
+    mileage: parseInt(document.getElementById('up-km').value)||0,
+    fuel_type: document.getElementById('up-fuel').value||'Benzin',
+    transmission: document.getElementById('up-trans').value||'Automatik',
+    color: document.getElementById('up-color').value||'',
+    list_price: l,
+    price: s,
+    discount_pct: l>0&&s>0 ? Math.round(((l-s)/l)*100*10)/10 : 0,
+    description: document.getElementById('up-desc').value||'',
+    dealer_email: document.getElementById('up-email').value||'',
+    status: 'pending',
+    source: 'manual',
+  };
+  try {
+    const {error} = await db.from('vehicles').insert([vehicle]);
+    if(error) console.warn('Vehicle save error:', error.message);
+    else await loadVehicles();
+  } catch(err) { console.warn('Vehicle save failed:', err); }
   document.getElementById('upload-wrap').innerHTML=`<div class="text-center py-20 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h2 class="font-headline font-black text-4xl tracking-tighter">Fahrzeug eingereicht.</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir pr&uuml;fen dein Fahrzeug und schalten es innerhalb von 24 Stunden frei.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all mt-4">Zur&uuml;ck zur Startseite</button></div>`;
 }
 
@@ -858,8 +931,8 @@ function showAdmTab(t,btn){
   document.querySelectorAll('.admin-tab').forEach(b=>{b.classList.remove('bg-primary','border-primary');b.classList.add('border-white/20');});
   btn.classList.add('bg-primary','border-primary');btn.classList.remove('border-white/20');
 }
-// Init
-renderHome();
+// Init — Fahrzeuge aus Supabase laden
+loadVehicles();
 
 // ─── Drag & Drop Handler ─────────────────────────────────────────────────────
 function handleCSVDrop(event) {
@@ -913,13 +986,32 @@ async function uploadCSV(csvText, filename) {
       return;
     }
 
-    // Erfolg
+    // Erfolg — Fahrzeuge direkt in Supabase speichern
     csvImportSuccess = true;
     showCSVStatus('success', null, null, result);
-
-    // Fahrzeuge in lokale Liste einpflegen (für MVP ohne DB)
-    if (result.vehicles && window.addImportedVehicles) {
-      window.addImportedVehicles(result.vehicles);
+    if (result.vehicles && result.vehicles.length > 0) {
+      const rows = result.vehicles.map(v => ({
+        brand: v.brand || '',
+        model: v.model || '',
+        variant: v.description || '',
+        first_registration: v.first_registration || null,
+        mileage: parseInt(v.mileage) || 0,
+        fuel_type: v.fuel_type || 'Benzin',
+        transmission: v.transmission || 'Automatik',
+        color: v.color || '',
+        list_price: parseFloat(v.list_price) || 0,
+        price: parseFloat(v.price) || 0,
+        discount_pct: parseFloat(v.discount_pct) || 0,
+        description: v.description || '',
+        is_day_registration: v.is_day_registration || false,
+        status: 'active',
+        source: 'csv_import',
+      }));
+      try {
+        const {error} = await db.from('vehicles').insert(rows);
+        if(error) console.warn('CSV Supabase insert error:', error.message);
+        else await loadVehicles();
+      } catch(err) { console.warn('CSV Supabase insert failed:', err); }
     }
 
   } catch (err) {
