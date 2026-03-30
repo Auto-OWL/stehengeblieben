@@ -5,7 +5,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>stehengeblieben.de — Tageszulassungen zu unschlagbaren Preisen.</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
@@ -690,8 +690,8 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
 // ── SUPABASE ──────────────────────────────────────────────────────────────────
 const SUPA_URL = 'https://clbhgauhguhevmcczawv.supabase.co';
 const SUPA_KEY = 'sb_publishable_PaIDKjbjdmn0lejx_PS_zQ_7fdCpPKV';
-const { createClient } = supabase;
-const db = createClient(SUPA_URL, SUPA_KEY);
+// Supabase JS v2 — globales Objekt aus CDN
+const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
 // DATA — wird aus Supabase geladen
 let VEHICLES = [];
