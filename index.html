@@ -5,7 +5,6 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>stehengeblieben.de — Tageszulassungen zu unschlagbaren Preisen.</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
@@ -687,11 +686,34 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
 </div>
 
 <script>
-// ── SUPABASE ──────────────────────────────────────────────────────────────────
+// ── SUPABASE — direktes REST API (kein SDK) ───────────────────────────────────
 const SUPA_URL = 'https://clbhgauhguhevmcczawv.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsYmhnYXVoZ3VoZXZtY2N6YXd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3MTY3NTQsImV4cCI6MjA5MDI5Mjc1NH0.Onf8t_NkW7J9VTdaBnuRVflFRpr2vjvbbOHUbCJaj9Y';
-// Supabase JS v2 — globales Objekt aus CDN
-const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+const db = {
+  headers: {
+    'apikey': SUPA_KEY,
+    'Authorization': 'Bearer ' + SUPA_KEY,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation'
+  },
+  async select(table, params) {
+    let url = SUPA_URL + '/rest/v1/' + table + '?';
+    if (params) url += params;
+    const r = await fetch(url, { headers: this.headers });
+    if (!r.ok) throw new Error(await r.text());
+    return r.json();
+  },
+  async insert(table, rows) {
+    const r = await fetch(SUPA_URL + '/rest/v1/' + table, {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify(rows)
+    });
+    if (!r.ok) throw new Error(await r.text());
+    return r.json();
+  }
+};
 
 // DATA — wird aus Supabase geladen
 let VEHICLES = [];
@@ -701,12 +723,8 @@ const ADMIN_PASS = 'stehengeblieben2025';
 // ── Fahrzeuge aus Supabase laden ───────────────────────────────────────────────
 async function loadVehicles() {
   try {
-    const { data, error } = await db
-      .from('vehicles')
-      .select('*')
-      .eq('status', 'active')
-      .order('discount_pct', { ascending: false });
-    if (error) throw error;
+    const data = await db.select('vehicles',
+      'select=*&status=eq.active&order=discount_pct.desc');
     // Supabase-Felder auf internes Format mappen
     VEHICLES = (data || []).map((v, i) => ({
       id: v.id || i+1,
@@ -840,7 +858,7 @@ async function submitInq(){
   if(!n||!e){alert('Bitte Name und E-Mail angeben.');return;}
   const inqData={vehicle:CUR?`${CUR.brand} ${CUR.model}`:'',vehicle_id:CUR?.id||null,name:n,email:e,phone:document.getElementById('inq-phone').value,message:document.getElementById('inq-msg').value};
   if(CUR)INQUIRIES.push({...inqData,date:new Date().toLocaleDateString('de-DE')});
-  try{await db.from('inquiries').insert([inqData]);}catch(err){console.warn('Inquiry save failed:',err);}
+  try{await db.insert('inquiries',[inqData]);}catch(err){console.warn('Inquiry save failed:',err);}
   document.getElementById('inq-modal-inner').innerHTML=`<div class="text-center py-4 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h3 class="font-headline font-black text-2xl">Anfrage gesendet!</h3><p class="text-on-surface-variant">Der Händler meldet sich innerhalb von 24 Stunden.</p><button onclick="closeInq()" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all">Schließen</button></div>`;
 }
 
@@ -851,8 +869,7 @@ async function submitReg(){
   const dealer={company:c,contact:document.getElementById('reg-contact').value,email:e,phone:document.getElementById('reg-phone').value,city:document.getElementById('reg-city').value,approved:false};
   // Supabase speichern
   try {
-    const {error} = await db.from('dealers').insert([dealer]);
-    if(error) console.warn('Dealer save error:', error.message);
+    await db.insert('dealers', [dealer]);
   } catch(err) { console.warn('Dealer save failed:', err); }
   DEALERS.push({...dealer,date:new Date().toLocaleDateString('de-DE')});
   document.getElementById('reg-wrap').innerHTML=`<div class="text-center py-10 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h2 class="font-headline font-black text-3xl tracking-tighter">Registrierung erhalten!</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir melden uns innerhalb von 24 Stunden. Danach kannst du sofort Fahrzeuge hochladen.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all">Zurück zur Startseite</button></div>`;
@@ -909,9 +926,8 @@ async function submitUpload(){
     source: 'manual',
   };
   try {
-    const {error} = await db.from('vehicles').insert([vehicle]);
-    if(error) console.warn('Vehicle save error:', error.message);
-    else await loadVehicles();
+    await db.insert('vehicles', [vehicle]);
+    await loadVehicles();
   } catch(err) { console.warn('Vehicle save failed:', err); }
   document.getElementById('upload-wrap').innerHTML=`<div class="text-center py-20 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h2 class="font-headline font-black text-4xl tracking-tighter">Fahrzeug eingereicht.</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir pr&uuml;fen dein Fahrzeug und schalten es innerhalb von 24 Stunden frei.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all mt-4">Zur&uuml;ck zur Startseite</button></div>`;
 }
@@ -1008,9 +1024,8 @@ async function uploadCSV(csvText, filename) {
         source: 'csv_import',
       }));
       try {
-        const {error} = await db.from('vehicles').insert(rows);
-        if(error) console.warn('CSV Supabase insert error:', error.message);
-        else await loadVehicles();
+        await db.insert('vehicles', rows);
+        await loadVehicles();
       } catch(err) { console.warn('CSV Supabase insert failed:', err); }
     }
 
