@@ -567,149 +567,6 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
   <span class="text-navy-500 text-sm">oder manuell eingeben</span>
   <div class="flex-1 h-px bg-navy-700"></div>
 </div>
-
-
-<!-- ════════════════════════════════════════════════════════════════════
-     JavaScript — in <script> Tag am Ende der index.html einfügen
-     ════════════════════════════════════════════════════════════════════ -->
-<script>
-// ─── Drag & Drop Handler ─────────────────────────────────────────────────────
-function handleCSVDrop(event) {
-  event.preventDefault();
-  document.getElementById('csv-dropzone').classList.remove('border-gold-400', 'bg-navy-800/50');
-  const file = event.dataTransfer.files[0];
-  if (file) handleCSVFile(file);
-}
-
-// ─── Datei verarbeiten ───────────────────────────────────────────────────────
-async function handleCSVFile(file) {
-  if (!file) return;
-  if (!file.name.match(/\.(csv|txt)$/i)) {
-    showCSVStatus('error', 'Bitte eine .csv oder .txt Datei auswählen');
-    return;
-  }
-
-  // Datei lesen
-  showCSVStatus('loading', `Lese "${file.name}"…`);
-
-  try {
-    const text = await file.text();
-    await uploadCSV(text, file.name);
-  } catch (err) {
-    showCSVStatus('error', 'Fehler beim Lesen der Datei: ' + err.message);
-  }
-}
-
-// ─── An API senden ────────────────────────────────────────────────────────────
-async function uploadCSV(csvText, filename) {
-  showCSVStatus('loading', 'Importiere Fahrzeuge…');
-
-  // Händler-Token aus localStorage (nach Login gesetzt)
-  const token = localStorage.getItem('dealer_token') || 'demo-token';
-
-  try {
-    const response = await fetch('/api/import-csv', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/csv',
-        'Authorization': `Bearer ${token}`,
-        'X-Filename': filename,
-      },
-      body: csvText,
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      showCSVStatus('error', result.error || 'Import fehlgeschlagen', result.details);
-      return;
-    }
-
-    // Erfolg
-    showCSVStatus('success', null, null, result);
-
-    // Fahrzeuge in lokale Liste einpflegen (für MVP ohne DB)
-    if (result.vehicles && window.addImportedVehicles) {
-      window.addImportedVehicles(result.vehicles);
-    }
-
-  } catch (err) {
-    showCSVStatus('error', 'Verbindungsfehler: ' + err.message);
-  }
-}
-
-// ─── Status anzeigen ─────────────────────────────────────────────────────────
-function showCSVStatus(type, message, details, result) {
-  const el = document.getElementById('csv-status');
-  el.classList.remove('hidden');
-
-  const icons = {
-    loading: 'hourglass_empty',
-    success: 'check_circle',
-    error: 'error',
-  };
-  const colors = {
-    loading: 'border-blue-500 bg-blue-500/10 text-blue-300',
-    success: 'border-green-500 bg-green-500/10 text-green-300',
-    error: 'border-red-500 bg-red-500/10 text-red-300',
-  };
-
-  let html = `
-    <div class="border rounded-lg p-4 ${colors[type]}">
-      <div class="flex items-start gap-3">
-        <span class="material-symbols-outlined ${type === 'loading' ? 'animate-spin' : ''}">${icons[type]}</span>
-        <div class="flex-1">
-  `;
-
-  if (type === 'loading') {
-    html += `<p class="font-medium">${message}</p>`;
-  } else if (type === 'error') {
-    html += `<p class="font-medium text-red-300">${message}</p>`;
-    if (details && details.length > 0) {
-      html += `<ul class="mt-2 text-sm space-y-1">`;
-      details.slice(0, 5).forEach(d => { html += `<li>• ${d}</li>`; });
-      if (details.length > 5) html += `<li>… und ${details.length - 5} weitere Fehler</li>`;
-      html += `</ul>`;
-    }
-  } else if (type === 'success') {
-    html += `
-      <p class="font-medium text-green-300">
-        ✓ ${result.imported} Fahrzeuge importiert
-        ${result.skipped > 0 ? `<span class="text-yellow-400 text-sm ml-2">(${result.skipped} übersprungen)</span>` : ''}
-      </p>
-      <div class="mt-2 grid grid-cols-3 gap-3 text-sm">
-        <div class="bg-white/5 rounded p-2 text-center">
-          <div class="text-white font-bold text-lg">${result.imported}</div>
-          <div class="text-navy-400">Fahrzeuge</div>
-        </div>
-        <div class="bg-white/5 rounded p-2 text-center">
-          <div class="text-gold-400 font-bold text-lg">${result.summary?.avg_discount || 0}%</div>
-          <div class="text-navy-400">Ø Nachlass</div>
-        </div>
-        <div class="bg-white/5 rounded p-2 text-center">
-          <div class="text-white font-bold text-lg">${result.summary?.day_registrations || 0}</div>
-          <div class="text-navy-400">Tageszulassungen</div>
-        </div>
-      </div>
-    `;
-    if (result.errors && result.errors.length > 0) {
-      html += `
-        <details class="mt-2">
-          <summary class="text-sm cursor-pointer hover:text-yellow-300">
-            ${result.errors.length} Zeilen konnten nicht importiert werden
-          </summary>
-          <ul class="mt-1 text-sm space-y-1 text-yellow-400">
-            ${result.errors.slice(0, 10).map(e => `<li>• ${e}</li>`).join('')}
-          </ul>
-        </details>
-      `;
-    }
-  }
-
-  html += `</div></div></div>`;
-  el.innerHTML = html;
-}
-</script>
       <div id="upload-wrap" class="space-y-10">
         <section class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-8 md:p-10">
           <div class="flex items-center justify-between mb-8"><h3 class="font-headline font-black text-2xl uppercase tracking-tighter">Fahrzeugdaten</h3><span class="text-xs bg-primary text-white px-3 py-1.5 rounded font-black uppercase tracking-widest">Pflichtfelder</span></div>
@@ -974,6 +831,143 @@ function showAdmTab(t,btn){
 }
 // Init
 renderHome();
+
+// ─── Drag & Drop Handler ─────────────────────────────────────────────────────
+function handleCSVDrop(event) {
+  event.preventDefault();
+  document.getElementById('csv-dropzone').classList.remove('border-gold-400', 'bg-navy-800/50');
+  const file = event.dataTransfer.files[0];
+  if (file) handleCSVFile(file);
+}
+
+// ─── Datei verarbeiten ───────────────────────────────────────────────────────
+async function handleCSVFile(file) {
+  if (!file) return;
+  if (!file.name.match(/\.(csv|txt)$/i)) {
+    showCSVStatus('error', 'Bitte eine .csv oder .txt Datei auswählen');
+    return;
+  }
+
+  // Datei lesen
+  showCSVStatus('loading', `Lese "${file.name}"…`);
+
+  try {
+    const text = await file.text();
+    await uploadCSV(text, file.name);
+  } catch (err) {
+    showCSVStatus('error', 'Fehler beim Lesen der Datei: ' + err.message);
+  }
+}
+
+// ─── An API senden ────────────────────────────────────────────────────────────
+async function uploadCSV(csvText, filename) {
+  showCSVStatus('loading', 'Importiere Fahrzeuge…');
+
+  // Händler-Token aus localStorage (nach Login gesetzt)
+  const token = localStorage.getItem('dealer_token') || 'demo-token';
+
+  try {
+    const response = await fetch('/api/import-csv', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/csv',
+        'Authorization': `Bearer ${token}`,
+        'X-Filename': filename,
+      },
+      body: csvText,
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      showCSVStatus('error', result.error || 'Import fehlgeschlagen', result.details);
+      return;
+    }
+
+    // Erfolg
+    showCSVStatus('success', null, null, result);
+
+    // Fahrzeuge in lokale Liste einpflegen (für MVP ohne DB)
+    if (result.vehicles && window.addImportedVehicles) {
+      window.addImportedVehicles(result.vehicles);
+    }
+
+  } catch (err) {
+    showCSVStatus('error', 'Verbindungsfehler: ' + err.message);
+  }
+}
+
+// ─── Status anzeigen ─────────────────────────────────────────────────────────
+function showCSVStatus(type, message, details, result) {
+  const el = document.getElementById('csv-status');
+  el.classList.remove('hidden');
+
+  const icons = {
+    loading: 'hourglass_empty',
+    success: 'check_circle',
+    error: 'error',
+  };
+  const colors = {
+    loading: 'border-blue-500 bg-blue-500/10 text-blue-300',
+    success: 'border-green-500 bg-green-500/10 text-green-300',
+    error: 'border-red-500 bg-red-500/10 text-red-300',
+  };
+
+  let html = `
+    <div class="border rounded-lg p-4 ${colors[type]}">
+      <div class="flex items-start gap-3">
+        <span class="material-symbols-outlined ${type === 'loading' ? 'animate-spin' : ''}">${icons[type]}</span>
+        <div class="flex-1">
+  `;
+
+  if (type === 'loading') {
+    html += `<p class="font-medium">${message}</p>`;
+  } else if (type === 'error') {
+    html += `<p class="font-medium text-red-300">${message}</p>`;
+    if (details && details.length > 0) {
+      html += `<ul class="mt-2 text-sm space-y-1">`;
+      details.slice(0, 5).forEach(d => { html += `<li>• ${d}</li>`; });
+      if (details.length > 5) html += `<li>… und ${details.length - 5} weitere Fehler</li>`;
+      html += `</ul>`;
+    }
+  } else if (type === 'success') {
+    html += `
+      <p class="font-medium text-green-300">
+        ✓ ${result.imported} Fahrzeuge importiert
+        ${result.skipped > 0 ? `<span class="text-yellow-400 text-sm ml-2">(${result.skipped} übersprungen)</span>` : ''}
+      </p>
+      <div class="mt-2 grid grid-cols-3 gap-3 text-sm">
+        <div class="bg-white/5 rounded p-2 text-center">
+          <div class="text-white font-bold text-lg">${result.imported}</div>
+          <div class="text-navy-400">Fahrzeuge</div>
+        </div>
+        <div class="bg-white/5 rounded p-2 text-center">
+          <div class="text-gold-400 font-bold text-lg">${result.summary?.avg_discount || 0}%</div>
+          <div class="text-navy-400">Ø Nachlass</div>
+        </div>
+        <div class="bg-white/5 rounded p-2 text-center">
+          <div class="text-white font-bold text-lg">${result.summary?.day_registrations || 0}</div>
+          <div class="text-navy-400">Tageszulassungen</div>
+        </div>
+      </div>
+    `;
+    if (result.errors && result.errors.length > 0) {
+      html += `
+        <details class="mt-2">
+          <summary class="text-sm cursor-pointer hover:text-yellow-300">
+            ${result.errors.length} Zeilen konnten nicht importiert werden
+          </summary>
+          <ul class="mt-1 text-sm space-y-1 text-yellow-400">
+            ${result.errors.slice(0, 10).map(e => `<li>• ${e}</li>`).join('')}
+          </ul>
+        </details>
+      `;
+    }
+  }
+
+  html += `</div></div></div>`;
+  el.innerHTML = html;
+}
 </script>
 </body>
 </html>
