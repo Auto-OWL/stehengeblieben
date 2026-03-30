@@ -490,28 +490,36 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
   ════════════════════════════════════════════════════════════════════
 -->
 
-<section id="dms-import" class="mb-8">
+<section id="dms-import" class="mb-8 bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-8">
   <!-- Header -->
-  <div class="flex items-center gap-3 mb-4">
-    <span class="material-symbols-outlined text-gold-400">upload_file</span>
+  <div class="flex items-center gap-3 mb-6">
+    <span class="material-symbols-outlined text-on-tertiary-container">upload_file</span>
     <div>
-      <h3 class="text-white font-semibold text-lg">Fahrzeuge aus DMS importieren</h3>
-      <p class="text-navy-300 text-sm">Autrado · Audaris · Loco-Soft · Mobile.de CSV · AutoScout24 Export</p>
+      <h3 class="font-headline font-black text-xl uppercase tracking-tighter">DMS Import</h3>
+      <p class="text-on-surface-variant text-sm">Autrado · Audaris · Loco-Soft · Mobile.de CSV · AutoScout24 Export</p>
     </div>
   </div>
 
-  <!-- Dropzone -->
+  <!-- Dropzone — KEIN type="submit", kein form, eigener Button -->
   <div
     id="csv-dropzone"
-    class="border-2 border-dashed border-navy-600 rounded-xl p-8 text-center cursor-pointer transition-all duration-200 hover:border-gold-400 hover:bg-navy-800/50"
+    class="border-2 border-dashed border-outline-variant rounded-xl p-8 text-center cursor-pointer transition-all duration-200 hover:border-on-tertiary-container hover:bg-surface-container-low"
     onclick="document.getElementById('csv-file-input').click()"
-    ondragover="event.preventDefault(); this.classList.add('border-gold-400','bg-navy-800/50')"
-    ondragleave="this.classList.remove('border-gold-400','bg-navy-800/50')"
+    ondragover="event.preventDefault(); this.classList.add('border-on-tertiary-container','bg-surface-container-low')"
+    ondragleave="this.classList.remove('border-on-tertiary-container','bg-surface-container-low')"
     ondrop="handleCSVDrop(event)"
   >
-    <span class="material-symbols-outlined text-navy-400 text-5xl mb-3 block">cloud_upload</span>
-    <p class="text-white font-medium mb-1">CSV-Datei hier ablegen</p>
-    <p class="text-navy-400 text-sm">oder klicken zum Auswählen · .csv und .txt werden unterstützt</p>
+    <span class="material-symbols-outlined text-on-surface-variant mb-3 block" style="font-size:48px">cloud_upload</span>
+    <p class="font-headline font-bold text-on-surface mb-1">CSV-Datei hier ablegen</p>
+    <p class="text-on-surface-variant text-sm mb-4">oder klicken zum Auswählen · .csv und .txt werden unterstützt</p>
+    <!-- type="button" verhindert, dass Enter/Click das Formular absendet -->
+    <button
+      type="button"
+      onclick="event.stopPropagation(); document.getElementById('csv-file-input').click()"
+      class="inline-flex items-center gap-2 px-6 py-2.5 bg-surface-container-high text-on-surface font-headline font-bold text-xs uppercase tracking-widest rounded hover:bg-surface-container-highest transition-colors"
+    >
+      <span class="material-symbols-outlined text-sm">folder_open</span>Datei auswählen
+    </button>
     <input
       id="csv-file-input"
       type="file"
@@ -522,14 +530,14 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
   </div>
 
   <!-- Anleitung (aufklappbar) -->
-  <details class="mt-3">
-    <summary class="text-navy-400 text-sm cursor-pointer hover:text-gold-400 transition-colors">
+  <details class="mt-4">
+    <summary class="text-on-surface-variant text-sm cursor-pointer hover:text-primary transition-colors font-bold uppercase tracking-widest text-xs">
       Wie exportiere ich aus meinem DMS?
     </summary>
-    <div class="mt-3 bg-navy-900 rounded-lg p-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+    <div class="mt-3 bg-surface-container-low rounded-lg p-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
       <div>
-        <p class="text-gold-400 font-semibold mb-1">Autrado</p>
-        <ol class="text-navy-300 space-y-1 list-decimal list-inside">
+        <p class="font-headline font-bold text-primary mb-2 text-xs uppercase tracking-widest">Autrado</p>
+        <ol class="text-on-surface-variant space-y-1 list-decimal list-inside">
           <li>Fahrzeugbestand öffnen</li>
           <li>„Export" → „CSV/Mobile.de"</li>
           <li>Datei herunterladen</li>
@@ -537,8 +545,8 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
         </ol>
       </div>
       <div>
-        <p class="text-gold-400 font-semibold mb-1">Audaris / Loco-Soft</p>
-        <ol class="text-navy-300 space-y-1 list-decimal list-inside">
+        <p class="font-headline font-bold text-primary mb-2 text-xs uppercase tracking-widest">Audaris / Loco-Soft</p>
+        <ol class="text-on-surface-variant space-y-1 list-decimal list-inside">
           <li>Bestandsverwaltung öffnen</li>
           <li>Export → Mobile-Extended</li>
           <li>CSV speichern</li>
@@ -546,8 +554,8 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
         </ol>
       </div>
       <div>
-        <p class="text-gold-400 font-semibold mb-1">Mobile.de / AutoScout24</p>
-        <ol class="text-navy-300 space-y-1 list-decimal list-inside">
+        <p class="font-headline font-bold text-primary mb-2 text-xs uppercase tracking-widest">Mobile.de / AutoScout24</p>
+        <ol class="text-on-surface-variant space-y-1 list-decimal list-inside">
           <li>Händler-Dashboard</li>
           <li>Bestand → Export</li>
           <li>CSV-Format wählen</li>
@@ -562,10 +570,10 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
 </section>
 
 <!-- ─── Trennlinie vor manuellem Formular ─── -->
-<div class="flex items-center gap-3 mb-6">
-  <div class="flex-1 h-px bg-navy-700"></div>
-  <span class="text-navy-500 text-sm">oder manuell eingeben</span>
-  <div class="flex-1 h-px bg-navy-700"></div>
+<div class="flex items-center gap-4 mb-8">
+  <div class="flex-1 h-px bg-outline-variant opacity-30"></div>
+  <span class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">oder manuell eingeben</span>
+  <div class="flex-1 h-px bg-outline-variant opacity-30"></div>
 </div>
       <div id="upload-wrap" class="space-y-10">
         <section class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-8 md:p-10">
@@ -809,9 +817,28 @@ function calcDisc(){
   else el.classList.add('hidden');
 }
 function submitUpload(){
-  const b=document.getElementById('up-brand').value,m=document.getElementById('up-model').value;
-  if(!b||!m){alert('Bitte Hersteller und Modell angeben.');return;}
-  document.getElementById('upload-wrap').innerHTML=`<div class="text-center py-20 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h2 class="font-headline font-black text-4xl tracking-tighter">Fahrzeug eingereicht.</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir prüfen dein Fahrzeug und schalten es innerhalb von 24 Stunden frei.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all mt-4">Zurück zur Startseite</button></div>`;
+  const b=document.getElementById('up-brand').value;
+  const m=document.getElementById('up-model').value;
+  const l=document.getElementById('up-list').value;
+  const s=document.getElementById('up-sale').value;
+  const anyFieldFilled = b || m || l || s;
+  if(anyFieldFilled && (!b || !m)) {
+    let errBox = document.getElementById('upload-error');
+    if(!errBox){
+      errBox = document.createElement('div');
+      errBox.id = 'upload-error';
+      errBox.className = 'mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-error text-sm font-bold flex items-center gap-2';
+      document.getElementById('upload-wrap').prepend(errBox);
+    }
+    errBox.innerHTML = '<span class="material-symbols-outlined text-base">error</span>Bitte Hersteller und Modell auswaehlen.';
+    errBox.scrollIntoView({behavior:"smooth", block:"center"});
+    return;
+  }
+  if(!anyFieldFilled) {
+    alert("Bitte entweder eine CSV-Datei importieren oder das Formular ausfuellen.");
+    return;
+  }
+  document.getElementById("upload-wrap").innerHTML="<div class="text-center py-20 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h2 class="font-headline font-black text-4xl tracking-tighter">Fahrzeug eingereicht.</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir pruefen dein Fahrzeug und schalten es innerhalb von 24 Stunden frei.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all mt-4">Zurueck zur Startseite</button></div>";
 }
 
 // ADMIN
