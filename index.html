@@ -816,26 +816,28 @@ function calcDisc(){
   if(l&&s&&l>s){el.classList.remove('hidden');document.getElementById('dp-pct').textContent=`${(((l-s)/l)*100).toFixed(1)}%`;document.getElementById('dp-save').textContent=`${fmt(l-s)} €`;}
   else el.classList.add('hidden');
 }
+// Flag: wird auf true gesetzt wenn CSV erfolgreich importiert wurde
+let csvImportSuccess = false;
+
 function submitUpload(){
+  // CSV wurde erfolgreich importiert → direkt Bestätigung zeigen
+  if(csvImportSuccess){
+    document.getElementById('upload-wrap').innerHTML=`<div class="text-center py-20 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h2 class="font-headline font-black text-4xl tracking-tighter">Fahrzeuge eingereicht.</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir pr&uuml;fen die importierten Fahrzeuge und schalten sie innerhalb von 24 Stunden frei.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all mt-4">Zur&uuml;ck zur Startseite</button></div>`;
+    return;
+  }
+  // Manuelles Formular
   const b=document.getElementById('up-brand').value;
   const m=document.getElementById('up-model').value;
-  const l=document.getElementById('up-list').value;
-  const s=document.getElementById('up-sale').value;
-  const anyFieldFilled = b || m || l || s;
-  if(anyFieldFilled && (!b || !m)) {
+  if(!b || !m){
     let errBox = document.getElementById('upload-error');
     if(!errBox){
       errBox = document.createElement('div');
       errBox.id = 'upload-error';
-      errBox.className = 'mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-error text-sm font-bold flex items-center gap-2';
+      errBox.className = 'mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-sm font-bold flex items-center gap-2';
       document.getElementById('upload-wrap').prepend(errBox);
     }
-    errBox.innerHTML = '<span class="material-symbols-outlined text-base">error</span>Bitte Hersteller und Modell auswaehlen.';
-    errBox.scrollIntoView({behavior:"smooth", block:"center"});
-    return;
-  }
-  if(!anyFieldFilled) {
-    alert("Bitte entweder eine CSV-Datei importieren oder das Formular ausfuellen.");
+    errBox.innerHTML = '<span class="material-symbols-outlined text-base" style="color:#ba1a1a">error</span><span style="color:#ba1a1a">Bitte Hersteller und Modell ausw&auml;hlen oder zuerst eine CSV-Datei importieren.</span>';
+    errBox.scrollIntoView({behavior:'smooth', block:'center'});
     return;
   }
   document.getElementById('upload-wrap').innerHTML=`<div class="text-center py-20 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h2 class="font-headline font-black text-4xl tracking-tighter">Fahrzeug eingereicht.</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir pr&uuml;fen dein Fahrzeug und schalten es innerhalb von 24 Stunden frei.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all mt-4">Zur&uuml;ck zur Startseite</button></div>`;
@@ -912,6 +914,7 @@ async function uploadCSV(csvText, filename) {
     }
 
     // Erfolg
+    csvImportSuccess = true;
     showCSVStatus('success', null, null, result);
 
     // Fahrzeuge in lokale Liste einpflegen (für MVP ohne DB)
