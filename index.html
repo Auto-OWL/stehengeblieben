@@ -250,6 +250,22 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
               </button>
             </div>
           </div>
+          <!-- Frage 5: Ausstattung (optional) -->
+          <div class="mb-10">
+            <p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">Welche Ausstattung ist dir wichtig? <span class="text-on-surface-variant font-normal normal-case tracking-normal">(optional, Mehrfachauswahl)</span></p>
+            <div class="flex flex-wrap gap-2" id="q-equipment">
+              <button onclick="toggleBedarfsEquip('Panoramadach',this)" class="bedarfs-equip px-3 py-2 rounded-full border-2 border-outline-variant text-xs font-bold hover:border-primary transition-all">Panoramadach</button>
+              <button onclick="toggleBedarfsEquip('Navigationssystem',this)" class="bedarfs-equip px-3 py-2 rounded-full border-2 border-outline-variant text-xs font-bold hover:border-primary transition-all">Navigation</button>
+              <button onclick="toggleBedarfsEquip('Apple CarPlay',this)" class="bedarfs-equip px-3 py-2 rounded-full border-2 border-outline-variant text-xs font-bold hover:border-primary transition-all">Apple CarPlay</button>
+              <button onclick="toggleBedarfsEquip('Sitzheizung',this)" class="bedarfs-equip px-3 py-2 rounded-full border-2 border-outline-variant text-xs font-bold hover:border-primary transition-all">Sitzheizung</button>
+              <button onclick="toggleBedarfsEquip('Anhängerkupplung',this)" class="bedarfs-equip px-3 py-2 rounded-full border-2 border-outline-variant text-xs font-bold hover:border-primary transition-all">Anhängerkupplung</button>
+              <button onclick="toggleBedarfsEquip('Induktives Laden',this)" class="bedarfs-equip px-3 py-2 rounded-full border-2 border-outline-variant text-xs font-bold hover:border-primary transition-all">Induktives Laden</button>
+              <button onclick="toggleBedarfsEquip('Rückfahrkamera',this)" class="bedarfs-equip px-3 py-2 rounded-full border-2 border-outline-variant text-xs font-bold hover:border-primary transition-all">Rückfahrkamera</button>
+              <button onclick="toggleBedarfsEquip('LED-Scheinwerfer',this)" class="bedarfs-equip px-3 py-2 rounded-full border-2 border-outline-variant text-xs font-bold hover:border-primary transition-all">LED-Scheinwerfer</button>
+              <button onclick="toggleBedarfsEquip('Einparkhilfe',this)" class="bedarfs-equip px-3 py-2 rounded-full border-2 border-outline-variant text-xs font-bold hover:border-primary transition-all">Einparkhilfe</button>
+              <button onclick="toggleBedarfsEquip('Soundsystem',this)" class="bedarfs-equip px-3 py-2 rounded-full border-2 border-outline-variant text-xs font-bold hover:border-primary transition-all">Soundsystem</button>
+            </div>
+          </div>
           <!-- CTA Button -->
           <button onclick="runBedarfsanalyse()" class="w-full metallic-gradient text-on-primary py-5 font-headline font-extrabold text-sm uppercase tracking-widest rounded-xl hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-xl">
             <span class="material-symbols-outlined">search</span>Passende Fahrzeuge anzeigen
@@ -316,6 +332,19 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
           <label class="flex items-center gap-3 bg-surface-container-highest px-4 py-3 rounded-lg cursor-pointer hover:bg-surface-container-high transition-colors"><input type="radio" name="urgency" value="" onchange="applyFilters()" class="accent-primary" checked><span class="text-sm font-medium">Alle Fahrzeuge</span></label>
           <label class="flex items-center gap-3 bg-error/5 border border-error/20 px-4 py-3 rounded-lg cursor-pointer hover:bg-error/10 transition-colors"><input type="radio" name="urgency" value="urgent" onchange="applyFilters()" class="accent-error"><span class="text-sm font-medium text-error">⏱ Läuft bald ab</span></label>
         </div>
+        <!-- Equipment Filter -->
+        <div class="space-y-3">
+          <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant">Ausstattung</label>
+          <div class="space-y-2" id="equip-filters">
+            <label class="flex items-center gap-2 cursor-pointer text-sm"><input type="checkbox" value="Panoramadach" onchange="applyFilters()" class="accent-primary rounded"><span>Panoramadach</span></label>
+            <label class="flex items-center gap-2 cursor-pointer text-sm"><input type="checkbox" value="Navigationssystem" onchange="applyFilters()" class="accent-primary rounded"><span>Navigation</span></label>
+            <label class="flex items-center gap-2 cursor-pointer text-sm"><input type="checkbox" value="Apple CarPlay" onchange="applyFilters()" class="accent-primary rounded"><span>Apple CarPlay</span></label>
+            <label class="flex items-center gap-2 cursor-pointer text-sm"><input type="checkbox" value="Sitzheizung" onchange="applyFilters()" class="accent-primary rounded"><span>Sitzheizung</span></label>
+            <label class="flex items-center gap-2 cursor-pointer text-sm"><input type="checkbox" value="Anhängerkupplung" onchange="applyFilters()" class="accent-primary rounded"><span>Anhängerkupplung</span></label>
+            <label class="flex items-center gap-2 cursor-pointer text-sm"><input type="checkbox" value="Induktives Laden" onchange="applyFilters()" class="accent-primary rounded"><span>Induktives Laden</span></label>
+            <label class="flex items-center gap-2 cursor-pointer text-sm"><input type="checkbox" value="Rückfahrkamera" onchange="applyFilters()" class="accent-primary rounded"><span>Rückfahrkamera</span></label>
+          </div>
+        </div>
         <button onclick="resetFilters()" class="w-full py-3 border border-outline-variant rounded text-xs font-bold uppercase tracking-widest text-on-surface-variant hover:bg-surface-container-low transition-colors">Filter zurücksetzen</button>
       </aside>
       <div class="flex-1"><div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="inv-grid"></div></div>
@@ -365,6 +394,11 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
           <div class="space-y-4">
             <h3 class="font-headline font-extrabold text-2xl">Technische Daten</h3>
             <div id="d-specs" class="grid grid-cols-1 md:grid-cols-2 gap-x-12"></div>
+          </div>
+          <!-- Ausstattung -->
+          <div id="d-equipment-section" class="hidden space-y-4">
+            <h3 class="font-headline font-extrabold text-2xl">Ausstattung</h3>
+            <div id="d-equipment" class="flex flex-wrap gap-2"></div>
           </div>
         </div>
         <!-- Sticky Right -->
@@ -835,10 +869,34 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
             </div>
             <input id="img-input" type="file" accept="image/*" multiple class="hidden" onchange="handleImageUpload(this.files)">
           </div>
+          <!-- Ausstattung -->
+          <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-8 space-y-4">
+            <h3 class="font-headline font-black text-xl uppercase tracking-tighter">Ausstattung</h3>
+            <p class="text-on-surface-variant text-sm">Merkmale durch Komma oder Semikolon trennen</p>
+            <!-- Schnellauswahl häufiger Merkmale -->
+            <div class="flex flex-wrap gap-2" id="equip-quick">
+              <button type="button" onclick="toggleEquip('Panoramadach',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-variant text-xs font-bold hover:border-primary transition-colors">Panoramadach</button>
+              <button type="button" onclick="toggleEquip('Navigationssystem',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-variant text-xs font-bold hover:border-primary transition-colors">Navigation</button>
+              <button type="button" onclick="toggleEquip('Apple CarPlay',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-variant text-xs font-bold hover:border-primary transition-colors">Apple CarPlay</button>
+              <button type="button" onclick="toggleEquip('Android Auto',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-variant text-xs font-bold hover:border-primary transition-colors">Android Auto</button>
+              <button type="button" onclick="toggleEquip('Sitzheizung',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-variant text-xs font-bold hover:border-primary transition-colors">Sitzheizung</button>
+              <button type="button" onclick="toggleEquip('Lenkradheizung',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-variant text-xs font-bold hover:border-primary transition-colors">Lenkradheizung</button>
+              <button type="button" onclick="toggleEquip('Klimaautomatik',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-villain text-xs font-bold hover:border-primary transition-colors">Klimaautomatik</button>
+              <button type="button" onclick="toggleEquip('Rückfahrkamera',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-variant text-xs font-bold hover:border-primary transition-colors">Rückfahrkamera</button>
+              <button type="button" onclick="toggleEquip('Anhängerkupplung',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-variant text-xs font-bold hover:border-primary transition-colors">Anhängerkupplung</button>
+              <button type="button" onclick="toggleEquip('Induktives Laden',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-variant text-xs font-bold hover:border-primary transition-colors">Induktives Laden</button>
+              <button type="button" onclick="toggleEquip('LED-Scheinwerfer',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-variant text-xs font-bold hover:border-primary transition-colors">LED-Scheinwerfer</button>
+              <button type="button" onclick="toggleEquip('Totwinkel-Assistent',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-variant text-xs font-bold hover:border-primary transition-colors">Totwinkel-Assistent</button>
+              <button type="button" onclick="toggleEquip('Einparkhilfe',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-variant text-xs font-bold hover:border-primary transition-colors">Einparkhilfe</button>
+              <button type="button" onclick="toggleEquip('Soundsystem',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-variant text-xs font-bold hover:border-primary transition-colors">Soundsystem</button>
+              <button type="button" onclick="toggleEquip('Sportpaket',this)" class="equip-tag px-3 py-1.5 rounded-full border border-outline-variant text-xs font-bold hover:border-primary transition-colors">Sportpaket</button>
+            </div>
+            <textarea id="d-up-equipment" rows="3" placeholder="z.B. Panoramadach; Apple CarPlay; Sitzheizung; AHK" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium resize-none"></textarea>
+          </div>
           <!-- Beschreibung -->
           <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-8">
             <h3 class="font-headline font-black text-xl uppercase tracking-tighter mb-4">Beschreibung</h3>
-            <textarea id="d-up-desc" rows="4" placeholder="Ausstattung, Besonderheiten, Zustand..." class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium resize-none"></textarea>
+            <textarea id="d-up-desc" rows="4" placeholder="Besonderheiten, Zustand, weitere Infos..." class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium resize-none"></textarea>
           </div>
           <button onclick="dealerSubmitUpload()" class="w-full metallic-gradient text-on-primary py-5 font-headline font-extrabold text-sm uppercase tracking-widest rounded hover:opacity-90 active:scale-95 transition-all">Fahrzeug einreichen →</button>
         </div>
@@ -944,6 +1002,7 @@ async function loadVehicles() {
       desc: v.description || v.variant || '',
       daysLeft: v.days_left || null,
       discount_pct: parseFloat(v.discount_pct) || 0,
+      equipment: Array.isArray(v.equipment) ? v.equipment : [],
     }));
     renderHome();
     renderInv();
@@ -1018,9 +1077,17 @@ function applyFilters(){
   const f=document.getElementById('f-fuel')?.value||'';
   const s=document.getElementById('f-sort')?.value||'discount';
   const u=document.querySelector('input[name="urgency"]:checked')?.value||'';
+  // Equipment Filter
+  const checkedEquip = [...document.querySelectorAll('#equip-filters input:checked')].map(el=>el.value);
   let l=[...VEHICLES];
   if(b)l=l.filter(v=>v.brand===b);
   if(f)l=l.filter(v=>v.fuel===f);
+  if(checkedEquip.length>0){
+    l=l.filter(v=>{
+      const eq=(v.equipment||[]).join(' ').toLowerCase();
+      return checkedEquip.every(e=>eq.includes(e.toLowerCase()));
+    });
+  }
   if(u==='urgent')l=l.filter(v=>v.daysLeft&&v.daysLeft<=30);
   if(s==='discount')l.sort((a,b)=>disc(b)-disc(a));
   if(s==='price_asc')l.sort((a,b)=>a.sale-b.sale);
@@ -1038,6 +1105,7 @@ function resetFilters(){
   const fb=document.getElementById('f-brand'),ff=document.getElementById('f-fuel'),fs=document.getElementById('f-sort');
   if(fb)fb.value='';if(ff)ff.value='';if(fs)fs.value='discount';
   const r=document.querySelectorAll('input[name="urgency"]');if(r[0])r[0].checked=true;
+  document.querySelectorAll('#equip-filters input').forEach(el=>el.checked=false);
   applyFilters();
 }
 
@@ -1062,6 +1130,15 @@ function showDet(id){
   if(v.daysLeft&&v.daysLeft<=30){db.classList.remove('hidden');db.classList.add('flex');db.innerHTML=`<span class="material-symbols-outlined text-sm mr-1">schedule</span>Nur noch ${v.daysLeft} Tage verfügbar`;}else{db.classList.add('hidden');db.classList.remove('flex');}
   const ub=document.getElementById('d-urg-badge');
   if(v.daysLeft&&v.daysLeft<=30){ub.classList.remove('hidden');ub.textContent=`⏱ ${v.daysLeft} Tage`;}else{ub.classList.add('hidden');}
+  // Ausstattung
+  const equipSection=document.getElementById('d-equipment-section');
+  const equipEl=document.getElementById('d-equipment');
+  if(v.equipment&&v.equipment.length>0){
+    equipSection.classList.remove('hidden');
+    equipEl.innerHTML=v.equipment.map(e=>`<span class="bg-surface-container-low border border-outline-variant/20 px-3 py-1.5 rounded-full text-xs font-bold text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-xs">check_circle</span>${e}</span>`).join('');
+  } else {
+    equipSection.classList.add('hidden');
+  }
 }
 
 // INQUIRY
@@ -1464,6 +1541,22 @@ function removeImage(url, el) {
 }
 
 // ── DEALER UPLOAD FORMULAR ───────────────────────────────────────────────────
+function toggleEquip(name, btn) {
+  const ta = document.getElementById('d-up-equipment');
+  const current = ta.value.split(/[;,]/).map(e=>e.trim()).filter(Boolean);
+  const idx = current.findIndex(e => e.toLowerCase() === name.toLowerCase());
+  if (idx === -1) {
+    current.push(name);
+    btn.classList.add('bg-primary', 'text-white', 'border-primary');
+    btn.classList.remove('border-outline-variant');
+  } else {
+    current.splice(idx, 1);
+    btn.classList.remove('bg-primary', 'text-white', 'border-primary');
+    btn.classList.add('border-outline-variant');
+  }
+  ta.value = current.join('; ');
+}
+
 function dealerCalcDisc() {
   const l = parseFloat(document.getElementById('d-up-list').value);
   const s = parseFloat(document.getElementById('d-up-sale').value);
@@ -1495,6 +1588,8 @@ async function dealerSubmitUpload() {
     discount_pct: l > 0 ? Math.round(((l-s)/l)*100*10)/10 : 0,
     description: document.getElementById('d-up-desc').value || null,
     is_day_registration: document.getElementById('d-up-dayref').checked,
+    equipment: document.getElementById('d-up-equipment').value
+      .split(/[;,\n]/).map(e=>e.trim()).filter(e=>e.length>1),
     dealer_email: CURRENT_USER.email,
     image_url: DEALER_IMAGES.length > 0 ? DEALER_IMAGES[0] : null,
     status: 'active',
@@ -1560,6 +1655,7 @@ async function dealerUploadCSV(csvText) {
         discount_pct: parseFloat(v.discount_pct)||0,
         description: v.description||null,
         is_day_registration: v.is_day_registration||false,
+        equipment: Array.isArray(v.equipment) ? v.equipment : [],
         dealer_email: CURRENT_USER?.email||null,
         status: 'active', source: 'csv_import',
       }));
@@ -1586,6 +1682,19 @@ function showDealerCSVStatus(type, msg, details, result) {
 
 // ── BEDARFSANALYSE ───────────────────────────────────────────────────────────
 const bedarfsFilters = { usage: null, body: null, fuel: null, budget: null };
+const bedarfsEquipment = new Set();
+
+function toggleBedarfsEquip(name, btn) {
+  if (bedarfsEquipment.has(name)) {
+    bedarfsEquipment.delete(name);
+    btn.classList.remove('border-primary', 'bg-primary', 'text-white');
+    btn.classList.add('border-outline-variant');
+  } else {
+    bedarfsEquipment.add(name);
+    btn.classList.remove('border-outline-variant');
+    btn.classList.add('border-primary', 'bg-primary', 'text-white');
+  }
+}
 
 function selectFilter(type, value, btn) {
   bedarfsFilters[type] = value;
@@ -1655,6 +1764,15 @@ function runBedarfsanalyse() {
 
   // Immer nach Nachlass sortieren
   results.sort((a, b) => disc(b) - disc(a));
+
+  // Ausstattungs-Filter
+  if (bedarfsEquipment.size > 0) {
+    const equipResults = results.filter(v => {
+      const eq = (v.equipment||[]).join(' ').toLowerCase();
+      return [...bedarfsEquipment].every(e => eq.includes(e.toLowerCase()));
+    });
+    if (equipResults.length > 0) results = equipResults;
+  }
 
   // Fallback: wenn zu wenig Ergebnisse, alle nehmen
   const showFallback = results.length === 0;
