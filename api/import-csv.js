@@ -116,6 +116,15 @@ function parseCSV(csvText) {
       ? Math.round(((listPrice - price) / listPrice) * 100 * 10) / 10
       : 0;
 
+    // Equipment als Array parsen — verschiedene Trennzeichen unterstützt
+    let equipmentArray = [];
+    if (raw.equipment) {
+      equipmentArray = raw.equipment
+        .split(/[;,|]/)
+        .map(e => e.trim().replace(/^["']|["']$/g, ''))
+        .filter(e => e.length > 1);
+    }
+
     vehicles.push({
       ...raw,
       price: price,
@@ -124,6 +133,7 @@ function parseCSV(csvText) {
       is_day_registration: ['ja', 'yes', '1', 'true', 'x'].includes(
         (raw.is_day_registration || '').toLowerCase()
       ),
+      equipment: equipmentArray,
       imported_at: new Date().toISOString(),
       source: 'csv_import',
       status: 'active',
