@@ -692,7 +692,7 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
             <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Hersteller *</label><select id="up-brand" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20 appearance-none"><option value="">Bitte wählen</option><option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Volkswagen</option><option>Porsche</option><option>Tesla</option><option>Skoda</option><option>Seat / Cupra</option><option>Andere</option></select></div>
             <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Modell *</label><input id="up-model" type="text" placeholder="z.B. Golf GTI" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
             <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Variante</label><input id="up-variant" type="text" placeholder="z.B. 2.0 TSI DSG" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
-            <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Erstzulassung Datum *</label><input id="up-reg" type="date" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+            <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Erstzulassung Datum *</label><input id="up-reg" type="date" oninput="calcDisc()" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
             <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Kilometerstand</label><div class="relative flex items-center"><input id="up-km" type="number" value="0" min="0" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20"><span class="absolute right-5 font-black text-xs text-on-surface-variant tracking-widest">KM</span></div></div>
             <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Kraftstoff</label><select id="up-fuel" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20 appearance-none"><option>Benzin</option><option>Diesel</option><option>Elektro</option><option>Hybrid</option><option>Plug-in-Hybrid</option></select></div>
             <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Getriebe</label><select id="up-trans" class="w-full bg-surface-container-high border-none rounded-lg py-4 px-5 text-sm font-medium focus:ring-1 focus:ring-primary/20 appearance-none"><option>Automatik</option><option>Schaltgetriebe</option><option>DSG</option></select></div>
@@ -859,7 +859,7 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
               <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Hersteller *</label><select id="d-up-brand" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"><option value="">Bitte wählen</option><option>Audi</option><option>BMW</option><option>Mercedes-Benz</option><option>Volkswagen</option><option>Porsche</option><option>Tesla</option><option>Skoda</option><option>Seat / Cupra</option><option>Ford</option><option>Toyota</option><option>Hyundai</option><option>Andere</option></select></div>
               <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Modell *</label><input id="d-up-model" type="text" placeholder="z.B. Golf GTI" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"></div>
               <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Variante</label><input id="d-up-variant" type="text" placeholder="z.B. 2.0 TSI DSG" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"></div>
-              <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Erstzulassung</label><input id="d-up-reg" type="date" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"></div>
+              <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Erstzulassung</label><input id="d-up-reg" type="date" oninput="dealerCalcDisc()" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"></div>
               <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Kilometerstand</label><input id="d-up-km" type="number" value="0" min="0" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"></div>
               <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Kraftstoff</label><select id="d-up-fuel" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"><option>Benzin</option><option>Diesel</option><option>Elektro</option><option>Hybrid</option><option>Plug-in-Hybrid</option></select></div>
               <div><label class="block text-xs font-black text-on-surface-variant uppercase tracking-widest mb-2">Getriebe</label><select id="d-up-trans" class="w-full bg-surface-container-high border-none rounded-lg py-3 px-4 text-sm font-medium"><option>Automatik</option><option>Schaltgetriebe</option><option>DSG</option></select></div>
@@ -1562,11 +1562,124 @@ async function submitReg(){
 }
 
 // UPLOAD
-function calcDisc(){
-  const l=parseFloat(document.getElementById('up-list').value),s=parseFloat(document.getElementById('up-sale').value),el=document.getElementById('disc-preview');
-  if(l&&s&&l>s){el.classList.remove('hidden');document.getElementById('dp-pct').textContent=`${(((l-s)/l)*100).toFixed(1)}%`;document.getElementById('dp-save').textContent=`${fmt(l-s)} €`;}
-  else el.classList.add('hidden');
+// ── VALIDIERUNGS-REGELN ───────────────────────────────────────────────────────
+// Regel 1: Inseratspreis mind. 20% unter Listenneupreis
+// Regel 2: Erstzulassung max. 24 Monate zurück
+const VALIDATION_RULES = {
+  MIN_DISCOUNT_PCT: 20,
+  MAX_AGE_MONTHS: 24,
+};
+
+function validateVehicleData(listPrice, salePrice, regDateStr) {
+  const errors = [];
+  // Pflichtfelder
+  if (!listPrice || listPrice <= 0) errors.push({ field: 'list', msg: 'Listenneupreis ist Pflichtfeld.' });
+  if (!salePrice || salePrice <= 0) errors.push({ field: 'sale', msg: 'Inseratspreis ist Pflichtfeld.' });
+  if (!regDateStr) errors.push({ field: 'reg', msg: 'Erstzulassungsdatum ist Pflichtfeld.' });
+  if (errors.length) return errors;
+
+  // Nachlass mind. 20%
+  const discPct = ((listPrice - salePrice) / listPrice) * 100;
+  if (salePrice >= listPrice) {
+    errors.push({ field: 'sale', msg: 'Inseratspreis muss unter dem Listenneupreis liegen.' });
+  } else if (discPct < VALIDATION_RULES.MIN_DISCOUNT_PCT) {
+    const minSale = Math.ceil(listPrice * (1 - VALIDATION_RULES.MIN_DISCOUNT_PCT / 100));
+    errors.push({ field: 'sale', msg: `Mindestens ${VALIDATION_RULES.MIN_DISCOUNT_PCT}% Nachlass erforderlich. Maximaler Inseratspreis: ${fmt(minSale)} €` });
+  }
+
+  // Zulassung max. 24 Monate
+  const regDate = new Date(regDateStr);
+  const now = new Date();
+  const monthsDiff = (now.getFullYear() - regDate.getFullYear()) * 12 + (now.getMonth() - regDate.getMonth());
+  if (regDate > now) {
+    errors.push({ field: 'reg', msg: 'Erstzulassungsdatum kann nicht in der Zukunft liegen.' });
+  } else if (monthsDiff > VALIDATION_RULES.MAX_AGE_MONTHS) {
+    errors.push({ field: 'reg', msg: `Erstzulassung darf maximal ${VALIDATION_RULES.MAX_AGE_MONTHS} Monate zurückliegen. Dieses Fahrzeug ist ${monthsDiff} Monate alt.` });
+  }
+
+  return errors;
 }
+
+function showFieldError(fieldId, msg) {
+  const input = document.getElementById(fieldId);
+  if (!input) return;
+  input.style.cssText = 'border:2px solid #ba1a1a !important; background:#fff5f5 !important;';
+  let hint = document.getElementById(fieldId + '-err');
+  if (!hint) {
+    hint = document.createElement('p');
+    hint.id = fieldId + '-err';
+    hint.className = 'text-xs font-bold mt-1.5 flex items-center gap-1';
+    hint.style.color = '#ba1a1a';
+    input.parentNode.appendChild(hint);
+  }
+  hint.innerHTML = `<span style="font-size:14px;vertical-align:middle;">⚠</span> ${msg}`;
+}
+
+function showFieldSuccess(fieldId, msg) {
+  const input = document.getElementById(fieldId);
+  if (!input) return;
+  input.style.cssText = 'border:2px solid #16a34a !important; background:#f0fdf4 !important;';
+  let hint = document.getElementById(fieldId + '-err');
+  if (!hint) {
+    hint = document.createElement('p');
+    hint.id = fieldId + '-err';
+    hint.className = 'text-xs font-bold mt-1.5 flex items-center gap-1';
+    input.parentNode.appendChild(hint);
+  }
+  hint.style.color = '#16a34a';
+  hint.innerHTML = `<span style="font-size:14px;vertical-align:middle;">✓</span> ${msg}`;
+}
+
+function clearFieldState(fieldId) {
+  const input = document.getElementById(fieldId);
+  if (input) input.style.cssText = '';
+  const hint = document.getElementById(fieldId + '-err');
+  if (hint) hint.remove();
+}
+
+// Live-Validierung beim Tippen
+function calcDisc() {
+  const l = parseFloat(document.getElementById('up-list').value);
+  const s = parseFloat(document.getElementById('up-sale').value);
+  const reg = document.getElementById('up-reg').value;
+  const el = document.getElementById('disc-preview');
+
+  // Nachlass berechnen & anzeigen
+  if (l && s && l > s) {
+    const pct = ((l - s) / l) * 100;
+    el.classList.remove('hidden');
+    document.getElementById('dp-pct').textContent = pct.toFixed(1) + '%';
+    document.getElementById('dp-save').textContent = fmt(l - s) + ' €';
+    // Live-Feedback Nachlass
+    if (pct < VALIDATION_RULES.MIN_DISCOUNT_PCT) {
+      const needed = Math.ceil(l * (1 - VALIDATION_RULES.MIN_DISCOUNT_PCT / 100));
+      showFieldError('up-sale', `Noch ${(VALIDATION_RULES.MIN_DISCOUNT_PCT - pct).toFixed(1)}% fehlen. Max. zulässig: ${fmt(needed)} €`);
+    } else {
+      showFieldSuccess('up-sale', `${pct.toFixed(1)}% Nachlass — Anforderung erfüllt ✓`);
+    }
+  } else if (l && s && s >= l) {
+    el.classList.add('hidden');
+    showFieldError('up-sale', 'Inseratspreis muss unter dem Listenneupreis liegen.');
+  } else {
+    el.classList.add('hidden');
+    if (s) clearFieldState('up-sale');
+  }
+
+  // Live-Feedback Zulassung
+  if (reg) {
+    const regDate = new Date(reg);
+    const now = new Date();
+    const months = (now.getFullYear() - regDate.getFullYear()) * 12 + (now.getMonth() - regDate.getMonth());
+    if (regDate > now) {
+      showFieldError('up-reg', 'Datum kann nicht in der Zukunft liegen.');
+    } else if (months > VALIDATION_RULES.MAX_AGE_MONTHS) {
+      showFieldError('up-reg', `Fahrzeug ist ${months} Monate alt — Maximum: ${VALIDATION_RULES.MAX_AGE_MONTHS} Monate.`);
+    } else {
+      showFieldSuccess('up-reg', `${months} Monate alt — Anforderung erfüllt ✓`);
+    }
+  }
+}
+
 // Flag: wird auf true gesetzt wenn CSV erfolgreich importiert wurde
 let csvImportSuccess = false;
 
@@ -1576,47 +1689,76 @@ async function submitUpload(){
     document.getElementById('upload-wrap').innerHTML=`<div class="text-center py-20 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h2 class="font-headline font-black text-4xl tracking-tighter">Fahrzeuge eingereicht.</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir pr&uuml;fen die importierten Fahrzeuge und schalten sie innerhalb von 24 Stunden frei.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all mt-4">Zur&uuml;ck zur Startseite</button></div>`;
     return;
   }
-  // Manuelles Formular
-  const b=document.getElementById('up-brand').value;
-  const m=document.getElementById('up-model').value;
-  if(!b || !m){
-    let errBox = document.getElementById('upload-error');
-    if(!errBox){
-      errBox = document.createElement('div');
-      errBox.id = 'upload-error';
-      errBox.className = 'mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-sm font-bold flex items-center gap-2';
-      document.getElementById('upload-wrap').prepend(errBox);
-    }
-    errBox.innerHTML = '<span class="material-symbols-outlined text-base" style="color:#ba1a1a">error</span><span style="color:#ba1a1a">Bitte Hersteller und Modell ausw&auml;hlen oder zuerst eine CSV-Datei importieren.</span>';
-    errBox.scrollIntoView({behavior:'smooth', block:'center'});
+
+  // Manuelles Formular — Pflichtfeld-Check
+  const b = document.getElementById('up-brand').value;
+  const m = document.getElementById('up-model').value;
+  const l = parseFloat(document.getElementById('up-list').value) || 0;
+  const s = parseFloat(document.getElementById('up-sale').value) || 0;
+  const reg = document.getElementById('up-reg').value || '';
+
+  // Basis-Pflichtfelder
+  if (!b || !m) {
+    showUploadError('Bitte Hersteller und Modell auswählen.');
     return;
   }
-  // Manuelles Fahrzeug in Supabase speichern
-  const l=parseFloat(document.getElementById('up-list').value)||0;
-  const s=parseFloat(document.getElementById('up-sale').value)||0;
-  const regVal = document.getElementById('up-reg').value||'';
+
+  // Vollständige Validierung
+  const errors = validateVehicleData(l, s, reg);
+  if (errors.length > 0) {
+    // Alle Felder markieren
+    ['up-list','up-sale','up-reg'].forEach(id => clearFieldState(id));
+    const fieldMap = { list: 'up-list', sale: 'up-sale', reg: 'up-reg' };
+    errors.forEach(e => showFieldError(fieldMap[e.field] || e.field, e.msg));
+    // Sammel-Fehlerbox
+    showUploadError(
+      errors.map(e => e.msg).join('<br/>'),
+      'Das Fahrzeug erfüllt nicht die Mindestanforderungen von stehengeblieben.de:'
+    );
+    document.getElementById('up-list')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  // Validierung bestanden — speichern
   const vehicle = {
-    brand: b,
-    model: m,
-    variant: document.getElementById('up-variant').value||null,
-    first_registration: regVal ? regVal : null,
-    mileage: parseInt(document.getElementById('up-km').value)||0,
-    fuel_type: document.getElementById('up-fuel').value||'Benzin',
-    transmission: document.getElementById('up-trans').value||'Automatik',
-    color: document.getElementById('up-color').value||'',
-    list_price: l,
-    price: s,
-    discount_pct: l>0&&s>0 ? Math.round(((l-s)/l)*100*10)/10 : 0,
-    description: document.getElementById('up-desc').value||'',
-    dealer_email: document.getElementById('up-email').value||'',
-    status: 'pending',
-    source: 'manual',
+    brand: b, model: m,
+    variant: document.getElementById('up-variant').value || null,
+    first_registration: reg || null,
+    mileage: parseInt(document.getElementById('up-km').value) || 0,
+    fuel_type: document.getElementById('up-fuel').value || 'Benzin',
+    transmission: document.getElementById('up-trans').value || 'Automatik',
+    color: document.getElementById('up-color').value || '',
+    list_price: l, price: s,
+    discount_pct: Math.round(((l - s) / l) * 100 * 10) / 10,
+    description: document.getElementById('up-desc').value || '',
+    dealer_email: document.getElementById('up-email').value || '',
+    status: 'pending', source: 'manual',
   };
   try {
     await db.insert('vehicles', [vehicle]);
     await loadVehicles();
   } catch(err) { console.warn('Vehicle save failed:', err); }
   document.getElementById('upload-wrap').innerHTML=`<div class="text-center py-20 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl">check_circle</span></div><h2 class="font-headline font-black text-4xl tracking-tighter">Fahrzeug eingereicht.</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir pr&uuml;fen dein Fahrzeug und schalten es innerhalb von 24 Stunden frei.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all mt-4">Zur&uuml;ck zur Startseite</button></div>`;
+}
+
+function showUploadError(msg, title) {
+  let errBox = document.getElementById('upload-error');
+  if (!errBox) {
+    errBox = document.createElement('div');
+    errBox.id = 'upload-error';
+    errBox.className = 'mb-6 p-5 rounded-xl text-sm border';
+    errBox.style.cssText = 'background:#fff5f5; border-color:#ba1a1a;';
+    document.getElementById('upload-wrap').prepend(errBox);
+  }
+  errBox.innerHTML = `
+    <div class="flex items-start gap-3">
+      <span class="material-symbols-outlined flex-shrink-0 mt-0.5" style="color:#ba1a1a; font-size:20px;">error</span>
+      <div>
+        <p class="font-bold mb-1" style="color:#ba1a1a;">${title || 'Fahrzeug kann nicht eingestellt werden:'}</p>
+        <p class="leading-relaxed" style="color:#7f1d1d;">${msg}</p>
+      </div>
+    </div>`;
+  errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 // ── ADMIN ACCOUNTS ────────────────────────────────────────────────────────────
@@ -1793,10 +1935,43 @@ async function portalLogin() {
     if (!r.ok) throw new Error(data.error_description || data.msg || 'Login fehlgeschlagen');
     localStorage.setItem('sb_token', data.access_token);
     CURRENT_USER = data.user;
-    await nav('dealer-dashboard');
+    // ── Rolle prüfen und entsprechend weiterleiten ──────────────────────────
+    await redirectByRole(email);
   } catch(e) {
     errEl.textContent = e.message;
     errEl.classList.remove('hidden');
+  }
+}
+
+// ── Rolle aus dealers-Tabelle prüfen und weiterleiten ─────────────────────────
+async function redirectByRole(email) {
+  try {
+    const token = localStorage.getItem('sb_token') || '';
+    const r = await fetch(
+      SUPA_URL + '/rest/v1/dealers?select=role,approved&email=eq.' + encodeURIComponent(email) + '&limit=1',
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + token } }
+    );
+    const rows = await r.json();
+    if (rows && rows.length > 0 && rows[0].role === 'admin') {
+      // Admin → Admin Panel öffnen
+      document.querySelectorAll('[data-page]').forEach(x => x.classList.remove('active'));
+      const adminEl = document.querySelector('[data-page="admin"]');
+      if (adminEl) adminEl.classList.add('active');
+      window.scrollTo(0, 0);
+      // Admin-Login-Screen überspringen, direkt ins Panel
+      CURRENT_ADMIN = { user: email, role: 'Super Admin', color: '#ffdea5' };
+      document.getElementById('admin-login-screen').classList.add('hidden');
+      document.getElementById('admin-main').classList.remove('hidden');
+      const badge = document.getElementById('admin-role-badge');
+      if (badge) { badge.textContent = 'Eingeloggt als: ' + email + ' — Super Admin'; badge.style.color = '#ffdea5'; }
+      renderAdm();
+    } else {
+      // Händler → Dashboard
+      await nav('dealer-dashboard');
+    }
+  } catch(e) {
+    // Fallback: normales Dashboard
+    await nav('dealer-dashboard');
   }
 }
 
@@ -2065,12 +2240,40 @@ function toggleEquip(name, btn) {
 function dealerCalcDisc() {
   const l = parseFloat(document.getElementById('d-up-list').value);
   const s = parseFloat(document.getElementById('d-up-sale').value);
+  const reg = document.getElementById('d-up-reg').value;
   const el = document.getElementById('d-disc-preview');
+
   if (l && s && l > s) {
+    const pct = ((l - s) / l) * 100;
     el.classList.remove('hidden');
-    document.getElementById('d-dp-pct').textContent = (((l-s)/l)*100).toFixed(1) + '%';
-    document.getElementById('d-dp-save').textContent = fmt(l-s) + ' €';
-  } else { el.classList.add('hidden'); }
+    document.getElementById('d-dp-pct').textContent = pct.toFixed(1) + '%';
+    document.getElementById('d-dp-save').textContent = fmt(l - s) + ' €';
+    if (pct < VALIDATION_RULES.MIN_DISCOUNT_PCT) {
+      const needed = Math.ceil(l * (1 - VALIDATION_RULES.MIN_DISCOUNT_PCT / 100));
+      showFieldError('d-up-sale', `Noch ${(VALIDATION_RULES.MIN_DISCOUNT_PCT - pct).toFixed(1)}% fehlen. Max. zulässig: ${fmt(needed)} €`);
+    } else {
+      showFieldSuccess('d-up-sale', `${pct.toFixed(1)}% Nachlass — Anforderung erfüllt ✓`);
+    }
+  } else if (l && s && s >= l) {
+    el.classList.add('hidden');
+    showFieldError('d-up-sale', 'Inseratspreis muss unter dem Listenneupreis liegen.');
+  } else {
+    el.classList.add('hidden');
+    if (s) clearFieldState('d-up-sale');
+  }
+
+  if (reg) {
+    const regDate = new Date(reg);
+    const now = new Date();
+    const months = (now.getFullYear() - regDate.getFullYear()) * 12 + (now.getMonth() - regDate.getMonth());
+    if (regDate > now) {
+      showFieldError('d-up-reg', 'Datum kann nicht in der Zukunft liegen.');
+    } else if (months > VALIDATION_RULES.MAX_AGE_MONTHS) {
+      showFieldError('d-up-reg', `Fahrzeug ist ${months} Monate alt — Maximum: ${VALIDATION_RULES.MAX_AGE_MONTHS} Monate.`);
+    } else {
+      showFieldSuccess('d-up-reg', `${months} Monate alt — Anforderung erfüllt ✓`);
+    }
+  }
 }
 
 async function dealerSubmitUpload() {
@@ -2079,39 +2282,79 @@ async function dealerSubmitUpload() {
   const m = document.getElementById('d-up-model').value;
   const l = parseFloat(document.getElementById('d-up-list').value) || 0;
   const s = parseFloat(document.getElementById('d-up-sale').value) || 0;
-  if (!b || !m) { alert('Bitte Hersteller und Modell angeben.'); return; }
-  if (!l || !s) { alert('Bitte Listenpreis und Verkaufspreis angeben.'); return; }
+  const reg = document.getElementById('d-up-reg').value || '';
+
+  if (!b || !m) {
+    showDealerUploadError('Bitte Hersteller und Modell angeben.');
+    return;
+  }
+
+  // Vollständige Validierung
+  const errors = validateVehicleData(l, s, reg);
+  if (errors.length > 0) {
+    ['d-up-list','d-up-sale','d-up-reg'].forEach(id => clearFieldState(id));
+    const fieldMap = { list: 'd-up-list', sale: 'd-up-sale', reg: 'd-up-reg' };
+    errors.forEach(e => showFieldError(fieldMap[e.field] || e.field, e.msg));
+    showDealerUploadError(
+      errors.map(e => e.msg).join('<br/>'),
+      'Fahrzeug kann nicht eingestellt werden:'
+    );
+    document.getElementById('d-up-list')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
   const vehicle = {
     brand: b, model: m,
     variant: document.getElementById('d-up-variant').value || null,
-    first_registration: document.getElementById('d-up-reg').value || null,
+    first_registration: reg || null,
     mileage: parseInt(document.getElementById('d-up-km').value) || 0,
     fuel_type: document.getElementById('d-up-fuel').value,
     transmission: document.getElementById('d-up-trans').value,
     color: document.getElementById('d-up-color').value || null,
     list_price: l, price: s,
-    discount_pct: l > 0 ? Math.round(((l-s)/l)*100*10)/10 : 0,
+    discount_pct: Math.round(((l - s) / l) * 100 * 10) / 10,
     description: document.getElementById('d-up-desc').value || null,
     is_day_registration: document.getElementById('d-up-dayref').checked,
     equipment: document.getElementById('d-up-equipment').value
       .split(/[;,\n]/).map(e=>e.trim()).filter(e=>e.length>1),
     dealer_email: CURRENT_USER.email,
     image_url: DEALER_IMAGES.length > 0 ? DEALER_IMAGES[0] : null,
-    status: 'active',
-    source: 'manual',
+    status: 'active', source: 'manual',
   };
   try {
     await db.insert('vehicles', [vehicle]);
     DEALER_IMAGES = [];
     await loadDealerDashboard();
     showDealerTab('inventory');
-    // Reset form
     ['d-up-brand','d-up-model','d-up-variant','d-up-reg','d-up-km','d-up-fuel','d-up-trans','d-up-color','d-up-list','d-up-sale','d-up-desc'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = el.tagName === 'SELECT' ? el.options[0].value : '';
+      clearFieldState(id);
     });
     document.getElementById('image-upload-grid').innerHTML = `<div onclick="document.getElementById('img-input').click()" class="aspect-square bg-surface-container-high rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-surface-container-highest transition-colors border-2 border-dashed border-outline-variant"><span class="material-symbols-outlined text-outline text-3xl">add_photo_alternate</span><span class="text-xs font-bold mt-2 uppercase tracking-widest text-on-surface-variant">Bild hinzufügen</span></div>`;
   } catch(e) { alert('Fehler beim Speichern: ' + e.message); }
+}
+
+function showDealerUploadError(msg, title) {
+  const wrap = document.querySelector('#dealer-dashboard [data-upload-form]') || document.getElementById('dealer-dashboard');
+  let errBox = document.getElementById('d-upload-error');
+  if (!errBox) {
+    errBox = document.createElement('div');
+    errBox.id = 'd-upload-error';
+    errBox.className = 'mb-5 p-5 rounded-xl text-sm border';
+    errBox.style.cssText = 'background:#fff5f5; border-color:#ba1a1a;';
+    const listEl = document.getElementById('d-up-list');
+    if (listEl) listEl.closest('section')?.parentNode?.insertBefore(errBox, listEl.closest('section'));
+  }
+  errBox.innerHTML = `
+    <div class="flex items-start gap-3">
+      <span class="material-symbols-outlined flex-shrink-0 mt-0.5" style="color:#ba1a1a; font-size:20px;">error</span>
+      <div>
+        <p class="font-bold mb-1" style="color:#ba1a1a;">${title || 'Fahrzeug kann nicht eingestellt werden:'}</p>
+        <p class="leading-relaxed" style="color:#7f1d1d;">${msg}</p>
+      </div>
+    </div>`;
+  errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 // ── DEALER CSV ────────────────────────────────────────────────────────────────
