@@ -1172,7 +1172,7 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
           </div>
           <div class="bg-secondary-fixed/10 border border-secondary-fixed/20 rounded-xl p-4 flex gap-3">
             <span class="material-symbols-outlined text-secondary text-lg mt-0.5 flex-shrink-0">info</span>
-            <p>API-Keys erhalten Sie nach Ihrer Registrierung als Händler. Wenden Sie sich an <a href="mailto:api@stehengeblieben.de" class="text-on-tertiary-container hover:underline">api@stehengeblieben.de</a>.</p>
+            API-Keys erhalten Sie nach Ihrer Registrierung als Händler.
           </div>
         </section>
 
@@ -1290,7 +1290,7 @@ Authorization: Bearer IHR_API_KEY</pre>
             </div>
             <div class="bg-surface-container-low rounded-xl p-5 space-y-2">
               <div class="font-bold text-sm flex items-center gap-2"><span class="w-2 h-2 bg-on-tertiary-container rounded-full"></span>Andere Systeme</div>
-              <p class="text-on-surface-variant text-xs">Alle Systeme die einen CSV-Export im Mobile.de-Format unterstützen funktionieren direkt. Bei Fragen: <a href="mailto:api@stehengeblieben.de" class="text-on-tertiary-container hover:underline">api@stehengeblieben.de</a></p>
+              <p class="text-on-surface-variant text-xs">Alle Systeme die einen CSV-Export im Mobile.de-Format unterstützen funktionieren direkt.</p>
             </div>
           </div>
         </section>
@@ -1314,7 +1314,7 @@ Authorization: Bearer IHR_API_KEY</pre>
             <span class="material-symbols-outlined text-on-tertiary-container mt-0.5 flex-shrink-0">support_agent</span>
             <div>
               <p class="font-bold text-sm mb-1">Technischer Support</p>
-              <p class="text-on-surface-variant text-xs">Bei Integrationsfragen: <a href="mailto:api@stehengeblieben.de" class="text-on-tertiary-container hover:underline">api@stehengeblieben.de</a> — Antwortzeit innerhalb von 24 Stunden.</p>
+              <p class="text-on-surface-variant text-xs">Bei Integrationsfragen wenden Sie sich an uns — Antwortzeit innerhalb von 24 Stunden.</p>
             </div>
           </div>
         </section>
@@ -2052,7 +2052,34 @@ async function loadDealerDashboard() {
   const email = CURRENT_USER.email;
   const company = CURRENT_USER.user_metadata?.company || email;
   document.getElementById('dash-company').textContent = company;
-  document.getElementById('dash-email').textContent = email;
+    document.getElementById('dash-email').textContent = email;
+
+  // Rolle aus dealers-Tabelle laden und "Mein Paket" + Admin-Link aktualisieren
+  try {
+    const token = localStorage.getItem('sb_token') || '';
+    const rr = await fetch(SUPA_URL + '/rest/v1/dealers?select=role,plan&email=eq.' + encodeURIComponent(email) + '&limit=1', {
+      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + token }
+    });
+    const dealerRows = await rr.json();
+    const dealerRole = dealerRows && dealerRows.length > 0 ? dealerRows[0].role : null;
+    const dealerPlan = dealerRows && dealerRows.length > 0 ? dealerRows[0].plan : null;
+    const planEl = document.getElementById('kpi-plan');
+    if (dealerRole === 'admin') {
+      if (planEl) { planEl.textContent = 'Admin'; planEl.style.color = '#ffdea5'; }
+      let adminLink = document.getElementById('dtab-admin');
+      if (!adminLink) {
+        adminLink = document.createElement('a');
+        adminLink.id = 'dtab-admin';
+        adminLink.className = 'flex items-center gap-3 px-4 py-3 text-yellow-400 hover:bg-surface-container-high rounded-lg text-sm font-bold transition-all cursor-pointer';
+        adminLink.innerHTML = '<span class="material-symbols-outlined text-xl">admin_panel_settings</span>Admin-Panel';
+        adminLink.onclick = () => redirectByRole(email);
+        document.querySelector('#dealer-dashboard nav').appendChild(adminLink);
+      }
+    } else if (dealerPlan) {
+      if (planEl) planEl.textContent = dealerPlan;
+    }
+  } catch(e) { /* Plan-Anzeige ist nicht kritisch */ }
+
 
   // Meine Fahrzeuge laden
   try {
