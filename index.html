@@ -797,6 +797,7 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
         <a onclick="showDealerTab('upload')" id="dtab-upload" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined text-xl">add_circle</span>Fahrzeug einstellen</a>
         <a onclick="showDealerTab('inventory')" id="dtab-inventory" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined text-xl">directions_car</span>Mein Inventar</a>
         <a onclick="showDealerTab('leads')" id="dtab-leads" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined text-xl">person_search</span>Leads</a>
+        <a onclick="showDealerTab('profile')" id="dtab-profile" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined text-xl">manage_accounts</span>Mein Profil</a>
       </nav>
       <button onclick="portalLogout()" class="flex items-center gap-2 px-4 py-3 text-on-surface-variant hover:text-error text-sm font-medium transition-colors mt-4">
         <span class="material-symbols-outlined text-xl">logout</span>Abmelden
@@ -939,6 +940,82 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
         <h1 class="font-headline font-black text-3xl tracking-tighter mb-8">Leads</h1>
         <div id="dealer-leads-list" class="space-y-4"></div>
       </div>
+
+      <!-- PROFIL TAB -->
+      <div id="dealer-tab-profile" class="hidden">
+        <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
+          <div>
+            <h1 class="font-headline font-black text-3xl tracking-tighter">Mein Profil</h1>
+            <p class="text-on-surface-variant text-sm mt-1">Ihre Händlerdaten — sichtbar für das stehengeblieben.de Team</p>
+          </div>
+          <button onclick="saveProfile()" class="metallic-gradient text-on-primary px-6 py-3 rounded font-headline font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">save</span>Profil speichern
+          </button>
+        </div>
+        <div id="profile-save-msg" class="hidden mb-6 p-4 rounded-xl text-sm font-bold flex items-center gap-2" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;">
+          <span class="material-symbols-outlined text-base">check_circle</span>Profil erfolgreich gespeichert.
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Unternehmen -->
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+            <h2 class="font-headline font-bold text-lg tracking-tighter flex items-center gap-2"><span class="material-symbols-outlined text-on-tertiary-container">store</span>Unternehmen</h2>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Firmenname *</label><input id="prof-company" type="text" placeholder="Auto Müller GmbH" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Rechtsform</label>
+              <select id="prof-legal" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium appearance-none">
+                <option value="">Bitte wählen</option><option>GmbH</option><option>GmbH & Co. KG</option><option>AG</option><option>Einzelunternehmen</option><option>OHG</option><option>UG (haftungsbeschränkt)</option>
+              </select>
+            </div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Umsatzsteuer-ID *</label><input id="prof-vatid" type="text" placeholder="DE123456789" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Handelsregisternummer</label><input id="prof-hrn" type="text" placeholder="HRB 12345" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+          </div>
+          <!-- Anschrift -->
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+            <h2 class="font-headline font-bold text-lg tracking-tighter flex items-center gap-2"><span class="material-symbols-outlined text-on-tertiary-container">location_on</span>Anschrift</h2>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Straße und Hausnummer *</label><input id="prof-street" type="text" placeholder="Musterstraße 12" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+            <div class="grid grid-cols-3 gap-3">
+              <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">PLZ *</label><input id="prof-plz" type="text" placeholder="50667" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+              <div class="col-span-2"><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Stadt *</label><input id="prof-city" type="text" placeholder="Köln" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+            </div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Bundesland</label>
+              <select id="prof-state" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium appearance-none">
+                <option value="">Bitte wählen</option><option>Baden-Württemberg</option><option>Bayern</option><option>Berlin</option><option>Brandenburg</option><option>Bremen</option><option>Hamburg</option><option>Hessen</option><option>Mecklenburg-Vorpommern</option><option>Niedersachsen</option><option>Nordrhein-Westfalen</option><option>Rheinland-Pfalz</option><option>Saarland</option><option>Sachsen</option><option>Sachsen-Anhalt</option><option>Schleswig-Holstein</option><option>Thüringen</option>
+              </select>
+            </div>
+          </div>
+          <!-- Ansprechpartner -->
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+            <h2 class="font-headline font-bold text-lg tracking-tighter flex items-center gap-2"><span class="material-symbols-outlined text-on-tertiary-container">person</span>Ansprechpartner</h2>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Vorname *</label><input id="prof-firstname" type="text" placeholder="Max" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+              <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Nachname *</label><input id="prof-lastname" type="text" placeholder="Müller" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+            </div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Position</label><input id="prof-position" type="text" placeholder="Geschäftsführer" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">E-Mail (Kontakt) *</label><input id="prof-email-contact" type="email" placeholder="kontakt@autohaus.de" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Telefon *</label><input id="prof-phone" type="tel" placeholder="+49 221 123456" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Mobil</label><input id="prof-mobile" type="tel" placeholder="+49 172 1234567" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+          </div>
+          <!-- Betrieb -->
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+            <h2 class="font-headline font-bold text-lg tracking-tighter flex items-center gap-2"><span class="material-symbols-outlined text-on-tertiary-container">garage</span>Betrieb</h2>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Website</label><input id="prof-website" type="url" placeholder="https://www.autohaus.de" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Marken (kommagetrennt)</label><input id="prof-brands" type="text" placeholder="VW, BMW, Audi" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Mitarbeiter</label>
+              <select id="prof-employees" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium appearance-none">
+                <option value="">Bitte wählen</option><option>1–5</option><option>6–15</option><option>16–50</option><option>51–100</option><option>über 100</option>
+              </select>
+            </div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">IBAN</label><input id="prof-iban" type="text" placeholder="DE89 3704 0044 0532 0130 00" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Abonnement</label><div id="prof-plan-display" class="bg-tertiary-container text-on-tertiary-container px-4 py-3 rounded-lg text-sm font-bold">Wird geladen…</div></div>
+          </div>
+        </div>
+        <div class="mt-6 flex justify-end gap-4 items-center">
+          <p class="text-xs text-on-surface-variant">Daten werden gemäß <button onclick="nav('datenschutz')" class="underline hover:text-primary">Datenschutzerklärung</button> verarbeitet (DSGVO Art. 6 Abs. 1 lit. b).</p>
+          <button onclick="saveProfile()" class="metallic-gradient text-on-primary px-8 py-4 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2 flex-shrink-0">
+            <span class="material-symbols-outlined text-sm">save</span>Speichern
+          </button>
+        </div>
+      </div>
+
     </main>
   </div>
 </div>
@@ -1047,7 +1124,7 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
       <section class="space-y-2">
         <h2 class="font-headline font-bold text-lg tracking-tighter">Kontakt</h2>
         <p>Telefon: 05281/1605613<br/>
-        E-Mail: <a href="mailto:kontakt@stehengeblieben.de" class="text-on-tertiary-container hover:underline">kontakt@stehengeblieben.de</a></p>
+        E-Mail: <a href="/cdn-cgi/l/email-protection#3b5054554f5a504f7b484f5e535e555c5e5957525e595e55155f5e" class="text-on-tertiary-container hover:underline"><span class="__cf_email__" data-cfemail="244f4b4a50454f50645750414c414a434146484d4146414a0a4041">[email&#160;protected]</span></a></p>
       </section>
       <section class="space-y-2">
         <h2 class="font-headline font-bold text-lg tracking-tighter">Umsatzsteuer-ID</h2>
@@ -1081,7 +1158,7 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
     <div class="max-w-3xl mx-auto px-6 md:px-8 py-12 space-y-10 text-sm text-on-surface leading-relaxed">
       <section class="space-y-3">
         <h2 class="font-headline font-bold text-xl tracking-tighter">1. Verantwortlicher</h2>
-        <p>Verantwortlicher im Sinne der DSGVO ist:<br/><strong>stehengeblieben.de</strong>, [Name und Adresse wie im Impressum]<br/>E-Mail: <a href="mailto:datenschutz@stehengeblieben.de" class="text-on-tertiary-container hover:underline">datenschutz@stehengeblieben.de</a></p>
+        <p>Verantwortlicher im Sinne der DSGVO ist:<br/><strong>stehengeblieben.de</strong>, [Name und Adresse wie im Impressum]<br/>E-Mail: <a href="/cdn-cgi/l/email-protection#8befeaffeee5f8e8e3fefff1cbf8ffeee3eee5eceee9e7e2eee9eee5a5efee" class="text-on-tertiary-container hover:underline"><span class="__cf_email__" data-cfemail="2e4a4f5a4b405d4d465b5a546e5d5a4b464b40494b4c42474b4c4b40004a4b">[email&#160;protected]</span></a></p>
       </section>
       <section class="space-y-3">
         <h2 class="font-headline font-bold text-xl tracking-tighter">2. Erhobene Daten und Zweck</h2>
@@ -1112,11 +1189,11 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
       </section>
       <section class="space-y-3">
         <h2 class="font-headline font-bold text-xl tracking-tighter">6. Ihre Rechte</h2>
-        <p>Sie haben das Recht auf: <strong>Auskunft</strong> (Art. 15 DSGVO), <strong>Berichtigung</strong> (Art. 16), <strong>Löschung</strong> (Art. 17), <strong>Einschränkung</strong> (Art. 18), <strong>Datenübertragbarkeit</strong> (Art. 20) und <strong>Widerspruch</strong> (Art. 21). Zur Ausübung Ihrer Rechte wenden Sie sich an: <a href="mailto:datenschutz@stehengeblieben.de" class="text-on-tertiary-container hover:underline">datenschutz@stehengeblieben.de</a>. Sie haben außerdem das Recht, sich bei der zuständigen Datenschutzbehörde zu beschweren.</p>
+        <p>Sie haben das Recht auf: <strong>Auskunft</strong> (Art. 15 DSGVO), <strong>Berichtigung</strong> (Art. 16), <strong>Löschung</strong> (Art. 17), <strong>Einschränkung</strong> (Art. 18), <strong>Datenübertragbarkeit</strong> (Art. 20) und <strong>Widerspruch</strong> (Art. 21). Zur Ausübung Ihrer Rechte wenden Sie sich an: <a href="/cdn-cgi/l/email-protection#b3d7d2c7d6ddc0d0dbc6c7c9f3c0c7d6dbd6ddd4d6d1dfdad6d1d6dd9dd7d6" class="text-on-tertiary-container hover:underline"><span class="__cf_email__" data-cfemail="32565346575c41515a474648724146575a575c5557505e5b5750575c1c5657">[email&#160;protected]</span></a>. Sie haben außerdem das Recht, sich bei der zuständigen Datenschutzbehörde zu beschweren.</p>
       </section>
       <section class="space-y-3">
         <h2 class="font-headline font-bold text-xl tracking-tighter">7. Kontakt Datenschutz</h2>
-        <p>Bei Fragen zum Datenschutz: <a href="mailto:datenschutz@stehengeblieben.de" class="text-on-tertiary-container hover:underline">datenschutz@stehengeblieben.de</a></p>
+        <p>Bei Fragen zum Datenschutz: <a href="/cdn-cgi/l/email-protection#65010411000b16060d10111f251611000d000b020007090c0007000b4b0100" class="text-on-tertiary-container hover:underline"><span class="__cf_email__" data-cfemail="593d382d3c372a3a312c2d23192a2d3c313c373e3c3b35303c3b3c37773d3c">[email&#160;protected]</span></a></p>
         <p class="text-xs text-on-surface-variant">Stand: Januar 2025</p>
       </section>
       <div class="pt-6 border-t border-outline-variant/20">
@@ -1337,7 +1414,7 @@ Authorization: Bearer IHR_API_KEY</pre>
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── SUPABASE — direktes REST API (kein SDK) ───────────────────────────────────
 const SUPA_URL = 'https://clbhgauhguhevmcczawv.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsYmhnYXVoZ3VoZXZtY2N6YXd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3MTY3NTQsImV4cCI6MjA5MDI5Mjc1NH0.Onf8t_NkW7J9VTdaBnuRVflFRpr2vjvbbOHUbCJaj9Y';
@@ -1762,6 +1839,7 @@ function showUploadError(msg, title) {
 const ADMIN_ACCOUNTS = {
   'sven':    { pass: 'stehengeblieben2025', role: 'Super Admin',    color: '#ffdea5' },
   'support': { pass: 'support2025',         role: 'Support Agent',  color: '#457efa' },
+  'ses@auto-owl.de': { pass: 'stehengeblieben2025', role: 'Super Admin', color: '#ffdea5' },
 };
 let CURRENT_ADMIN = null;
 const SUPPORT_LOG = [];
@@ -1811,7 +1889,7 @@ function doAdminHelp() {
   }
 }
 
-function renderAdm() {
+async function renderAdm() {
   // Fahrzeuge Tab
   const avCount = VEHICLES.length;
   const avEl = document.getElementById('av-count');
@@ -1829,34 +1907,62 @@ function renderAdm() {
       </div>
     </div>`).join('') : '<p class="text-on-surface-variant">Keine Fahrzeuge geladen.</p>';
 
-  // Händler Tab — erweitertes Dashboard
-  const soldCount = DEALERS.filter(d => d.approved).length;
-  const pendingCount = DEALERS.filter(d => !d.approved).length;
+  // Händler Tab — live aus Supabase laden
+  const adList = document.getElementById('ad-list');
   const adStats = document.getElementById('ad-stats');
-  if (adStats) adStats.textContent = `${soldCount} aktiv · ${pendingCount} ausstehend`;
-  document.getElementById('ad-list').innerHTML = DEALERS.length ? DEALERS.map((d, i) => `
-    <div class="bg-surface-container-lowest rounded-xl p-5 mb-3 border-l-4 ${d.approved ? 'border-green-400' : 'border-secondary'} shadow-sm">
-      <div class="flex justify-between items-start flex-wrap gap-3">
-        <div class="flex-1">
-          <div class="flex items-center gap-3 flex-wrap">
-            <div class="font-headline font-bold text-base">${d.company}</div>
-            <span class="text-xs px-2 py-0.5 rounded-full font-bold ${d.approved ? 'bg-green-100 text-green-700' : 'bg-secondary-fixed/20 text-secondary'}">${d.approved ? '✅ Aktiv' : '⏳ Ausstehend'}</span>
-            ${d.plan ? `<span class="text-xs px-2 py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-bold">${d.plan}</span>` : ''}
+  adList.innerHTML = '<p class="text-on-surface-variant text-sm animate-pulse">Lade Händler aus Datenbank…</p>';
+  try {
+    const dealers = await db.select('dealers', 'select=*&order=created_at.desc');
+    // Fahrzeugzähler pro Händler
+    let vCounts = {};
+    try {
+      const vAll = await db.select('vehicles', 'select=dealer_email,status');
+      vAll.forEach(v => { if (v.status === 'active') vCounts[v.dealer_email] = (vCounts[v.dealer_email]||0)+1; });
+    } catch(e) {}
+    // Profildaten
+    let profiles = [];
+    try { profiles = await db.select('dealer_profiles', 'select=*'); } catch(e) {}
+
+    const activeCount = dealers.filter(d=>d.approved).length;
+    const pendingCount = dealers.filter(d=>!d.approved).length;
+    if (adStats) adStats.textContent = `${dealers.length} gesamt · ${activeCount} aktiv · ${pendingCount} ausstehend`;
+
+    adList.innerHTML = dealers.length ? dealers.map((d,i) => {
+      const prof = profiles.find(p=>p.dealer_email===d.email)||{};
+      const vCount = vCounts[d.email]||0;
+      const regDate = d.created_at ? new Date(d.created_at).toLocaleDateString('de-DE') : '—';
+      return `
+      <div class="bg-surface-container-lowest rounded-xl p-5 mb-3 border-l-4 ${d.approved?'border-green-400':'border-secondary'} shadow-sm">
+        <div class="flex justify-between items-start flex-wrap gap-3">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap mb-2">
+              <span class="font-headline font-bold text-base">${d.company||'—'}</span>
+              <span class="text-xs px-2 py-0.5 rounded-full font-bold ${d.approved?'bg-green-100 text-green-700':'bg-secondary-fixed/20 text-secondary'}">${d.approved?'✅ Aktiv':'⏳ Ausstehend'}</span>
+              ${d.plan?`<span class="text-xs px-2 py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-bold">${d.plan}</span>`:''}
+              ${d.role==='admin'?`<span class="text-xs px-2 py-0.5 rounded-full bg-error/10 text-error font-bold">Admin</span>`:''}
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1 text-sm text-on-surface-variant">
+              <div>👤 ${d.contact||[prof.firstname,prof.lastname].filter(Boolean).join(' ')||'—'}</div>
+              <div>✉️ <a href="mailto:${d.email}" class="text-on-tertiary-container hover:underline">${d.email}</a></div>
+              <div>📞 ${d.phone||prof.phone||'—'}</div>
+              <div>📍 ${d.city||prof.city||'—'}</div>
+              <div>🏢 USt-ID: ${prof.vatid||'—'}</div>
+              <div>🗓 Registriert: <strong>${regDate}</strong></div>
+              <div>🚗 Aktive Fahrzeuge: <strong>${vCount}</strong></div>
+              ${prof.website?`<div>🌐 <a href="${prof.website}" target="_blank" class="text-on-tertiary-container hover:underline">${prof.website}</a></div>`:''}
+            </div>
           </div>
-          <div class="text-on-surface-variant text-sm mt-2 space-y-0.5">
-            <div>👤 ${d.contact || '—'}</div>
-            <div>✉️ <a href="mailto:${d.email}" class="hover:underline text-on-tertiary-container">${d.email}</a>${d.phone ? ` · 📞 ${d.phone}` : ''}</div>
-            <div>📍 ${d.city || '—'} · 🗓 Registriert: ${d.date || '—'}</div>
-            <div>🚗 Aktive Fahrzeuge: <strong>${d.vehicleCount || 0}</strong></div>
+          <div class="flex flex-col gap-2 flex-shrink-0">
+            ${!d.approved?`<button onclick="adminApproveDealer('${d.email}')" class="bg-green-500 text-white px-3 py-1.5 rounded text-xs font-bold uppercase tracking-widest hover:opacity-80">Freigeben</button>`:''}
+            <button onclick="document.getElementById('help-dealer-email').value='${d.email}';showAdmTab('ah',document.querySelectorAll('.admin-tab')[3])" class="bg-on-tertiary-container/10 text-on-tertiary-container px-3 py-1.5 rounded text-xs font-bold uppercase tracking-widest hover:opacity-80">Helfen</button>
+            <button onclick="if(confirm('Händler sperren?'))adminBlockDealer('${d.email}')" class="bg-error/10 text-error px-3 py-1.5 rounded text-xs font-bold uppercase tracking-widest hover:opacity-80">Sperren</button>
           </div>
         </div>
-        <div class="flex flex-col gap-2">
-          ${!d.approved ? `<button onclick="DEALERS[${i}].approved=true;renderAdm()" class="bg-green-500 text-white px-3 py-1.5 rounded text-xs font-bold uppercase tracking-widest hover:opacity-80">Freigeben</button>` : ''}
-          <button onclick="document.getElementById('help-dealer-email').value='${d.email}';showAdmTab('ah',document.querySelectorAll('.admin-tab')[3])" class="bg-on-tertiary-container/10 text-on-tertiary-container px-3 py-1.5 rounded text-xs font-bold uppercase tracking-widest hover:opacity-80">Helfen</button>
-          <button onclick="if(confirm('Händler wirklich sperren?'))alert('Gesperrt: ${d.company}')" class="bg-error/10 text-error px-3 py-1.5 rounded text-xs font-bold uppercase tracking-widest hover:opacity-80">Sperren</button>
-        </div>
-      </div>
-    </div>`).join('') : '<p class="text-on-surface-variant">Noch keine Händler-Registrierungen.</p>';
+      </div>`;
+    }).join('') : '<p class="text-on-surface-variant">Noch keine Händler-Registrierungen.</p>';
+  } catch(e) {
+    adList.innerHTML = `<div class="text-error text-sm p-4 bg-error/5 rounded-xl">Fehler beim Laden: ${e.message}</div>`;
+  }
 
   // Anfragen Tab
   document.getElementById('ai-list').innerHTML = INQUIRIES.length ? INQUIRIES.map(i => `
@@ -1866,6 +1972,26 @@ function renderAdm() {
       ${i.msg ? `<div class="text-on-surface-variant text-sm mt-2 italic">"${i.msg}"</div>` : ''}
       <div class="text-on-surface-variant text-xs mt-2">${i.date}</div>
     </div>`).join('') : '<p class="text-on-surface-variant">Noch keine Anfragen.</p>';
+}
+
+async function adminApproveDealer(email) {
+  try {
+    await fetch(SUPA_URL + '/rest/v1/dealers?email=eq.' + encodeURIComponent(email), {
+      method: 'PATCH', headers: {...db.headers, 'Prefer':'return=minimal'},
+      body: JSON.stringify({ approved: true })
+    });
+    renderAdm();
+  } catch(e) { alert('Fehler: ' + e.message); }
+}
+
+async function adminBlockDealer(email) {
+  try {
+    await fetch(SUPA_URL + '/rest/v1/dealers?email=eq.' + encodeURIComponent(email), {
+      method: 'PATCH', headers: {...db.headers, 'Prefer':'return=minimal'},
+      body: JSON.stringify({ approved: false })
+    });
+    renderAdm();
+  } catch(e) { alert('Fehler: ' + e.message); }
 }
 function showAdmTab(t,btn){
   ['av','ad','ai','ah'].forEach(x=>{const el=document.getElementById(x);if(el)el.classList.toggle('hidden',x!==t);});
@@ -2163,8 +2289,9 @@ async function loadDealerDashboard() {
 
 // Dealer Tab switcher
 function showDealerTab(tab) {
-  ['dashboard','upload','inventory','leads'].forEach(t => {
-    document.getElementById('dealer-tab-' + t).classList.toggle('hidden', t !== tab);
+  ['dashboard','upload','inventory','leads','profile'].forEach(t => {
+    const tabEl = document.getElementById('dealer-tab-' + t);
+    if (tabEl) tabEl.classList.toggle('hidden', t !== tab);
     const btn = document.getElementById('dtab-' + t);
     if (btn) {
       btn.classList.toggle('bg-surface-container-lowest', t === tab);
@@ -2174,6 +2301,90 @@ function showDealerTab(tab) {
       btn.classList.toggle('text-on-surface-variant', t !== tab);
     }
   });
+  if (tab === 'profile') loadProfile();
+}
+
+// ── Profil laden ──────────────────────────────────────────────────────────────
+async function loadProfile() {
+  if (!CURRENT_USER) return;
+  try {
+    const rows = await db.select('dealers', 'select=*&email=eq.' + encodeURIComponent(CURRENT_USER.email) + '&limit=1');
+    if (rows && rows[0]) {
+      const d = rows[0];
+      setVal('prof-company', d.company);
+      setVal('prof-phone', d.phone);
+      setVal('prof-city', d.city);
+      const parts = (d.contact||'').split(' ');
+      setVal('prof-firstname', parts[0]||'');
+      setVal('prof-lastname', parts.slice(1).join(' ')||'');
+      const planEl = document.getElementById('prof-plan-display');
+      if (planEl) planEl.textContent = d.plan ? `Paket: ${d.plan}` : '30 Tage kostenlos testen';
+    }
+  } catch(e) {}
+  try {
+    const rows = await db.select('dealer_profiles', 'select=*&dealer_email=eq.' + encodeURIComponent(CURRENT_USER.email) + '&limit=1');
+    if (rows && rows[0]) {
+      const p = rows[0];
+      ['vatid','hrn','street','plz','city','state','firstname','lastname','position','mobile','website','brands','employees','iban'].forEach(f => setVal('prof-'+f, p[f]));
+      setVal('prof-legal', p.legal_form);
+      setVal('prof-email-contact', p.contact_email);
+      setVal('prof-phone', p.phone);
+    }
+  } catch(e) {}
+}
+
+function setVal(id, val) { const el = document.getElementById(id); if (el && val != null) el.value = val; }
+
+// ── Profil speichern ──────────────────────────────────────────────────────────
+async function saveProfile() {
+  if (!CURRENT_USER) return;
+  const email = CURRENT_USER.email;
+  const company = document.getElementById('prof-company').value.trim();
+  if (!company) { alert('Bitte Firmenname angeben.'); return; }
+  const phone = document.getElementById('prof-phone').value.trim();
+  const city = document.getElementById('prof-city').value.trim();
+  const firstname = document.getElementById('prof-firstname').value.trim();
+  const lastname = document.getElementById('prof-lastname').value.trim();
+  // dealers updaten
+  try {
+    await fetch(SUPA_URL + '/rest/v1/dealers?email=eq.' + encodeURIComponent(email), {
+      method: 'PATCH', headers: {...db.headers, 'Prefer':'return=minimal'},
+      body: JSON.stringify({ company, phone, city, contact: [firstname, lastname].filter(Boolean).join(' ') })
+    });
+  } catch(e) {}
+  // dealer_profiles upsert
+  const prof = {
+    dealer_email: email, company,
+    legal_form: document.getElementById('prof-legal').value,
+    vatid: document.getElementById('prof-vatid').value.trim(),
+    hrn: document.getElementById('prof-hrn').value.trim(),
+    street: document.getElementById('prof-street').value.trim(),
+    plz: document.getElementById('prof-plz').value.trim(),
+    city, state: document.getElementById('prof-state').value,
+    firstname, lastname,
+    position: document.getElementById('prof-position').value.trim(),
+    contact_email: document.getElementById('prof-email-contact').value.trim(),
+    phone, mobile: document.getElementById('prof-mobile').value.trim(),
+    website: document.getElementById('prof-website').value.trim(),
+    brands: document.getElementById('prof-brands').value.trim(),
+    employees: document.getElementById('prof-employees').value,
+    iban: document.getElementById('prof-iban').value.trim(),
+    updated_at: new Date().toISOString()
+  };
+  try {
+    const ex = await db.select('dealer_profiles', 'select=dealer_email&dealer_email=eq.' + encodeURIComponent(email) + '&limit=1');
+    if (ex && ex.length > 0) {
+      await fetch(SUPA_URL + '/rest/v1/dealer_profiles?dealer_email=eq.' + encodeURIComponent(email), {
+        method: 'PATCH', headers: {...db.headers, 'Prefer':'return=minimal'}, body: JSON.stringify(prof)
+      });
+    } else {
+      await db.insert('dealer_profiles', [prof]);
+    }
+  } catch(e) { console.warn('dealer_profiles:', e.message); }
+  const msg = document.getElementById('profile-save-msg');
+  if (msg) { msg.classList.remove('hidden'); setTimeout(() => msg.classList.add('hidden'), 4000); }
+  const dc = document.getElementById('dash-company');
+  if (dc) dc.textContent = company;
 }
 
 // Fahrzeug als verkauft markieren
@@ -2717,26 +2928,13 @@ function showCSVStatus(type, message, details, result) {
           <div class="text-navy-400">Ø Nachlass</div>
         </div>
         <div class="bg-white/5 rounded p-2 text-center">
-          <div class="text-white font-bold text-lg">${result.summary?.day_registrations || 0}</div>
+          <div cl
+          <div class="text-secondary-fixed font-bold text-lg">${result.summary?.day_registrations || 0}</div>
           <div class="text-navy-400">Tageszulassungen</div>
         </div>
-      </div>
-    `;
-    if (result.errors && result.errors.length > 0) {
-      html += `
-        <details class="mt-2">
-          <summary class="text-sm cursor-pointer hover:text-yellow-300">
-            ${result.errors.length} Zeilen konnten nicht importiert werden
-          </summary>
-          <ul class="mt-1 text-sm space-y-1 text-yellow-400">
-            ${result.errors.slice(0, 10).map(e => `<li>• ${e}</li>`).join('')}
-          </ul>
-        </details>
-      `;
-    }
+      </div>`;
   }
-
-  html += `</div></div></div>`;
+  html += `</div></div>`;
   el.innerHTML = html;
 }
 </script>
