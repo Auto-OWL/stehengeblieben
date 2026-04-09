@@ -74,23 +74,15 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
           <div><div class="font-headline font-black text-3xl text-white">34</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Partnerhändler</div></div>
         </div>
       </div>
-      <!-- Hero Card Preview -->
-      <div class="hidden lg:block">
-        <div class="bg-white/5 border border-white/10 rounded-xl p-1">
-          <div class="bg-primary-container/50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center relative">
-            <span class="material-symbols-outlined text-white/10" style="font-size:160px">directions_car</span>
-            <div class="absolute bottom-5 left-5 bg-secondary-container text-on-secondary-container px-4 py-2 rounded font-headline font-extrabold text-xl">-27% Nachlass</div>
-            <div class="absolute top-5 right-5 bg-black/60 backdrop-blur-sm text-white px-4 py-3 rounded space-y-1">
-              <div class="text-xs text-white/60 uppercase tracking-widest">stehengeblieben Preis</div>
-              <div class="font-headline font-black text-2xl">39.900 €</div>
-              <div class="text-white/60 text-sm line-through">54.990 €</div>
-            </div>
-            <div class="absolute bottom-5 right-5 bg-tertiary-container text-on-tertiary-container px-3 py-1.5 rounded font-bold text-xs uppercase tracking-widest flex items-center gap-1">
-              <span class="material-symbols-outlined text-xs">schedule</span>Noch 12 Tage
-            </div>
-          </div>
-        </div>
-      </div>
+     <!-- Hero Card Preview — dynamisch aus Supabase -->
+<div class="hidden lg:block" id="hero-card-wrap">
+  <div class="bg-white/5 border border-white/10 rounded-xl p-1">
+    <div class="bg-primary-container/50 rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center relative" id="hero-card-inner">
+      <span class="material-symbols-outlined text-white/10" style="font-size:160px">directions_car</span>
+      <div class="absolute bottom-5 left-5 bg-secondary-container text-on-secondary-container px-4 py-2 rounded font-headline font-extrabold text-xl">Wird geladen…</div>
+    </div>
+  </div>
+</div>
     </div>
   </section>
 
