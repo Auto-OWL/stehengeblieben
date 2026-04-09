@@ -1941,7 +1941,12 @@ async function renderAdm() {
   const adStats = document.getElementById('ad-stats');
   adList.innerHTML = '<p class="text-on-surface-variant text-sm animate-pulse">Lade Händler aus Datenbank…</p>';
   try {
-    const dealers = await db.select('dealers', 'select=*&order=created_at.desc');
+    const _adminToken = localStorage.getItem('sb_token') || SUPA_KEY;
+const _dealerResp = await fetch(
+  SUPA_URL + '/rest/v1/dealers?select=*&order=created_at.desc',
+  { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + _adminToken } }
+);
+const dealers = await _dealerResp.json();
     // Fahrzeugzähler pro Händler
     let vCounts = {};
     try {
@@ -1950,7 +1955,12 @@ async function renderAdm() {
     } catch(e) {}
     // Profildaten
     let profiles = [];
-    try { profiles = await db.select('dealer_profiles', 'select=*'); } catch(e) {}
+    try {
+  const _token = localStorage.getItem('sb_token') || SUPA_KEY;
+  const _pResp = await fetch(SUPA_URL + '/rest/v1/dealer_profiles?select=*',
+    { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + _token } });
+  profiles = await _pResp.json();
+} catch(e) {}
 
     const activeCount = dealers.filter(d=>d.approved).length;
     const pendingCount = dealers.filter(d=>!d.approved).length;
