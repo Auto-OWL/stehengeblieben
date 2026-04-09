@@ -68,10 +68,10 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
             <span class="material-symbols-outlined text-sm">directions_car</span>Fahrzeuge entdecken
           </button>
         </div>
-        <div class="flex gap-10 pt-6 border-t border-white/10">
-          <div><div class="font-headline font-black text-3xl text-white">247+</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Fahrzeuge live</div></div>
-          <div><div class="font-headline font-black text-3xl text-secondary-fixed">Ø 8.400 €</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Ersparnis</div></div>
-          <div><div class="font-headline font-black text-3xl text-white">34</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Partnerhändler</div></div>
+<div class="flex gap-10 pt-6 border-t border-white/10">
+          <div><div class="font-headline font-black text-3xl text-white" id="stat-vehicles">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Fahrzeuge live</div></div>
+          <div><div class="font-headline font-black text-3xl text-secondary-fixed" id="stat-saving">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Ø Ersparnis</div></div>
+          <div><div class="font-headline font-black text-3xl text-white" id="stat-dealers">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Partnerhändler</div></div>
         </div>
       </div>
      <!-- Hero Card Preview — dynamisch aus Supabase -->
@@ -734,8 +734,8 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
           <div class="brand font-black text-3xl tracking-tighter">stehengeblieben.de</div>
           <p class="text-on-primary-container text-lg leading-relaxed max-w-sm">Professionelles Inventar-Management und Lead-Tracking.</p>
           <div class="flex gap-6 pt-4 border-t border-white/10">
-            <div><div class="font-headline font-black text-2xl text-secondary-fixed">34</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Partner</div></div>
-            <div><div class="font-headline font-black text-2xl text-secondary-fixed">247+</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Listings</div></div>
+            <div><div class="font-headline font-black text-2xl text-secondary-fixed" id="portal-stat-dealers">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Partner</div></div>
+            <div><div class="font-headline font-black text-2xl text-secondary-fixed" id="portal-stat-vehicles">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Listings</div></div>
           </div>
         </div>
       </div>
@@ -2048,8 +2048,36 @@ function acceptDSGVO() {
   localStorage.setItem('dsgvo_accepted', '1');
   document.getElementById('dsgvo-banner').style.display = 'none';
 }
+// ── Plattform-Statistiken laden ───────────────────────────────────────────────
+async function loadStats() {
+  try {
+    const vData = await db.select('vehicles', 'select=discount_pct&status=eq.active');
+    const vCount = (vData || []).length;
+    const avgDisc = vCount > 0
+      ? Math.round((vData.reduce((s, v) => s + (parseFloat(v.discount_pct) || 0), 0)) / vCount)
+      : 0;
+    const dData = await db.select('dealers', 'select=email&approved=eq.true&role=eq.dealer');
+    const dCount = (dData || []).length;
+
+    const sv = document.getElementById('stat-vehicles');
+    const ss = document.getElementById('stat-saving');
+    const sd = document.getElementById('stat-dealers');
+    if (sv) sv.textContent = vCount > 0 ? vCount + '+' : '0';
+    if (ss) ss.textContent = avgDisc > 0 ? 'Ø ' + avgDisc + '%' : '—';
+    if (sd) sd.textContent = dCount > 0 ? dCount : '0';
+
+    const pv = document.getElementById('portal-stat-vehicles');
+    const pd = document.getElementById('portal-stat-dealers');
+    if (pv) pv.textContent = vCount > 0 ? vCount + '+' : '0';
+    if (pd) pd.textContent = dCount > 0 ? dCount : '0';
+  } catch(e) {
+    console.warn('loadStats error:', e.message);
+  }
+}
+
 // Init
 loadVehicles();
+loadStats();
 initDSGVO();
 
 // ══════════════════════════════════════════════════════════════════════════════
