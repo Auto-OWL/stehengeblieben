@@ -1520,19 +1520,29 @@ function fmt(n){return Number(n).toLocaleString('de-DE');}
 function savamt(v){const s=v.list-v.sale;return s>0?fmt(s):'k.A.';}
 
 // NAV
-async function nav(p){
+async function nav(p, pushState = true){
   document.querySelectorAll('[data-page]').forEach(x=>x.classList.remove('active'));
   const el=document.querySelector('[data-page="'+p+'"]');
   if(el)el.classList.add('active');
   window.scrollTo(0,0);
-  // Wenn Fahrzeuge noch nicht geladen — jetzt laden
   if((p==='home'||p==='inventory') && VEHICLES.length===0){
     await loadVehicles();
   }
   if(p==='home')renderHome();
   if(p==='inventory')renderInv();
   if(p==='admin')renderAdm();
+  // Browser-History updaten
+  if(pushState) history.pushState({ page: p }, '', '#' + p);
 }
+
+// Browser Zurück/Vor Button
+window.addEventListener('popstate', (e) => {
+  const page = e.state?.page || 'home';
+  nav(page, false);
+});
+
+// Beim ersten Laden: aktuelle Seite in History eintragen
+history.replaceState({ page: 'home' }, '', '#home');
 function toggleMobile(){document.getElementById('mobile-menu').classList.toggle('hidden');}
 function scrollHow(){nav('home');setTimeout(()=>document.getElementById('how-section')?.scrollIntoView({behavior:'smooth'}),100);}
 
