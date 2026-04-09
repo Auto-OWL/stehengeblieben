@@ -1468,7 +1468,40 @@ async function loadVehicles() {
       discount_pct: parseFloat(v.discount_pct) || 0,
       equipment: Array.isArray(v.equipment) ? v.equipment : [],
     }));
-    renderHome();
+    function renderHome(){
+  const el=document.getElementById('home-cards');
+  if(!el)return;
+  if(VEHICLES.length===0){
+    el.innerHTML='<p class="text-on-surface-variant col-span-3 text-center py-10">Fahrzeuge werden geladen…</p>';
+    return;
+  }
+  el.innerHTML=VEHICLES.slice(0,6).map(v=>mkCard(v,`showDet(${v.id})`)).join('');
+
+  const heroInner = document.getElementById('hero-card-inner');
+  if(!heroInner) return;
+  const pool = VEHICLES.slice(0, Math.min(10, VEHICLES.length));
+  const v = pool[Math.floor(Math.random() * pool.length)];
+  const d = disc(v);
+  const hasImg = v.image_url && v.image_url.length > 5;
+  heroInner.innerHTML = `
+    ${hasImg
+      ? `<img src="${v.image_url}" alt="${v.brand} ${v.model}" class="w-full h-full object-cover absolute inset-0"/>`
+      : `<span class="material-symbols-outlined text-white/10" style="font-size:160px">directions_car</span>`
+    }
+    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+    <div class="absolute bottom-5 left-5 bg-secondary-container text-on-secondary-container px-4 py-2 rounded font-headline font-extrabold text-xl cursor-pointer hover:opacity-90 transition-opacity" onclick="showDet(${v.id})">
+      -${d}% Nachlass
+    </div>
+    <div class="absolute top-5 right-5 bg-black/70 backdrop-blur-sm text-white px-4 py-3 rounded space-y-1 cursor-pointer hover:bg-black/80 transition-colors" onclick="showDet(${v.id})">
+      <div class="text-xs text-white/60 uppercase tracking-widest">${v.brand} ${v.model}</div>
+      <div class="font-headline font-black text-2xl">${fmt(v.sale)} €</div>
+      <div class="text-white/60 text-sm line-through">${fmt(v.list)} €</div>
+    </div>
+    ${v.daysLeft && v.daysLeft <= 60 ? `
+    <div class="absolute bottom-5 right-5 bg-tertiary-container text-on-tertiary-container px-3 py-1.5 rounded font-bold text-xs uppercase tracking-widest flex items-center gap-1">
+      <span class="material-symbols-outlined text-xs">schedule</span>Noch ${v.daysLeft} Tage
+    </div>` : ''}`;
+}
     renderInv();
     if (document.querySelector('[data-page="admin"].active')) renderAdm();
   } catch(err) {
