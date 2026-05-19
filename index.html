@@ -532,6 +532,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
               </div>
               <div class="pt-4 border-t border-outline-variant/10 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-center">Keine Vermittlungsgebühr · Direkt vom Händler</div>
             </div>
+            <!-- Händler-Info Block -->
+            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/15 overflow-hidden" id="d-dealer-card">
+              <div class="bg-primary-container px-5 py-3 flex items-center gap-2">
+                <span class="material-symbols-outlined text-on-primary-container text-base" aria-hidden="true">store</span>
+                <span class="text-on-primary-container text-xs font-bold uppercase tracking-widest">Ihr Ansprechpartner</span>
+              </div>
+              <div class="p-5 space-y-3" id="d-dealer-info">
+                <div class="flex items-center gap-2 text-sm text-on-surface-variant animate-pulse">
+                  <span class="material-symbols-outlined text-base" aria-hidden="true">hourglass_empty</span>Händlerinfo wird geladen…
+                </div>
+              </div>
+            </div>
             <div class="bg-surface-container-high p-5 rounded-xl flex items-start gap-3">
               <span class="material-symbols-outlined text-secondary mt-0.5" aria-hidden="true">lightbulb</span>
               <div class="text-sm"><p class="font-bold mb-1">Experten-Einschätzung</p><p class="text-on-surface-variant leading-relaxed">Fahrzeuge mit diesem Nachlass werden in der Regel innerhalb von 5 Tagen verkauft.</p></div>
@@ -1621,6 +1633,7 @@ async function loadVehicles() {
       daysLeft: v.days_left || null,
       discount_pct: parseFloat(v.discount_pct) || 0,
       equipment: Array.isArray(v.equipment) ? v.equipment : [],
+      dealer_email: v.dealer_email || '',
     }));
     renderHome();
     renderInv();
@@ -1753,7 +1766,7 @@ function resetFilters(){
 }
 
 // DETAIL
-function showDet(id){
+async function showDet(id){
   const v=VEHICLES.find(x=>x.id===id);CUR=v;if(!v)return;nav('detail');
   document.getElementById('d-title').textContent=`${v.brand} ${v.model} ${v.variant}`;
   document.getElementById('d-desc').textContent=v.desc;
@@ -1782,6 +1795,54 @@ function showDet(id){
   } else {
     equipSection.classList.add('hidden');
   }
+  // Händlerdaten laden
+  const dealerInfoEl = document.getElementById('d-dealer-info');
+  if(dealerInfoEl && v.dealer_email) {
+    dealerInfoEl.innerHTML = '<div class="flex items-center gap-2 text-sm text-on-surface-variant animate-pulse"><span class="material-symbols-outlined text-base" aria-hidden="true">hourglass_empty</span>Wird geladen…</div>';
+    try {
+      const [dRows, pRows] = await Promise.all([
+        db.select('dealers', 'select=company,contact,phone,city&email=eq.'+encodeURIComponent(v.dealer_email)+'&limit=1'),
+        db.select('dealer_profiles', 'select=firstname,lastname,phone,street,plz,city,contact_email&dealer_email=eq.'+encodeURIComponent(v.dealer_email)+'&limit=1')
+      ]);
+      const d = (dRows && dRows[0]) || {};
+      const p = (pRows && pRows[0]) || {};
+      const name = d.company || '—';
+      const contact = [p.firstname, p.lastname].filter(Boolean).join(' ') || d.contact || '—';
+      const phone = p.phone || d.phone || null;
+      const street = p.street || null;
+      const plz = p.plz || null;
+      const city = p.city || d.city || null;
+      const email = p.contact_email || v.dealer_email || null;
+      dealerInfoEl.innerHTML = `
+        <div class="space-y-3">
+          <div>
+            <p class="font-headline font-bold text-base text-on-surface">${name}</p>
+            ${contact !== '—' ? `<p class="text-sm text-on-surface-variant mt-0.5">${contact}</p>` : ''}
+          </div>
+          ${street || city ? `
+          <div class="flex items-start gap-2 text-sm text-on-surface-variant">
+            <span class="material-symbols-outlined text-base flex-shrink-0 mt-0.5" aria-hidden="true">location_on</span>
+            <span>${[street, [plz,city].filter(Boolean).join(' ')].filter(Boolean).join(', ')}</span>
+          </div>` : ''}
+          ${phone ? `
+          <a href="tel:${phone}" class="flex items-center gap-2 text-sm text-on-tertiary-container hover:underline font-medium">
+            <span class="material-symbols-outlined text-base" aria-hidden="true">phone</span>${phone}
+          </a>` : ''}
+          ${email ? `
+          <a href="mailto:${email}" class="flex items-center gap-2 text-sm text-on-tertiary-container hover:underline font-medium">
+            <span class="material-symbols-outlined text-base" aria-hidden="true">mail</span>${email}
+          </a>` : ''}
+          <div class="pt-2 border-t border-outline-variant/10 flex items-center gap-1.5 text-xs text-green-700 font-bold">
+            <span class="material-symbols-outlined text-sm text-green-600" aria-hidden="true">verified</span>Geprüfter Partner-Händler
+          </div>
+        </div>`;
+    } catch(e) {
+      dealerInfoEl.innerHTML = '<p class="text-xs text-on-surface-variant">Händlerinfo nicht verfügbar.</p>';
+    }
+  } else if(dealerInfoEl) {
+    dealerInfoEl.innerHTML = '<p class="text-xs text-on-surface-variant">Kein Händler zugeordnet.</p>';
+  }
+
   // Ähnliche Fahrzeuge
   const simEl = document.getElementById('d-similar');
   const simSec = document.getElementById('d-similar-section');
@@ -3719,6 +3780,18 @@ async function triggerCsvSync() {
                 </button>
               </div>
               <div class="pt-4 border-t border-outline-variant/10 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-center">Keine Vermittlungsgebühr · Direkt vom Händler</div>
+            </div>
+            <!-- Händler-Info Block -->
+            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/15 overflow-hidden" id="d-dealer-card">
+              <div class="bg-primary-container px-5 py-3 flex items-center gap-2">
+                <span class="material-symbols-outlined text-on-primary-container text-base" aria-hidden="true">store</span>
+                <span class="text-on-primary-container text-xs font-bold uppercase tracking-widest">Ihr Ansprechpartner</span>
+              </div>
+              <div class="p-5 space-y-3" id="d-dealer-info">
+                <div class="flex items-center gap-2 text-sm text-on-surface-variant animate-pulse">
+                  <span class="material-symbols-outlined text-base" aria-hidden="true">hourglass_empty</span>Händlerinfo wird geladen…
+                </div>
+              </div>
             </div>
             <div class="bg-surface-container-high p-5 rounded-xl flex items-start gap-3">
               <span class="material-symbols-outlined text-secondary mt-0.5" aria-hidden="true">lightbulb</span>
