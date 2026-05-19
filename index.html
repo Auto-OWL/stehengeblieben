@@ -78,9 +78,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
           </button>
         </div>
         <div class="flex gap-10 pt-6 border-t border-white/10">
-          <div><div class="font-headline font-black text-3xl text-white">247+</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Fahrzeuge live</div></div>
-          <div><div class="font-headline font-black text-3xl text-secondary-fixed">Ø 8.400 €</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Ersparnis</div></div>
-          <div><div class="font-headline font-black text-3xl text-white">34</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Partnerhändler</div></div>
+          <div><div class="font-headline font-black text-3xl text-white" id="stat-vehicles">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Fahrzeuge live</div></div>
+          <div><div class="font-headline font-black text-3xl text-secondary-fixed" id="stat-saving">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Ø Ersparnis</div></div>
+          <div><div class="font-headline font-black text-3xl text-white" id="stat-dealers">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Partnerhändler</div></div>
         </div>
       </div>
       <!-- Hero Card Preview -->
@@ -752,8 +752,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
           <div class="brand font-black text-3xl tracking-tighter">stehengeblieben.de</div>
           <p class="text-on-primary-container text-lg leading-relaxed max-w-sm">Professionelles Inventar-Management und Lead-Tracking.</p>
           <div class="flex gap-6 pt-4 border-t border-white/10">
-            <div><div class="font-headline font-black text-2xl text-secondary-fixed">34</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Partner</div></div>
-            <div><div class="font-headline font-black text-2xl text-secondary-fixed">247+</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Listings</div></div>
+            <div><div class="font-headline font-black text-2xl text-secondary-fixed" id="portal-stat-dealers">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Partner</div></div>
+            <div><div class="font-headline font-black text-2xl text-secondary-fixed" id="portal-stat-vehicles">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Listings</div></div>
           </div>
         </div>
       </div>
@@ -811,6 +811,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <a onclick="showDealerTab('upload')" id="dtab-upload" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined" class="material-symbols-outlined text-xl" aria-hidden="true">add_circle</span>Fahrzeug einstellen</a>
         <a onclick="showDealerTab('inventory')" id="dtab-inventory" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined" class="material-symbols-outlined text-xl" aria-hidden="true">directions_car</span>Mein Inventar</a>
         <a onclick="showDealerTab('leads')" id="dtab-leads" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined" class="material-symbols-outlined text-xl" aria-hidden="true">person_search</span>Leads</a>
+        <a onclick="showDealerTab('profile')" id="dtab-profile" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined text-xl" aria-hidden="true">manage_accounts</span>Mein Profil</a>
+        <a onclick="showDealerTab('datasync')" id="dtab-datasync" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined text-xl" aria-hidden="true">sync</span>Datenschnittstelle</a>
       </nav>
       <button onclick="portalLogout()" class="flex items-center gap-2 px-4 py-3 text-on-surface-variant hover:text-error text-sm font-medium transition-colors mt-4">
         <span class="material-symbols-outlined" class="material-symbols-outlined text-xl" aria-hidden="true">logout</span>Abmelden
@@ -953,6 +955,134 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <h1 class="font-headline font-black text-3xl tracking-tighter mb-8">Leads</h1>
         <div id="dealer-leads-list" class="space-y-4"></div>
       </div>
+
+      <!-- PROFIL TAB -->
+      <div id="dealer-tab-profile" class="hidden">
+        <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
+          <div>
+            <h1 class="font-headline font-black text-3xl tracking-tighter">Mein Profil</h1>
+            <p class="text-on-surface-variant text-sm mt-1">Ihre Händlerdaten — sichtbar für das stehengeblieben.de Team</p>
+          </div>
+          <button onclick="saveProfile()" class="metallic-gradient text-on-primary px-6 py-3 rounded font-headline font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm" aria-hidden="true">save</span>Profil speichern
+          </button>
+        </div>
+        <div id="profile-save-msg" class="hidden mb-6 p-4 rounded-xl text-sm font-bold flex items-center gap-2" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;">
+          <span class="material-symbols-outlined text-base" aria-hidden="true">check_circle</span>Profil erfolgreich gespeichert.
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+            <h2 class="font-headline font-bold text-lg tracking-tighter flex items-center gap-2"><span class="material-symbols-outlined text-on-tertiary-container" aria-hidden="true">store</span>Unternehmen</h2>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Firmenname *</label><input id="prof-company" type="text" placeholder="Auto Müller GmbH" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="organization"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Rechtsform</label><select id="prof-legal" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium appearance-none"><option value="">Bitte wählen</option><option>GmbH</option><option>GmbH & Co. KG</option><option>AG</option><option>Einzelunternehmen</option><option>OHG</option><option>UG (haftungsbeschränkt)</option></select></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Umsatzsteuer-ID *</label><input id="prof-vatid" type="text" placeholder="DE123456789" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Handelsregisternummer</label><input id="prof-hrn" type="text" placeholder="HRB 12345" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+          </div>
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+            <h2 class="font-headline font-bold text-lg tracking-tighter flex items-center gap-2"><span class="material-symbols-outlined text-on-tertiary-container" aria-hidden="true">location_on</span>Anschrift</h2>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Straße und Hausnummer *</label><input id="prof-street" type="text" placeholder="Musterstraße 12" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="street-address"/></div>
+            <div class="grid grid-cols-3 gap-3">
+              <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">PLZ *</label><input id="prof-plz" type="text" placeholder="50667" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="postal-code"/></div>
+              <div class="col-span-2"><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Stadt *</label><input id="prof-city" type="text" placeholder="Köln" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="address-level2"/></div>
+            </div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Bundesland</label><select id="prof-state" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium appearance-none"><option value="">Bitte wählen</option><option>Baden-Württemberg</option><option>Bayern</option><option>Berlin</option><option>Brandenburg</option><option>Bremen</option><option>Hamburg</option><option>Hessen</option><option>Mecklenburg-Vorpommern</option><option>Niedersachsen</option><option>Nordrhein-Westfalen</option><option>Rheinland-Pfalz</option><option>Saarland</option><option>Sachsen</option><option>Sachsen-Anhalt</option><option>Schleswig-Holstein</option><option>Thüringen</option></select></div>
+          </div>
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+            <h2 class="font-headline font-bold text-lg tracking-tighter flex items-center gap-2"><span class="material-symbols-outlined text-on-tertiary-container" aria-hidden="true">person</span>Ansprechpartner</h2>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Vorname *</label><input id="prof-firstname" type="text" placeholder="Max" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="given-name"/></div>
+              <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Nachname *</label><input id="prof-lastname" type="text" placeholder="Müller" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="family-name"/></div>
+            </div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">E-Mail (Kontakt) *</label><input id="prof-email-contact" type="email" placeholder="kontakt@autohaus.de" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="email"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Telefon *</label><input id="prof-phone" type="tel" placeholder="+49 221 123456" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="tel"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">IBAN</label><input id="prof-iban" type="text" placeholder="DE89 3704 0044 0532 0130 00" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+          </div>
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+            <h2 class="font-headline font-bold text-lg tracking-tighter flex items-center gap-2"><span class="material-symbols-outlined text-on-tertiary-container" aria-hidden="true">garage</span>Betrieb</h2>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Website</label><input id="prof-website" type="url" placeholder="https://www.autohaus.de" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="url"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Abonnement</label><div id="prof-plan-display" class="bg-tertiary-container text-on-tertiary-container px-4 py-3 rounded-lg text-sm font-bold">Wird geladen…</div></div>
+          </div>
+        </div>
+        <div class="mt-6 flex justify-end">
+          <button onclick="saveProfile()" class="metallic-gradient text-on-primary px-8 py-4 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2 flex-shrink-0">
+            <span class="material-symbols-outlined text-sm" aria-hidden="true">save</span>Speichern
+          </button>
+        </div>
+      </div>
+
+      <!-- DATENSCHNITTSTELLE TAB -->
+      <div id="dealer-tab-datasync" class="hidden">
+        <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
+          <div>
+            <h1 class="font-headline font-black text-3xl tracking-tighter">Datenschnittstelle</h1>
+            <p class="text-on-surface-variant text-sm mt-1">Automatischer Import aus Ihrem DMS/CRM über CSV-Export-URL</p>
+          </div>
+          <div class="flex gap-3">
+            <button onclick="triggerCsvSync()" id="csv-sync-btn" class="border border-on-tertiary-container text-on-tertiary-container px-5 py-2.5 rounded font-headline font-bold text-xs uppercase tracking-widest hover:bg-on-tertiary-container/10 transition-all flex items-center gap-2"><span class="material-symbols-outlined text-sm" aria-hidden="true">sync</span>Jetzt synchronisieren</button>
+            <button onclick="saveCsvUrl()" class="metallic-gradient text-on-primary px-6 py-2.5 rounded font-headline font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2"><span class="material-symbols-outlined text-sm" aria-hidden="true">save</span>Speichern</button>
+          </div>
+        </div>
+        <div id="csv-status-banner" class="hidden mb-6 p-4 rounded-xl text-sm font-bold flex items-start gap-3"></div>
+        <div class="bg-tertiary-container/20 border border-on-tertiary-container/20 rounded-xl p-5 mb-6 flex gap-4">
+          <span class="material-symbols-outlined text-on-tertiary-container flex-shrink-0 mt-0.5" aria-hidden="true">info</span>
+          <div class="text-sm space-y-2">
+            <p class="font-bold">So richten Sie den automatischen Import ein:</p>
+            <ol class="text-on-surface-variant space-y-1 list-decimal list-inside">
+              <li>In Autrado: <strong>Exportdaten → Webserver → "Exportdatei auf Webserver bereitstellen"</strong> aktivieren</li>
+              <li>Autrado sendet Ihnen per E-Mail einen Download-Link zur CSV-Datei</li>
+              <li>Diesen Link unten eintragen — wir holen die Datei automatisch alle 6 Stunden ab</li>
+            </ol>
+            <p class="text-xs text-on-surface-variant pt-1">Fahrzeuge unter 20% Nachlass oder älter als 24 Monate werden übersprungen.</p>
+          </div>
+        </div>
+        <div id="csv-sync-status" class="hidden mb-6 bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10">
+          <div class="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-1">Letzter Sync</p>
+              <p id="csv-last-sync" class="font-headline font-bold text-base">—</p>
+              <p id="csv-last-message" class="text-sm text-on-surface-variant mt-1">—</p>
+            </div>
+            <div class="flex gap-6">
+              <div class="text-center"><div id="csv-stat-imported" class="font-headline font-black text-2xl text-on-tertiary-container">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Neu</div></div>
+              <div class="text-center"><div id="csv-stat-updated" class="font-headline font-black text-2xl text-secondary">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Aktualisiert</div></div>
+              <div class="text-center"><div id="csv-stat-deleted" class="font-headline font-black text-2xl text-error">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Entfernt</div></div>
+              <div class="text-center"><div id="csv-stat-skipped" class="font-headline font-black text-2xl text-on-surface-variant">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Übersprungen</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+            <h2 class="font-headline font-bold text-lg tracking-tighter">Export-URL (von Autrado / DMS)</h2>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="csv-url-input">Download-URL der CSV-Datei *</label>
+              <input id="csv-url-input" type="url" placeholder="https://export.autrado.de/export/export_12345.csv" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" aria-required="true" autocomplete="url"/>
+              <p class="text-xs text-on-surface-variant mt-2">Die URL aus der Autrado-Benachrichtigungsmail oder Ihrem DMS-Exportbereich</p>
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="csv-interval-select">Sync-Intervall</label>
+              <select id="csv-interval-select" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium appearance-none">
+                <option value="1">Stündlich</option>
+                <option value="3">Alle 3 Stunden</option>
+                <option value="6" selected>Alle 6 Stunden (empfohlen)</option>
+                <option value="12">Alle 12 Stunden</option>
+                <option value="24">Täglich</option>
+              </select>
+            </div>
+          </div>
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-4">
+            <h2 class="font-headline font-bold text-lg tracking-tighter">Sync-Regeln</h2>
+            <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-green-500 flex-shrink-0 mt-1.5"></span><p class="font-bold text-green-700">Neue Fahrzeuge werden hinzugefügt</p></div>
+            <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-on-tertiary-container flex-shrink-0 mt-1.5"></span><p class="font-bold text-on-tertiary-container">Preisänderungen werden aktualisiert</p></div>
+            <div class="flex items-start gap-3 p-3 bg-red-50 rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-error flex-shrink-0 mt-1.5"></span><p class="font-bold text-error">Verkaufte Fahrzeuge werden entfernt</p></div>
+            <div class="flex items-start gap-3 p-3 bg-surface-container-high rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-outline flex-shrink-0 mt-1.5"></span><p class="font-bold">Unter 20% / älter 24 Monate → übersprungen</p></div>
+          </div>
+        </div>
+        <div class="mt-6 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10">
+          <h2 class="font-headline font-bold text-lg tracking-tighter mb-4">Sync-Protokoll</h2>
+          <div id="csv-sync-logs" class="space-y-2 text-sm text-on-surface-variant"><p>Noch kein Sync durchgeführt.</p></div>
+        </div>
+      </div>
+
     </main>
   </div>
 </div>
@@ -1989,8 +2119,25 @@ function acceptDSGVO() {
   localStorage.setItem('dsgvo_accepted', '1');
   document.getElementById('dsgvo-banner').style.display = 'none';
 }
+
+// ── Plattform-Statistiken laden ───────────────────────────────────────────────
+async function loadStats() {
+  try {
+    const vData = await db.select('vehicles', 'select=discount_pct&status=eq.active');
+    const vCount = (vData || []).length;
+    const avgDisc = vCount > 0 ? Math.round(vData.reduce((s, v) => s + (parseFloat(v.discount_pct) || 0), 0) / vCount) : 0;
+    const dData = await db.select('dealers', 'select=email&approved=eq.true&role=eq.dealer');
+    const dCount = (dData || []).length;
+    ['stat-vehicles','portal-stat-vehicles'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=vCount>0?vCount+'+':'0'; });
+    ['stat-dealers','portal-stat-dealers'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=dCount>0?dCount:'0'; });
+    const ss=document.getElementById('stat-saving'); if(ss) ss.textContent=avgDisc>0?'Ø '+avgDisc+'%':'—';
+  } catch(e) { console.warn('loadStats error:', e.message); }
+}
+
+
 // Init
 loadVehicles();
+loadStats();
 initDSGVO();
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -2269,7 +2416,7 @@ async function loadDealerDashboard() {
 
 // Dealer Tab switcher
 function showDealerTab(tab) {
-  ['dashboard','upload','inventory','leads'].forEach(t => {
+  ['dashboard','upload','inventory','leads','profile','datasync'].forEach(t => {
     document.getElementById('dealer-tab-' + t).classList.toggle('hidden', t !== tab);
     const btn = document.getElementById('dtab-' + t);
     if (btn) {
@@ -2280,6 +2427,8 @@ function showDealerTab(tab) {
       btn.classList.toggle('text-on-surface-variant', t !== tab);
     }
   });
+  if (tab === 'profile') loadProfile();
+  if (tab === 'datasync') loadCsvSyncStatus();
 }
 
 // Fahrzeug als verkauft markieren
@@ -2845,6 +2994,135 @@ function showCSVStatus(type, message, details, result) {
   html += `</div></div></div>`;
   el.innerHTML = html;
 }
+
+// ── Profil laden ───────────────────────────────────────────────────────────────
+async function loadProfile() {
+  if (!CURRENT_USER) return;
+  function setVal(id, val) { const el=document.getElementById(id); if(el&&val!=null) el.value=val; }
+  try {
+    const rows = await db.select('dealers','select=*&email=eq.'+encodeURIComponent(CURRENT_USER.email)+'&limit=1');
+    if (rows&&rows[0]) {
+      const d=rows[0]; setVal('prof-company',d.company); setVal('prof-phone',d.phone); setVal('prof-city',d.city);
+      const parts=(d.contact||'').split(' '); setVal('prof-firstname',parts[0]||''); setVal('prof-lastname',parts.slice(1).join(' ')||'');
+      const planEl=document.getElementById('prof-plan-display'); if(planEl) planEl.textContent=d.plan?'Paket: '+d.plan:'30 Tage kostenlos testen';
+    }
+  } catch(e) {}
+  try {
+    const rows = await db.select('dealer_profiles','select=*&dealer_email=eq.'+encodeURIComponent(CURRENT_USER.email)+'&limit=1');
+    if (rows&&rows[0]) {
+      const p=rows[0];
+      ['vatid','hrn','street','plz','city','state','firstname','lastname','mobile','website','iban'].forEach(f=>setVal('prof-'+f,p[f]));
+      setVal('prof-legal',p.legal_form); setVal('prof-email-contact',p.contact_email); setVal('prof-phone',p.phone);
+    }
+  } catch(e) {}
+}
+
+// ── Profil speichern ──────────────────────────────────────────────────────────
+async function saveProfile() {
+  if (!CURRENT_USER) return;
+  const email=CURRENT_USER.email;
+  const company=document.getElementById('prof-company').value.trim();
+  if (!company) { alert('Bitte Firmenname angeben.'); return; }
+  function getVal(id) { const el=document.getElementById(id); return el?el.value.trim():''; }
+  try {
+    await fetch(SUPA_URL+'/rest/v1/dealers?email=eq.'+encodeURIComponent(email),{method:'PATCH',headers:{...db.headers,'Prefer':'return=minimal'},body:JSON.stringify({company,phone:getVal('prof-phone'),city:getVal('prof-city'),contact:[getVal('prof-firstname'),getVal('prof-lastname')].filter(Boolean).join(' ')})});
+  } catch(e) {}
+  const prof={dealer_email:email,company,legal_form:getVal('prof-legal'),vatid:getVal('prof-vatid'),hrn:getVal('prof-hrn'),street:getVal('prof-street'),plz:getVal('prof-plz'),city:getVal('prof-city'),state:getVal('prof-state'),firstname:getVal('prof-firstname'),lastname:getVal('prof-lastname'),contact_email:getVal('prof-email-contact'),phone:getVal('prof-phone'),mobile:getVal('prof-mobile'),website:getVal('prof-website'),iban:getVal('prof-iban'),updated_at:new Date().toISOString()};
+  try {
+    const ex=await db.select('dealer_profiles','select=dealer_email&dealer_email=eq.'+encodeURIComponent(email)+'&limit=1');
+    if(ex&&ex.length>0){await fetch(SUPA_URL+'/rest/v1/dealer_profiles?dealer_email=eq.'+encodeURIComponent(email),{method:'PATCH',headers:{...db.headers,'Prefer':'return=minimal'},body:JSON.stringify(prof)});}
+    else{await db.insert('dealer_profiles',[prof]);}
+  } catch(e){console.warn('saveProfile:',e.message);}
+  const msg=document.getElementById('profile-save-msg');
+  if(msg){msg.classList.remove('hidden');setTimeout(()=>msg.classList.add('hidden'),4000);}
+  const dc=document.getElementById('dash-company'); if(dc) dc.textContent=company;
+}
+
+// ── CSV-URL Datenschnittstelle ─────────────────────────────────────────────────
+async function loadCsvSyncStatus() {
+  if (!CURRENT_USER) return;
+  try {
+    const token=localStorage.getItem('sb_token')||'';
+    const r=await fetch('/api/csv-url-sync',{headers:{'Authorization':`Bearer ${token}`}});
+    if(!r.ok) return;
+    const data=await r.json();
+    if(data.config){
+      const c=data.config;
+      const intEl=document.getElementById('csv-interval-select'); if(intEl) intEl.value=c.sync_interval_hours||6;
+      if(c.last_sync_at){
+        document.getElementById('csv-sync-status').classList.remove('hidden');
+        document.getElementById('csv-last-sync').textContent=new Date(c.last_sync_at).toLocaleString('de-DE');
+        document.getElementById('csv-last-message').textContent=c.last_sync_message||'—';
+        document.getElementById('csv-stat-imported').textContent=c.last_sync_imported||0;
+        document.getElementById('csv-stat-updated').textContent=c.last_sync_updated||0;
+        document.getElementById('csv-stat-deleted').textContent=c.last_sync_deleted||0;
+        document.getElementById('csv-stat-skipped').textContent=c.last_sync_skipped||0;
+        const el=document.getElementById('csv-last-sync');
+        if(c.last_sync_status==='error') el.style.color='#ba1a1a';
+        if(c.last_sync_status==='success') el.style.color='#16a34a';
+      }
+    }
+    const logsEl=document.getElementById('csv-sync-logs');
+    if(logsEl&&data.logs&&data.logs.length>0){
+      logsEl.innerHTML=data.logs.map(log=>`<div class="flex items-start justify-between py-3 border-b border-outline-variant/10 last:border-0"><div class="flex items-center gap-3"><span class="material-symbols-outlined text-sm ${log.status==='success'?'text-green-600':'text-error'}" aria-hidden="true">${log.status==='success'?'check_circle':'error'}</span><div><p class="font-bold">${new Date(log.synced_at).toLocaleString('de-DE')}</p>${log.error_message?`<p class="text-error text-xs">${log.error_message}</p>`:`<p class="text-xs">+${log.imported} neu · ↺${log.updated} · −${log.deleted} · ${log.skipped} übersprungen</p>`}</div></div><span class="text-xs text-on-surface-variant">${log.duration_ms?(log.duration_ms/1000).toFixed(1)+'s':''}</span></div>`).join('');
+    } else if(logsEl){logsEl.innerHTML='<p class="text-on-surface-variant text-sm">Noch kein Sync. URL speichern um zu starten.</p>';}
+  } catch(e){console.warn('[loadCsvSyncStatus]',e.message);}
+}
+
+async function saveCsvUrl() {
+  if(!CURRENT_USER) return;
+  const banner=document.getElementById('csv-status-banner');
+  const url=document.getElementById('csv-url-input').value.trim();
+  const interval=document.getElementById('csv-interval-select').value;
+  if(!url||!url.startsWith('http')){
+    banner.style.cssText='background:#fff5f5;border:1px solid #ba1a1a;color:#ba1a1a;';
+    banner.innerHTML='<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">error</span><span>Bitte eine gültige URL eingeben.</span>';
+    banner.classList.remove('hidden'); return;
+  }
+  banner.style.cssText='background:#eff6ff;border:1px solid #457efa;color:#1d4ed8;';
+  banner.innerHTML='<span class="material-symbols-outlined text-base flex-shrink-0 animate-spin" aria-hidden="true">sync</span><span>URL wird gespeichert…</span>';
+  banner.classList.remove('hidden');
+  try {
+    const token=localStorage.getItem('sb_token')||'';
+    const r=await fetch('/api/save-csv-url',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({csv_url:url,sync_interval_hours:interval})});
+    const data=await r.json();
+    if(!r.ok) throw new Error(data.error||'Fehler');
+    banner.style.cssText='background:#f0fdf4;border:1px solid #86efac;color:#166534;';
+    banner.innerHTML=`<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">check_circle</span><span>Gespeichert — erster Sync startet in Kürze.</span>`;
+    setTimeout(()=>triggerCsvSync(),2000);
+  } catch(e){
+    banner.style.cssText='background:#fff5f5;border:1px solid #ba1a1a;color:#ba1a1a;';
+    banner.innerHTML=`<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">error</span><span>${e.message}</span>`;
+  }
+}
+
+async function triggerCsvSync() {
+  if(!CURRENT_USER) return;
+  const btn=document.getElementById('csv-sync-btn');
+  const banner=document.getElementById('csv-status-banner');
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="material-symbols-outlined text-sm animate-spin" aria-hidden="true">sync</span>Synchronisiert…';}
+  banner.style.cssText='background:#eff6ff;border:1px solid #457efa;color:#1d4ed8;';
+  banner.innerHTML='<span class="material-symbols-outlined text-base flex-shrink-0 animate-spin" aria-hidden="true">sync</span><span>Importiere Fahrzeuge…</span>';
+  banner.classList.remove('hidden');
+  try {
+    const token=localStorage.getItem('sb_token')||'';
+    const r=await fetch('/api/csv-url-sync',{method:'POST',headers:{'Authorization':`Bearer ${token}`}});
+    const data=await r.json();
+    if(!r.ok) throw new Error(data.error||'Sync fehlgeschlagen');
+    const result=data.results?.[0];
+    if(result?.success){
+      banner.style.cssText='background:#f0fdf4;border:1px solid #86efac;color:#166534;';
+      banner.innerHTML=`<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">check_circle</span><span>+${result.imported} neu · ↺${result.updated} · −${result.deleted} · ${result.skipped} übersprungen</span>`;
+      await loadVehicles();
+    } else throw new Error(result?.error||'Sync fehlgeschlagen');
+    await loadCsvSyncStatus();
+  } catch(e){
+    banner.style.cssText='background:#fff5f5;border:1px solid #ba1a1a;color:#ba1a1a;';
+    banner.innerHTML=`<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">error</span><span>${e.message}</span>`;
+  } finally {
+    if(btn){btn.disabled=false;btn.innerHTML='<span class="material-symbols-outlined text-sm" aria-hidden="true">sync</span>Jetzt synchronisieren';}
+  }
+}
 </script>
 
 <!-- BARRIEREFREIHEITSERKLÄRUNG -->
@@ -2955,9 +3233,9 @@ function showCSVStatus(type, message, details, result) {
           </button>
         </div>
         <div class="flex gap-10 pt-6 border-t border-white/10">
-          <div><div class="font-headline font-black text-3xl text-white">247+</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Fahrzeuge live</div></div>
-          <div><div class="font-headline font-black text-3xl text-secondary-fixed">Ø 8.400 €</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Ersparnis</div></div>
-          <div><div class="font-headline font-black text-3xl text-white">34</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Partnerhändler</div></div>
+          <div><div class="font-headline font-black text-3xl text-white" id="stat-vehicles">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Fahrzeuge live</div></div>
+          <div><div class="font-headline font-black text-3xl text-secondary-fixed" id="stat-saving">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Ø Ersparnis</div></div>
+          <div><div class="font-headline font-black text-3xl text-white" id="stat-dealers">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Partnerhändler</div></div>
         </div>
       </div>
       <!-- Hero Card Preview -->
@@ -3629,8 +3907,8 @@ function showCSVStatus(type, message, details, result) {
           <div class="brand font-black text-3xl tracking-tighter">stehengeblieben.de</div>
           <p class="text-on-primary-container text-lg leading-relaxed max-w-sm">Professionelles Inventar-Management und Lead-Tracking.</p>
           <div class="flex gap-6 pt-4 border-t border-white/10">
-            <div><div class="font-headline font-black text-2xl text-secondary-fixed">34</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Partner</div></div>
-            <div><div class="font-headline font-black text-2xl text-secondary-fixed">247+</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Listings</div></div>
+            <div><div class="font-headline font-black text-2xl text-secondary-fixed" id="portal-stat-dealers">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Partner</div></div>
+            <div><div class="font-headline font-black text-2xl text-secondary-fixed" id="portal-stat-vehicles">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Listings</div></div>
           </div>
         </div>
       </div>
@@ -3688,6 +3966,8 @@ function showCSVStatus(type, message, details, result) {
         <a onclick="showDealerTab('upload')" id="dtab-upload" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined" class="material-symbols-outlined text-xl" aria-hidden="true">add_circle</span>Fahrzeug einstellen</a>
         <a onclick="showDealerTab('inventory')" id="dtab-inventory" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined" class="material-symbols-outlined text-xl" aria-hidden="true">directions_car</span>Mein Inventar</a>
         <a onclick="showDealerTab('leads')" id="dtab-leads" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined" class="material-symbols-outlined text-xl" aria-hidden="true">person_search</span>Leads</a>
+        <a onclick="showDealerTab('profile')" id="dtab-profile" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined text-xl" aria-hidden="true">manage_accounts</span>Mein Profil</a>
+        <a onclick="showDealerTab('datasync')" id="dtab-datasync" class="dealer-tab flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all cursor-pointer"><span class="material-symbols-outlined text-xl" aria-hidden="true">sync</span>Datenschnittstelle</a>
       </nav>
       <button onclick="portalLogout()" class="flex items-center gap-2 px-4 py-3 text-on-surface-variant hover:text-error text-sm font-medium transition-colors mt-4">
         <span class="material-symbols-outlined" class="material-symbols-outlined text-xl" aria-hidden="true">logout</span>Abmelden
@@ -3830,6 +4110,134 @@ function showCSVStatus(type, message, details, result) {
         <h1 class="font-headline font-black text-3xl tracking-tighter mb-8">Leads</h1>
         <div id="dealer-leads-list" class="space-y-4"></div>
       </div>
+
+      <!-- PROFIL TAB -->
+      <div id="dealer-tab-profile" class="hidden">
+        <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
+          <div>
+            <h1 class="font-headline font-black text-3xl tracking-tighter">Mein Profil</h1>
+            <p class="text-on-surface-variant text-sm mt-1">Ihre Händlerdaten — sichtbar für das stehengeblieben.de Team</p>
+          </div>
+          <button onclick="saveProfile()" class="metallic-gradient text-on-primary px-6 py-3 rounded font-headline font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm" aria-hidden="true">save</span>Profil speichern
+          </button>
+        </div>
+        <div id="profile-save-msg" class="hidden mb-6 p-4 rounded-xl text-sm font-bold flex items-center gap-2" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;">
+          <span class="material-symbols-outlined text-base" aria-hidden="true">check_circle</span>Profil erfolgreich gespeichert.
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+            <h2 class="font-headline font-bold text-lg tracking-tighter flex items-center gap-2"><span class="material-symbols-outlined text-on-tertiary-container" aria-hidden="true">store</span>Unternehmen</h2>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Firmenname *</label><input id="prof-company" type="text" placeholder="Auto Müller GmbH" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="organization"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Rechtsform</label><select id="prof-legal" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium appearance-none"><option value="">Bitte wählen</option><option>GmbH</option><option>GmbH & Co. KG</option><option>AG</option><option>Einzelunternehmen</option><option>OHG</option><option>UG (haftungsbeschränkt)</option></select></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Umsatzsteuer-ID *</label><input id="prof-vatid" type="text" placeholder="DE123456789" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Handelsregisternummer</label><input id="prof-hrn" type="text" placeholder="HRB 12345" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+          </div>
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+            <h2 class="font-headline font-bold text-lg tracking-tighter flex items-center gap-2"><span class="material-symbols-outlined text-on-tertiary-container" aria-hidden="true">location_on</span>Anschrift</h2>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Straße und Hausnummer *</label><input id="prof-street" type="text" placeholder="Musterstraße 12" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="street-address"/></div>
+            <div class="grid grid-cols-3 gap-3">
+              <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">PLZ *</label><input id="prof-plz" type="text" placeholder="50667" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="postal-code"/></div>
+              <div class="col-span-2"><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Stadt *</label><input id="prof-city" type="text" placeholder="Köln" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="address-level2"/></div>
+            </div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Bundesland</label><select id="prof-state" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium appearance-none"><option value="">Bitte wählen</option><option>Baden-Württemberg</option><option>Bayern</option><option>Berlin</option><option>Brandenburg</option><option>Bremen</option><option>Hamburg</option><option>Hessen</option><option>Mecklenburg-Vorpommern</option><option>Niedersachsen</option><option>Nordrhein-Westfalen</option><option>Rheinland-Pfalz</option><option>Saarland</option><option>Sachsen</option><option>Sachsen-Anhalt</option><option>Schleswig-Holstein</option><option>Thüringen</option></select></div>
+          </div>
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+            <h2 class="font-headline font-bold text-lg tracking-tighter flex items-center gap-2"><span class="material-symbols-outlined text-on-tertiary-container" aria-hidden="true">person</span>Ansprechpartner</h2>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Vorname *</label><input id="prof-firstname" type="text" placeholder="Max" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="given-name"/></div>
+              <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Nachname *</label><input id="prof-lastname" type="text" placeholder="Müller" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="family-name"/></div>
+            </div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">E-Mail (Kontakt) *</label><input id="prof-email-contact" type="email" placeholder="kontakt@autohaus.de" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="email"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Telefon *</label><input id="prof-phone" type="tel" placeholder="+49 221 123456" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="tel"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">IBAN</label><input id="prof-iban" type="text" placeholder="DE89 3704 0044 0532 0130 00" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/></div>
+          </div>
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+            <h2 class="font-headline font-bold text-lg tracking-tighter flex items-center gap-2"><span class="material-symbols-outlined text-on-tertiary-container" aria-hidden="true">garage</span>Betrieb</h2>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Website</label><input id="prof-website" type="url" placeholder="https://www.autohaus.de" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="url"/></div>
+            <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Abonnement</label><div id="prof-plan-display" class="bg-tertiary-container text-on-tertiary-container px-4 py-3 rounded-lg text-sm font-bold">Wird geladen…</div></div>
+          </div>
+        </div>
+        <div class="mt-6 flex justify-end">
+          <button onclick="saveProfile()" class="metallic-gradient text-on-primary px-8 py-4 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2 flex-shrink-0">
+            <span class="material-symbols-outlined text-sm" aria-hidden="true">save</span>Speichern
+          </button>
+        </div>
+      </div>
+
+      <!-- DATENSCHNITTSTELLE TAB -->
+      <div id="dealer-tab-datasync" class="hidden">
+        <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
+          <div>
+            <h1 class="font-headline font-black text-3xl tracking-tighter">Datenschnittstelle</h1>
+            <p class="text-on-surface-variant text-sm mt-1">Automatischer Import aus Ihrem DMS/CRM über CSV-Export-URL</p>
+          </div>
+          <div class="flex gap-3">
+            <button onclick="triggerCsvSync()" id="csv-sync-btn" class="border border-on-tertiary-container text-on-tertiary-container px-5 py-2.5 rounded font-headline font-bold text-xs uppercase tracking-widest hover:bg-on-tertiary-container/10 transition-all flex items-center gap-2"><span class="material-symbols-outlined text-sm" aria-hidden="true">sync</span>Jetzt synchronisieren</button>
+            <button onclick="saveCsvUrl()" class="metallic-gradient text-on-primary px-6 py-2.5 rounded font-headline font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2"><span class="material-symbols-outlined text-sm" aria-hidden="true">save</span>Speichern</button>
+          </div>
+        </div>
+        <div id="csv-status-banner" class="hidden mb-6 p-4 rounded-xl text-sm font-bold flex items-start gap-3"></div>
+        <div class="bg-tertiary-container/20 border border-on-tertiary-container/20 rounded-xl p-5 mb-6 flex gap-4">
+          <span class="material-symbols-outlined text-on-tertiary-container flex-shrink-0 mt-0.5" aria-hidden="true">info</span>
+          <div class="text-sm space-y-2">
+            <p class="font-bold">So richten Sie den automatischen Import ein:</p>
+            <ol class="text-on-surface-variant space-y-1 list-decimal list-inside">
+              <li>In Autrado: <strong>Exportdaten → Webserver → "Exportdatei auf Webserver bereitstellen"</strong> aktivieren</li>
+              <li>Autrado sendet Ihnen per E-Mail einen Download-Link zur CSV-Datei</li>
+              <li>Diesen Link unten eintragen — wir holen die Datei automatisch alle 6 Stunden ab</li>
+            </ol>
+            <p class="text-xs text-on-surface-variant pt-1">Fahrzeuge unter 20% Nachlass oder älter als 24 Monate werden übersprungen.</p>
+          </div>
+        </div>
+        <div id="csv-sync-status" class="hidden mb-6 bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10">
+          <div class="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-1">Letzter Sync</p>
+              <p id="csv-last-sync" class="font-headline font-bold text-base">—</p>
+              <p id="csv-last-message" class="text-sm text-on-surface-variant mt-1">—</p>
+            </div>
+            <div class="flex gap-6">
+              <div class="text-center"><div id="csv-stat-imported" class="font-headline font-black text-2xl text-on-tertiary-container">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Neu</div></div>
+              <div class="text-center"><div id="csv-stat-updated" class="font-headline font-black text-2xl text-secondary">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Aktualisiert</div></div>
+              <div class="text-center"><div id="csv-stat-deleted" class="font-headline font-black text-2xl text-error">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Entfernt</div></div>
+              <div class="text-center"><div id="csv-stat-skipped" class="font-headline font-black text-2xl text-on-surface-variant">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Übersprungen</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+            <h2 class="font-headline font-bold text-lg tracking-tighter">Export-URL (von Autrado / DMS)</h2>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="csv-url-input">Download-URL der CSV-Datei *</label>
+              <input id="csv-url-input" type="url" placeholder="https://export.autrado.de/export/export_12345.csv" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" aria-required="true" autocomplete="url"/>
+              <p class="text-xs text-on-surface-variant mt-2">Die URL aus der Autrado-Benachrichtigungsmail oder Ihrem DMS-Exportbereich</p>
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="csv-interval-select">Sync-Intervall</label>
+              <select id="csv-interval-select" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium appearance-none">
+                <option value="1">Stündlich</option>
+                <option value="3">Alle 3 Stunden</option>
+                <option value="6" selected>Alle 6 Stunden (empfohlen)</option>
+                <option value="12">Alle 12 Stunden</option>
+                <option value="24">Täglich</option>
+              </select>
+            </div>
+          </div>
+          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-4">
+            <h2 class="font-headline font-bold text-lg tracking-tighter">Sync-Regeln</h2>
+            <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-green-500 flex-shrink-0 mt-1.5"></span><p class="font-bold text-green-700">Neue Fahrzeuge werden hinzugefügt</p></div>
+            <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-on-tertiary-container flex-shrink-0 mt-1.5"></span><p class="font-bold text-on-tertiary-container">Preisänderungen werden aktualisiert</p></div>
+            <div class="flex items-start gap-3 p-3 bg-red-50 rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-error flex-shrink-0 mt-1.5"></span><p class="font-bold text-error">Verkaufte Fahrzeuge werden entfernt</p></div>
+            <div class="flex items-start gap-3 p-3 bg-surface-container-high rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-outline flex-shrink-0 mt-1.5"></span><p class="font-bold">Unter 20% / älter 24 Monate → übersprungen</p></div>
+          </div>
+        </div>
+        <div class="mt-6 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10">
+          <h2 class="font-headline font-bold text-lg tracking-tighter mb-4">Sync-Protokoll</h2>
+          <div id="csv-sync-logs" class="space-y-2 text-sm text-on-surface-variant"><p>Noch kein Sync durchgeführt.</p></div>
+        </div>
+      </div>
+
     </main>
   </div>
 </div>
@@ -4228,1441 +4636,7 @@ Authorization: Bearer IHR_API_KEY</pre>
   </div>
 </div>
 
-<script>
-// ── SUPABASE — direktes REST API (kein SDK) ───────────────────────────────────
-const SUPA_URL = 'https://clbhgauhguhevmcczawv.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsYmhnYXVoZ3VoZXZtY2N6YXd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3MTY3NTQsImV4cCI6MjA5MDI5Mjc1NH0.Onf8t_NkW7J9VTdaBnuRVflFRpr2vjvbbOHUbCJaj9Y';
 
-const db = {
-  headers: {
-    'apikey': SUPA_KEY,
-    'Authorization': 'Bearer ' + SUPA_KEY,
-    'Content-Type': 'application/json',
-    'Prefer': 'return=representation'
-  },
-  async select(table, params) {
-    let url = SUPA_URL + '/rest/v1/' + table + '?';
-    if (params) url += params;
-    const r = await fetch(url, { headers: this.headers });
-    if (!r.ok) throw new Error(await r.text());
-    return r.json();
-  },
-  async insert(table, rows) {
-    const r = await fetch(SUPA_URL + '/rest/v1/' + table, {
-      method: 'POST',
-      headers: this.headers,
-      body: JSON.stringify(rows)
-    });
-    if (!r.ok) throw new Error(await r.text());
-    return r.json();
-  }
-};
-
-// DATA — wird aus Supabase geladen
-let VEHICLES = [];
-let DEALERS = [], INQUIRIES = [], CUR = null;
-const ADMIN_PASS = 'stehengeblieben2025';
-
-// ── Fahrzeuge aus Supabase laden ───────────────────────────────────────────────
-async function loadVehicles() {
-  try {
-    const data = await db.select('vehicles',
-      'select=*&status=eq.active&order=discount_pct.desc');
-    // Supabase-Felder auf internes Format mappen
-    VEHICLES = (data || []).map((v, i) => ({
-      id: v.id || i+1,
-      brand: v.brand || '',
-      model: v.model || '',
-      variant: v.variant || v.description || '',
-      year: v.year || (v.first_registration ? new Date(v.first_registration).getFullYear() : 2024),
-      km: v.mileage || v.km || 0,
-      list: parseFloat(v.list_price) || 0,
-      sale: parseFloat(v.price) || 0,
-      fuel: v.fuel_type || v.fuel || 'Benzin',
-      trans: v.transmission || 'Automatik',
-      color: v.color || '',
-      desc: v.description || v.variant || '',
-      daysLeft: v.days_left || null,
-      discount_pct: parseFloat(v.discount_pct) || 0,
-      equipment: Array.isArray(v.equipment) ? v.equipment : [],
-    }));
-    renderHome();
-    renderInv();
-    if (document.querySelector('[data-page="admin"].active')) renderAdm();
-  } catch(err) {
-    console.warn('Supabase load error:', err.message);
-    // Fallback: Demo-Daten wenn DB leer oder nicht erreichbar
-    VEHICLES = [
-      {id:1,brand:'Volkswagen',model:'Golf GTI',variant:'2.0 TSI DSG',year:2024,km:12,list:42500,sale:31900,fuel:'Benzin',trans:'Automatik',color:'Tornado Rot',desc:'Tageszulassung vom 15.01.2024. Demo-Fahrzeug.',daysLeft:18},
-      {id:2,brand:'BMW',model:'3er',variant:'320d xDrive',year:2024,km:22,list:58900,sale:44200,fuel:'Diesel',trans:'Automatik',color:'Mineralweiß',desc:'Demo-Fahrzeug.',daysLeft:45},
-    ];
-    renderHome();
-  }
-}
-
-function disc(v){if(!v.list||v.list<=0)return(v.discount_pct||0).toFixed(1);return(((v.list-v.sale)/v.list)*100).toFixed(1);}
-function fmt(n){return Number(n).toLocaleString('de-DE');}
-function savamt(v){const s=v.list-v.sale;return s>0?fmt(s):'k.A.';}
-
-// NAV
-const PAGE_TITLES = {
-  'home': 'stehengeblieben.de — Neuwagen unschlagbar günstig',
-  'inventory': 'Alle Fahrzeuge — stehengeblieben.de',
-  'detail': 'Fahrzeugdetails — stehengeblieben.de',
-  'dealer-register': 'Als Händler registrieren — stehengeblieben.de',
-  'dealer-portal': 'Händler-Login — stehengeblieben.de',
-  'dealer-dashboard': 'Händler-Dashboard — stehengeblieben.de',
-  'admin': 'Admin-Panel — stehengeblieben.de',
-  'impressum': 'Impressum — stehengeblieben.de',
-  'datenschutz': 'Datenschutzerklärung — stehengeblieben.de',
-  'api-docs': 'API-Dokumentation — stehengeblieben.de',
-  'barrierefreiheit': 'Barrierefreiheitserklärung — stehengeblieben.de',
-};
-
-async function nav(p){
-  if(PAGE_TITLES[p]){ document.title = PAGE_TITLES[p]; announceToScreenReader('Seite: ' + PAGE_TITLES[p].split('—')[0].trim()); }
-  document.querySelectorAll('[data-page]').forEach(x=>x.classList.remove('active'));
-  const el=document.querySelector('[data-page="'+p+'"]');
-  if(el)el.classList.add('active');
-  window.scrollTo(0,0);
-  // Wenn Fahrzeuge noch nicht geladen — jetzt laden
-  if((p==='home'||p==='inventory') && VEHICLES.length===0){
-    await loadVehicles();
-  }
-  if(p==='home')renderHome();
-  if(p==='inventory')renderInv();
-  if(p==='admin')renderAdm();
-}
-function toggleMobile(){
-  const menu = document.getElementById('mobile-menu');
-  const btn = document.getElementById('mobile-menu-btn');
-  const isHidden = menu.classList.toggle('hidden');
-  if(btn) btn.setAttribute('aria-expanded', !isHidden);
-}
-function scrollHow(){nav('home');setTimeout(()=>document.getElementById('how-section')?.scrollIntoView({behavior:'smooth'}),100);}
-
-// CARD
-function announceToScreenReader(msg, urgent=false) {
-  const el = document.getElementById(urgent ? 'a11y-alert' : 'a11y-live');
-  if (el) { el.textContent = ''; setTimeout(() => el.textContent = msg, 10); }
-}
-
-function mkCard(v,fn){
-  const d=disc(v),urg=v.daysLeft&&v.daysLeft<=30;
-  return`<article class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/10 card-hover cursor-pointer" onclick="${fn}" role="button" tabindex="0" aria-label="${v.brand} ${v.model} ${v.variant} — ${fmt(v.sale)} € statt ${fmt(v.list)} € — ${disc(v)}% Nachlass" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();${fn}}">
-    <div class="relative overflow-hidden aspect-video bg-surface-container-low flex items-center justify-center">
-      <span class="material-symbols-outlined" class="text-on-surface-variant" aria-hidden="true" style="font-size:80px">directions_car</span>
-      <div class="absolute bottom-4 left-4 bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded font-headline font-extrabold text-base">-${d}%</div>
-      ${urg?`<div class="absolute top-4 right-4 bg-error text-white px-2.5 py-1 rounded font-bold text-xs uppercase tracking-widest">⏱ ${v.daysLeft} Tage</div>`:''}
-    </div>
-    <div class="p-6 space-y-3">
-      <div><div class="font-headline font-black text-xl tracking-tighter">${v.brand} ${v.model}</div><div class="text-on-surface-variant text-sm mt-0.5">${v.variant}</div></div>
-      <div class="flex flex-wrap gap-2">
-        <span class="bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide">${v.year||2024}</span>
-        <span class="bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide">${v.fuel}</span>
-        <span class="bg-surface-container-high text-on-surface-variant px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide">${fmt(v.km)} km</span>
-        <span class="bg-tertiary-container text-on-tertiary-container px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide">Tageszulassung</span>
-      </div>
-      <div class="pt-2 border-t border-outline-variant/10 flex items-baseline justify-between">
-        <div><span class="font-headline font-black text-3xl text-primary">${fmt(v.sale)} €</span><span class="text-on-surface-variant text-sm line-through ml-2">${fmt(v.list)} €</span></div>
-        <span class="text-secondary text-sm font-bold">-${savamt(v)} €</span>
-      </div>
-    </div>
-  </article>`;
-}
-
-function renderHome(){
-  const el=document.getElementById('home-cards');
-  if(!el)return;
-  if(VEHICLES.length===0){el.innerHTML='<p class="text-on-surface-variant col-span-3 text-center py-10">Fahrzeuge werden geladen…</p>';return;}
-  el.innerHTML=VEHICLES.slice(0,6).map(v=>mkCard(v,`showDet(${v.id})`)).join('');
-}
-
-function renderInv(){applyFilters();}
-function applyFilters(){
-  const b=document.getElementById('f-brand')?.value||'';
-  const f=document.getElementById('f-fuel')?.value||'';
-  const s=document.getElementById('f-sort')?.value||'discount';
-  const u=document.querySelector('input[name="urgency"]:checked')?.value||'';
-  // Equipment Filter
-  const checkedEquip = [...document.querySelectorAll('#equip-filters input:checked')].map(el=>el.value);
-  let l=[...VEHICLES];
-  if(b)l=l.filter(v=>v.brand===b);
-  if(f)l=l.filter(v=>v.fuel===f);
-  if(checkedEquip.length>0){
-    l=l.filter(v=>{
-      const eq=(v.equipment||[]).join(' ').toLowerCase();
-      return checkedEquip.every(e=>eq.includes(e.toLowerCase()));
-    });
-  }
-  if(u==='urgent')l=l.filter(v=>v.daysLeft&&v.daysLeft<=30);
-  if(s==='discount')l.sort((a,b)=>disc(b)-disc(a));
-  if(s==='price_asc')l.sort((a,b)=>a.sale-b.sale);
-  if(s==='price_desc')l.sort((a,b)=>b.sale-a.sale);
-  if(s==='urgent')l.sort((a,b)=>(a.daysLeft||999)-(b.daysLeft||999));
-  const g=document.getElementById('inv-grid');
-  if(g){
-    if(l.length===0){g.innerHTML='<p class="text-on-surface-variant col-span-3 text-center py-10">Keine Fahrzeuge gefunden.</p>';}
-    else{g.innerHTML=l.map(v=>mkCard(v,`showDet(${v.id})`)).join('');}
-  }
-  const c=document.getElementById('inv-count');
-  if(c)c.textContent=`${l.length} Fahrzeuge — alle mit Tageszulassung`;
-}
-function resetFilters(){
-  const fb=document.getElementById('f-brand'),ff=document.getElementById('f-fuel'),fs=document.getElementById('f-sort');
-  if(fb)fb.value='';if(ff)ff.value='';if(fs)fs.value='discount';
-  const r=document.querySelectorAll('input[name="urgency"]');if(r[0])r[0].checked=true;
-  document.querySelectorAll('#equip-filters input').forEach(el=>el.checked=false);
-  applyFilters();
-}
-
-// DETAIL
-function showDet(id){
-  const v=VEHICLES.find(x=>x.id===id);CUR=v;if(!v)return;nav('detail');
-  document.getElementById('d-title').textContent=`${v.brand} ${v.model} ${v.variant}`;
-  document.getElementById('d-desc').textContent=v.desc;
-  document.getElementById('d-list').textContent=`${fmt(v.list)} €`;
-  document.getElementById('d-sale').textContent=`${fmt(v.sale)} €`;
-  document.getElementById('d-saving').textContent=`${savamt(v)} €`;
-  document.getElementById('d-disc-badge').textContent=`-${disc(v)}% Nachlass`;
-  document.getElementById('d-price-main').textContent=`${fmt(v.sale)} €`;
-  document.getElementById('d-tags').innerHTML=`
-    <div class="flex items-center gap-2"><span class="material-symbols-outlined" class="material-symbols-outlined text-base" aria-hidden="true">speed</span><span>${fmt(v.km)} km</span></div>
-    <div class="flex items-center gap-2"><span class="material-symbols-outlined" class="material-symbols-outlined text-base" aria-hidden="true">settings</span><span>${v.trans}</span></div>
-    <div class="flex items-center gap-2"><span class="material-symbols-outlined" class="material-symbols-outlined text-base" aria-hidden="true">local_gas_station</span><span>${v.fuel}</span></div>
-    <div class="flex items-center gap-2"><span class="material-symbols-outlined" class="material-symbols-outlined text-base" aria-hidden="true">palette</span><span>${v.color}</span></div>`;
-  const sp=[['Hersteller',v.brand],['Modell',v.model],['Variante',v.variant],['Baujahr',v.year],['Kilometerstand',`${fmt(v.km)} km`],['Kraftstoff',v.fuel],['Getriebe',v.trans],['Farbe',v.color],['Zustand','Tageszulassung'],['Verfügbar',v.daysLeft?`Noch ${v.daysLeft} Tage`:'Verfügbar']];
-  document.getElementById('d-specs').innerHTML=sp.map(([k,vl])=>`<div class="flex justify-between py-3 border-b border-outline-variant/10"><span class="text-on-surface-variant">${k}</span><span class="font-bold">${vl}</span></div>`).join('');
-  const db=document.getElementById('d-days-box');
-  if(v.daysLeft&&v.daysLeft<=30){db.classList.remove('hidden');db.classList.add('flex');db.innerHTML=`<span class="material-symbols-outlined class=" aria-hidden="true"text-sm mr-1">schedule</span>Nur noch ${v.daysLeft} Tage verfügbar`;}else{db.classList.add('hidden');db.classList.remove('flex');}
-  const ub=document.getElementById('d-urg-badge');
-  if(v.daysLeft&&v.daysLeft<=30){ub.classList.remove('hidden');ub.textContent=`⏱ ${v.daysLeft} Tage`;}else{ub.classList.add('hidden');}
-  // Ausstattung
-  const equipSection=document.getElementById('d-equipment-section');
-  const equipEl=document.getElementById('d-equipment');
-  if(v.equipment&&v.equipment.length>0){
-    equipSection.classList.remove('hidden');
-    equipEl.innerHTML=v.equipment.map(e=>`<span class="bg-surface-container-low border border-outline-variant/20 px-3 py-1.5 rounded-full text-xs font-bold text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined" class="material-symbols-outlined text-xs" aria-hidden="true">check_circle</span>${e}</span>`).join('');
-  } else {
-    equipSection.classList.add('hidden');
-  }
-}
-
-// INQUIRY
-function openInquiry(){const m=document.getElementById('inq-modal');m.classList.remove('hidden');m.classList.add('flex');}
-function closeInq(){
-  const m=document.getElementById('inq-modal');
-  m.classList.add('hidden');
-  m.classList.remove('flex');
-  // Fokus zurück zum auslösenden Button (WCAG 2.4.3)
-  const trigger = document.querySelector('[onclick="openInquiry()"]');
-  if(trigger) trigger.focus();
-}
-document.getElementById('inq-modal').addEventListener('click',function(e){if(e.target===this)closeInq();});
-async function submitInq(){
-  const n=document.getElementById('inq-name').value,e=document.getElementById('inq-email').value;
-  if(!n||!e){announceToScreenReader('Fehler: Bitte Name und E-Mail angeben.', true);alert('Bitte Name und E-Mail angeben.');return;}
-  const inqData={vehicle:CUR?`${CUR.brand} ${CUR.model}`:'',vehicle_id:CUR?.id||null,name:n,email:e,phone:document.getElementById('inq-phone').value,message:document.getElementById('inq-msg').value};
-  if(CUR)INQUIRIES.push({...inqData,date:new Date().toLocaleDateString('de-DE')});
-  try{await db.insert('inquiries',[inqData]);}catch(err){console.warn('Inquiry save failed:',err);}
-  document.getElementById('inq-modal-inner').innerHTML=`<div class="text-center py-4 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl" aria-hidden="true">check_circle</span></div><h3 class="font-headline font-black text-2xl">Anfrage gesendet!</h3><p class="text-on-surface-variant">Der Händler meldet sich innerhalb von 24 Stunden.</p><button onclick="closeInq()" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all">Schließen</button></div>`;
-}
-
-// DEALER REG
-async function submitReg(){
-  const c=document.getElementById('reg-company').value,e=document.getElementById('reg-email').value;
-  if(!c||!e){alert('Bitte Firmenname und E-Mail angeben.');return;}
-  const dealer={company:c,contact:document.getElementById('reg-contact').value,email:e,phone:document.getElementById('reg-phone').value,city:document.getElementById('reg-city').value,approved:false};
-  // Supabase speichern
-  try {
-    await db.insert('dealers', [dealer]);
-  } catch(err) { console.warn('Dealer save failed:', err); }
-  DEALERS.push({...dealer,date:new Date().toLocaleDateString('de-DE')});
-  document.getElementById('reg-wrap').innerHTML=`<div class="text-center py-10 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl" aria-hidden="true">check_circle</span></div><h2 class="font-headline font-black text-3xl tracking-tighter">Registrierung erhalten!</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir melden uns innerhalb von 24 Stunden. Danach kannst du sofort Fahrzeuge hochladen.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all">Zurück zur Startseite</button></div>`;
-}
-
-// UPLOAD
-// ── VALIDIERUNGS-REGELN ───────────────────────────────────────────────────────
-// Regel 1: Inseratspreis mind. 20% unter Listenneupreis
-// Regel 2: Erstzulassung max. 24 Monate zurück
-const VALIDATION_RULES = {
-  MIN_DISCOUNT_PCT: 20,
-  MAX_AGE_MONTHS: 24,
-};
-
-function validateVehicleData(listPrice, salePrice, regDateStr) {
-  const errors = [];
-  // Pflichtfelder
-  if (!listPrice || listPrice <= 0) errors.push({ field: 'list', msg: 'Listenneupreis ist Pflichtfeld.' });
-  if (!salePrice || salePrice <= 0) errors.push({ field: 'sale', msg: 'Inseratspreis ist Pflichtfeld.' });
-  if (!regDateStr) errors.push({ field: 'reg', msg: 'Erstzulassungsdatum ist Pflichtfeld.' });
-  if (errors.length) return errors;
-
-  // Nachlass mind. 20%
-  const discPct = ((listPrice - salePrice) / listPrice) * 100;
-  if (salePrice >= listPrice) {
-    errors.push({ field: 'sale', msg: 'Inseratspreis muss unter dem Listenneupreis liegen.' });
-  } else if (discPct < VALIDATION_RULES.MIN_DISCOUNT_PCT) {
-    const minSale = Math.ceil(listPrice * (1 - VALIDATION_RULES.MIN_DISCOUNT_PCT / 100));
-    errors.push({ field: 'sale', msg: `Mindestens ${VALIDATION_RULES.MIN_DISCOUNT_PCT}% Nachlass erforderlich. Maximaler Inseratspreis: ${fmt(minSale)} €` });
-  }
-
-  // Zulassung max. 24 Monate
-  const regDate = new Date(regDateStr);
-  const now = new Date();
-  const monthsDiff = (now.getFullYear() - regDate.getFullYear()) * 12 + (now.getMonth() - regDate.getMonth());
-  if (regDate > now) {
-    errors.push({ field: 'reg', msg: 'Erstzulassungsdatum kann nicht in der Zukunft liegen.' });
-  } else if (monthsDiff > VALIDATION_RULES.MAX_AGE_MONTHS) {
-    errors.push({ field: 'reg', msg: `Erstzulassung darf maximal ${VALIDATION_RULES.MAX_AGE_MONTHS} Monate zurückliegen. Dieses Fahrzeug ist ${monthsDiff} Monate alt.` });
-  }
-
-  return errors;
-}
-
-function showFieldError(fieldId, msg) {
-  const input = document.getElementById(fieldId);
-  if (!input) return;
-  input.style.cssText = 'border:2px solid #ba1a1a !important; background:#fff5f5 !important;';
-  let hint = document.getElementById(fieldId + '-err');
-  if (!hint) {
-    hint = document.createElement('p');
-    hint.id = fieldId + '-err';
-    hint.className = 'text-xs font-bold mt-1.5 flex items-center gap-1';
-    hint.style.color = '#ba1a1a';
-    input.parentNode.appendChild(hint);
-  }
-  hint.innerHTML = `<span style="font-size:14px;vertical-align:middle;">⚠</span> ${msg}`;
-}
-
-function showFieldSuccess(fieldId, msg) {
-  const input = document.getElementById(fieldId);
-  if (!input) return;
-  input.style.cssText = 'border:2px solid #16a34a !important; background:#f0fdf4 !important;';
-  let hint = document.getElementById(fieldId + '-err');
-  if (!hint) {
-    hint = document.createElement('p');
-    hint.id = fieldId + '-err';
-    hint.className = 'text-xs font-bold mt-1.5 flex items-center gap-1';
-    input.parentNode.appendChild(hint);
-  }
-  hint.style.color = '#16a34a';
-  hint.innerHTML = `<span style="font-size:14px;vertical-align:middle;">✓</span> ${msg}`;
-}
-
-function clearFieldState(fieldId) {
-  const input = document.getElementById(fieldId);
-  if (input) input.style.cssText = '';
-  const hint = document.getElementById(fieldId + '-err');
-  if (hint) hint.remove();
-}
-
-// Live-Validierung beim Tippen
-function calcDisc() {
-  const l = parseFloat(document.getElementById('up-list').value);
-  const s = parseFloat(document.getElementById('up-sale').value);
-  const reg = document.getElementById('up-reg').value;
-  const el = document.getElementById('disc-preview');
-
-  // Nachlass berechnen & anzeigen
-  if (l && s && l > s) {
-    const pct = ((l - s) / l) * 100;
-    el.classList.remove('hidden');
-    document.getElementById('dp-pct').textContent = pct.toFixed(1) + '%';
-    document.getElementById('dp-save').textContent = fmt(l - s) + ' €';
-    // Live-Feedback Nachlass
-    if (pct < VALIDATION_RULES.MIN_DISCOUNT_PCT) {
-      const needed = Math.ceil(l * (1 - VALIDATION_RULES.MIN_DISCOUNT_PCT / 100));
-      showFieldError('up-sale', `Noch ${(VALIDATION_RULES.MIN_DISCOUNT_PCT - pct).toFixed(1)}% fehlen. Max. zulässig: ${fmt(needed)} €`);
-    } else {
-      showFieldSuccess('up-sale', `${pct.toFixed(1)}% Nachlass — Anforderung erfüllt ✓`);
-    }
-  } else if (l && s && s >= l) {
-    el.classList.add('hidden');
-    showFieldError('up-sale', 'Inseratspreis muss unter dem Listenneupreis liegen.');
-  } else {
-    el.classList.add('hidden');
-    if (s) clearFieldState('up-sale');
-  }
-
-  // Live-Feedback Zulassung
-  if (reg) {
-    const regDate = new Date(reg);
-    const now = new Date();
-    const months = (now.getFullYear() - regDate.getFullYear()) * 12 + (now.getMonth() - regDate.getMonth());
-    if (regDate > now) {
-      showFieldError('up-reg', 'Datum kann nicht in der Zukunft liegen.');
-    } else if (months > VALIDATION_RULES.MAX_AGE_MONTHS) {
-      showFieldError('up-reg', `Fahrzeug ist ${months} Monate alt — Maximum: ${VALIDATION_RULES.MAX_AGE_MONTHS} Monate.`);
-    } else {
-      showFieldSuccess('up-reg', `${months} Monate alt — Anforderung erfüllt ✓`);
-    }
-  }
-}
-
-// Flag: wird auf true gesetzt wenn CSV erfolgreich importiert wurde
-let csvImportSuccess = false;
-
-async function submitUpload(){
-  // CSV wurde erfolgreich importiert → direkt Bestätigung zeigen
-  if(csvImportSuccess){
-    document.getElementById('upload-wrap').innerHTML=`<div class="text-center py-20 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl" aria-hidden="true">check_circle</span></div><h2 class="font-headline font-black text-4xl tracking-tighter">Fahrzeuge eingereicht.</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir pr&uuml;fen die importierten Fahrzeuge und schalten sie innerhalb von 24 Stunden frei.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all mt-4">Zur&uuml;ck zur Startseite</button></div>`;
-    return;
-  }
-
-  // Manuelles Formular — Pflichtfeld-Check
-  const b = document.getElementById('up-brand').value;
-  const m = document.getElementById('up-model').value;
-  const l = parseFloat(document.getElementById('up-list').value) || 0;
-  const s = parseFloat(document.getElementById('up-sale').value) || 0;
-  const reg = document.getElementById('up-reg').value || '';
-
-  // Basis-Pflichtfelder
-  if (!b || !m) {
-    showUploadError('Bitte Hersteller und Modell auswählen.');
-    return;
-  }
-
-  // Vollständige Validierung
-  const errors = validateVehicleData(l, s, reg);
-  if (errors.length > 0) {
-    // Alle Felder markieren
-    ['up-list','up-sale','up-reg'].forEach(id => clearFieldState(id));
-    const fieldMap = { list: 'up-list', sale: 'up-sale', reg: 'up-reg' };
-    errors.forEach(e => showFieldError(fieldMap[e.field] || e.field, e.msg));
-    // Sammel-Fehlerbox
-    showUploadError(
-      errors.map(e => e.msg).join('<br/>'),
-      'Das Fahrzeug erfüllt nicht die Mindestanforderungen von stehengeblieben.de:'
-    );
-    document.getElementById('up-list')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return;
-  }
-
-  // Validierung bestanden — speichern
-  const vehicle = {
-    brand: b, model: m,
-    variant: document.getElementById('up-variant').value || null,
-    first_registration: reg || null,
-    mileage: parseInt(document.getElementById('up-km').value) || 0,
-    fuel_type: document.getElementById('up-fuel').value || 'Benzin',
-    transmission: document.getElementById('up-trans').value || 'Automatik',
-    color: document.getElementById('up-color').value || '',
-    list_price: l, price: s,
-    discount_pct: Math.round(((l - s) / l) * 100 * 10) / 10,
-    description: document.getElementById('up-desc').value || '',
-    dealer_email: document.getElementById('up-email').value || '',
-    status: 'pending', source: 'manual',
-  };
-  try {
-    await db.insert('vehicles', [vehicle]);
-    await loadVehicles();
-  } catch(err) { console.warn('Vehicle save failed:', err); }
-  document.getElementById('upload-wrap').innerHTML=`<div class="text-center py-20 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl" aria-hidden="true">check_circle</span></div><h2 class="font-headline font-black text-4xl tracking-tighter">Fahrzeug eingereicht.</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir pr&uuml;fen dein Fahrzeug und schalten es innerhalb von 24 Stunden frei.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all mt-4">Zur&uuml;ck zur Startseite</button></div>`;
-}
-
-function showUploadError(msg, title) {
-  let errBox = document.getElementById('upload-error');
-  if (!errBox) {
-    errBox = document.createElement('div');
-    errBox.id = 'upload-error';
-    errBox.className = 'mb-6 p-5 rounded-xl text-sm border';
-    errBox.style.cssText = 'background:#fff5f5; border-color:#ba1a1a;';
-    document.getElementById('upload-wrap').prepend(errBox);
-  }
-  errBox.innerHTML = `
-    <div class="flex items-start gap-3">
-      <span class="material-symbols-outlined flex-shrink-0 mt-0.5" aria-hidden="true" style="color:#ba1a1a; font-size:20px;">error</span>
-      <div>
-        <p class="font-bold mb-1" style="color:#ba1a1a;">${title || 'Fahrzeug kann nicht eingestellt werden:'}</p>
-        <p class="leading-relaxed" style="color:#7f1d1d;">${msg}</p>
-      </div>
-    </div>`;
-  errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-// ── ADMIN ACCOUNTS ────────────────────────────────────────────────────────────
-const ADMIN_ACCOUNTS = {
-  'sven':    { pass: 'stehengeblieben2025', role: 'Super Admin',    color: '#ffdea5' },
-  'support': { pass: 'support2025',         role: 'Support Agent',  color: '#457efa' },
-};
-let CURRENT_ADMIN = null;
-const SUPPORT_LOG = [];
-
-function doAdminLogin() {
-  const user = document.getElementById('admin-user-input').value.trim().toLowerCase();
-  const pass = document.getElementById('admin-pw-input').value;
-  const account = ADMIN_ACCOUNTS[user];
-  if (account && account.pass === pass) {
-    CURRENT_ADMIN = { user, ...account };
-    document.getElementById('admin-login-screen').classList.add('hidden');
-    document.getElementById('admin-main').classList.remove('hidden');
-    document.getElementById('admin-role-badge').textContent = `Eingeloggt als: ${user} — ${account.role}`;
-    document.getElementById('admin-role-badge').style.color = account.color;
-    document.getElementById('admin-login-err').classList.add('hidden');
-    renderAdm();
-  } else {
-    document.getElementById('admin-login-err').classList.remove('hidden');
-  }
-}
-
-function doAdminLogout() {
-  CURRENT_ADMIN = null;
-  document.getElementById('admin-login-screen').classList.remove('hidden');
-  document.getElementById('admin-main').classList.add('hidden');
-  document.getElementById('admin-user-input').value = '';
-  document.getElementById('admin-pw-input').value = '';
-}
-
-function doAdminHelp() {
-  const email = document.getElementById('help-dealer-email').value.trim();
-  const action = document.getElementById('help-action').value;
-  const resultEl = document.getElementById('help-result');
-  if (!email) { resultEl.classList.remove('hidden'); resultEl.textContent = 'Bitte eine Händler-E-Mail eingeben.'; return; }
-  const actionLabels = { upload: 'Fahrzeug-Upload-Formular', view: 'Dashboard-Ansicht', reset: 'Passwort-Reset' };
-  const entry = `[${new Date().toLocaleTimeString('de-DE')}] ${CURRENT_ADMIN?.user || 'Admin'} → ${actionLabels[action]} für ${email}`;
-  SUPPORT_LOG.push(entry);
-  const logEl = document.getElementById('admin-support-log');
-  logEl.innerHTML = SUPPORT_LOG.map(e => `<div class="bg-surface-container-low rounded px-3 py-2 font-mono text-xs">${e}</div>`).join('');
-  resultEl.classList.remove('hidden');
-  if (action === 'upload') {
-    resultEl.innerHTML = `✅ Support-Modus aktiv für <strong>${email}</strong>. <button onclick="nav('dealer-upload')" class="underline text-on-tertiary-container font-bold">Zum Upload-Formular</button> — Fahrzeug wird diesem Händler zugeordnet.`;
-  } else if (action === 'view') {
-    resultEl.innerHTML = `✅ Dashboard geöffnet für <strong>${email}</strong>. <button onclick="nav('dealer-dashboard')" class="underline text-on-tertiary-container font-bold">Zum Dashboard</button>`;
-  } else {
-    resultEl.innerHTML = `✅ Passwort-Reset-E-Mail wird gesendet an <strong>${email}</strong>. (In Produktion via Supabase Auth)`;
-  }
-}
-
-function renderAdm() {
-  // Fahrzeuge Tab
-  const avCount = VEHICLES.length;
-  const avEl = document.getElementById('av-count');
-  if (avEl) avEl.textContent = `${avCount} Fahrzeuge gesamt`;
-  document.getElementById('av-list').innerHTML = VEHICLES.length ? VEHICLES.map(v => `
-    <div class="bg-surface-container-lowest rounded-xl p-5 mb-3 flex justify-between items-center flex-wrap gap-3 border-l-4 border-green-400 shadow-sm">
-      <div>
-        <div class="font-headline font-bold text-base">${v.brand} ${v.model} ${v.variant||''}</div>
-        <div class="text-on-surface-variant text-sm mt-1">${v.year||''} · ${v.fuel||''} · ${fmt(v.sale)} € <span class="text-secondary font-bold">(${disc(v)}% Nachlass)</span></div>
-        <div class="text-on-surface-variant text-xs mt-1">✅ Live · ${fmt(v.km||0)} km${v.daysLeft ? ` · Noch ${v.daysLeft} Tage` : ''}</div>
-      </div>
-      <div class="flex gap-2">
-        <button onclick="alert('Als verkauft markiert!')" class="bg-surface-container-high text-on-surface px-3 py-1.5 rounded text-xs font-bold uppercase tracking-widest hover:bg-surface-container-highest">Verkauft</button>
-        <button onclick="alert('Fahrzeug gelöscht!')" class="bg-error/10 text-error px-3 py-1.5 rounded text-xs font-bold uppercase tracking-widest hover:bg-error/20">Löschen</button>
-      </div>
-    </div>`).join('') : '<p class="text-on-surface-variant">Keine Fahrzeuge geladen.</p>';
-
-  // Händler Tab — erweitertes Dashboard
-  const soldCount = DEALERS.filter(d => d.approved).length;
-  const pendingCount = DEALERS.filter(d => !d.approved).length;
-  const adStats = document.getElementById('ad-stats');
-  if (adStats) adStats.textContent = `${soldCount} aktiv · ${pendingCount} ausstehend`;
-  document.getElementById('ad-list').innerHTML = DEALERS.length ? DEALERS.map((d, i) => `
-    <div class="bg-surface-container-lowest rounded-xl p-5 mb-3 border-l-4 ${d.approved ? 'border-green-400' : 'border-secondary'} shadow-sm">
-      <div class="flex justify-between items-start flex-wrap gap-3">
-        <div class="flex-1">
-          <div class="flex items-center gap-3 flex-wrap">
-            <div class="font-headline font-bold text-base">${d.company}</div>
-            <span class="text-xs px-2 py-0.5 rounded-full font-bold ${d.approved ? 'bg-green-100 text-green-700' : 'bg-secondary-fixed/20 text-secondary'}">${d.approved ? '✅ Aktiv' : '⏳ Ausstehend'}</span>
-            ${d.plan ? `<span class="text-xs px-2 py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-bold">${d.plan}</span>` : ''}
-          </div>
-          <div class="text-on-surface-variant text-sm mt-2 space-y-0.5">
-            <div>👤 ${d.contact || '—'}</div>
-            <div>✉️ <a href="mailto:${d.email}" class="hover:underline text-on-tertiary-container">${d.email}</a>${d.phone ? ` · 📞 ${d.phone}` : ''}</div>
-            <div>📍 ${d.city || '—'} · 🗓 Registriert: ${d.date || '—'}</div>
-            <div>🚗 Aktive Fahrzeuge: <strong>${d.vehicleCount || 0}</strong></div>
-          </div>
-        </div>
-        <div class="flex flex-col gap-2">
-          ${!d.approved ? `<button onclick="DEALERS[${i}].approved=true;renderAdm()" class="bg-green-500 text-white px-3 py-1.5 rounded text-xs font-bold uppercase tracking-widest hover:opacity-80">Freigeben</button>` : ''}
-          <button onclick="document.getElementById('help-dealer-email').value='${d.email}';showAdmTab('ah',document.querySelectorAll('.admin-tab')[3])" class="bg-on-tertiary-container/10 text-on-tertiary-container px-3 py-1.5 rounded text-xs font-bold uppercase tracking-widest hover:opacity-80">Helfen</button>
-          <button onclick="if(confirm('Händler wirklich sperren?'))alert('Gesperrt: ${d.company}')" class="bg-error/10 text-error px-3 py-1.5 rounded text-xs font-bold uppercase tracking-widest hover:opacity-80">Sperren</button>
-        </div>
-      </div>
-    </div>`).join('') : '<p class="text-on-surface-variant">Noch keine Händler-Registrierungen.</p>';
-
-  // Anfragen Tab
-  document.getElementById('ai-list').innerHTML = INQUIRIES.length ? INQUIRIES.map(i => `
-    <div class="bg-surface-container-lowest rounded-xl p-5 mb-3 border-l-4 border-on-tertiary-container shadow-sm">
-      <div class="font-headline font-bold">${i.name} → ${i.vehicle}</div>
-      <div class="text-on-surface-variant text-sm mt-1"><a href="mailto:${i.email}" class="hover:underline">${i.email}</a>${i.phone ? ' · ' + i.phone : ''}</div>
-      ${i.msg ? `<div class="text-on-surface-variant text-sm mt-2 italic">"${i.msg}"</div>` : ''}
-      <div class="text-on-surface-variant text-xs mt-2">${i.date}</div>
-    </div>`).join('') : '<p class="text-on-surface-variant">Noch keine Anfragen.</p>';
-}
-function showAdmTab(t,btn){
-  ['av','ad','ai','ah'].forEach(x=>{const el=document.getElementById(x);if(el)el.classList.toggle('hidden',x!==t);});
-  document.querySelectorAll('.admin-tab').forEach(b=>{b.classList.remove('bg-primary','border-primary');b.classList.add('border-white/20');});
-  btn.classList.add('bg-primary','border-primary');btn.classList.remove('border-white/20');
-}
-
-// ── DSGVO Cookie Banner ───────────────────────────────────────────────────────
-function initDSGVO() {
-  if (!localStorage.getItem('dsgvo_accepted')) {
-    setTimeout(() => { document.getElementById('dsgvo-banner').style.display = 'block'; }, 800);
-  }
-}
-function acceptDSGVO() {
-  localStorage.setItem('dsgvo_accepted', '1');
-  document.getElementById('dsgvo-banner').style.display = 'none';
-}
-// Init
-loadVehicles();
-initDSGVO();
-
-// ══════════════════════════════════════════════════════════════════════════════
-// DEALER AUTH + PORTAL
-// ══════════════════════════════════════════════════════════════════════════════
-let CURRENT_USER = null;
-let DEALER_IMAGES = []; // uploaded image URLs
-
-// Auth State beim Start prüfen
-async function checkAuthState() {
-  try {
-    const r = await fetch(SUPA_URL + '/auth/v1/user', {
-      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + (localStorage.getItem('sb_token') || '') }
-    });
-    if (r.ok) {
-      const u = await r.json();
-      if (u.id) { CURRENT_USER = u; updateNavForAuth(); }
-    }
-  } catch(e) {}
-}
-
-function updateNavForAuth() {
-  // Nav-Button nach Login aktualisieren
-  const btns = document.querySelectorAll('[data-page-link="dealer-portal"]');
-  btns.forEach(btn => {
-    btn.textContent = 'Mein Portal';
-    btn.setAttribute('onclick', "nav('dealer-dashboard')");
-  });
-}
-
-// Login
-async function portalLogin() {
-  const email = document.getElementById('portal-user').value.trim();
-  const pw = document.getElementById('portal-pw').value;
-  const errEl = document.getElementById('portal-error');
-  errEl.classList.add('hidden');
-  if (!email || !pw) { errEl.textContent = 'Bitte E-Mail und Passwort eingeben.'; errEl.classList.remove('hidden'); return; }
-  try {
-    const r = await fetch(SUPA_URL + '/auth/v1/token?grant_type=password', {
-      method: 'POST',
-      headers: { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password: pw })
-    });
-    const data = await r.json();
-    if (!r.ok) throw new Error(data.error_description || data.msg || 'Login fehlgeschlagen');
-    localStorage.setItem('sb_token', data.access_token);
-    CURRENT_USER = data.user;
-    // ── Rolle prüfen und entsprechend weiterleiten ──────────────────────────
-    await redirectByRole(email);
-  } catch(e) {
-    errEl.textContent = e.message;
-    errEl.classList.remove('hidden');
-  }
-}
-
-// ── Rolle aus dealers-Tabelle prüfen und weiterleiten ─────────────────────────
-async function redirectByRole(email) {
-  try {
-    const token = localStorage.getItem('sb_token') || '';
-    const r = await fetch(
-      SUPA_URL + '/rest/v1/dealers?select=role,approved&email=eq.' + encodeURIComponent(email) + '&limit=1',
-      { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + token } }
-    );
-    const rows = await r.json();
-    if (rows && rows.length > 0 && rows[0].role === 'admin') {
-      // Admin → Admin Panel öffnen
-      document.querySelectorAll('[data-page]').forEach(x => x.classList.remove('active'));
-      const adminEl = document.querySelector('[data-page="admin"]');
-      if (adminEl) adminEl.classList.add('active');
-      window.scrollTo(0, 0);
-      // Admin-Login-Screen überspringen, direkt ins Panel
-      CURRENT_ADMIN = { user: email, role: 'Super Admin', color: '#ffdea5' };
-      document.getElementById('admin-login-screen').classList.add('hidden');
-      document.getElementById('admin-main').classList.remove('hidden');
-      const badge = document.getElementById('admin-role-badge');
-      if (badge) { badge.textContent = 'Eingeloggt als: ' + email + ' — Super Admin'; badge.style.color = '#ffdea5'; }
-      renderAdm();
-    } else {
-      // Händler → Dashboard
-      await nav('dealer-dashboard');
-    }
-  } catch(e) {
-    // Fallback: normales Dashboard
-    await nav('dealer-dashboard');
-  }
-}
-
-// Signup
-async function portalSignup() {
-  const company = document.getElementById('signup-company').value.trim();
-  const email = document.getElementById('signup-email').value.trim();
-  const pw = document.getElementById('signup-pw').value;
-  const errEl = document.getElementById('portal-signup-error');
-  errEl.classList.add('hidden');
-  if (!company || !email || !pw) { errEl.textContent = 'Bitte alle Felder ausfüllen.'; errEl.classList.remove('hidden'); return; }
-  if (pw.length < 6) { errEl.textContent = 'Passwort muss mindestens 6 Zeichen haben.'; errEl.classList.remove('hidden'); return; }
-  try {
-    const r = await fetch(SUPA_URL + '/auth/v1/signup', {
-      method: 'POST',
-      headers: { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password: pw, data: { company } })
-    });
-    const data = await r.json();
-    if (!r.ok) throw new Error(data.error_description || data.msg || 'Registrierung fehlgeschlagen');
-    // Auto-login nach Signup
-    localStorage.setItem('sb_token', data.access_token);
-    CURRENT_USER = data.user;
-    // Händler in dealers Tabelle speichern
-    try { await db.insert('dealers', [{ company, email, approved: true }]); } catch(e) {}
-    await nav('dealer-dashboard');
-  } catch(e) {
-    errEl.textContent = e.message;
-    errEl.classList.remove('hidden');
-  }
-}
-
-// Logout
-async function portalLogout() {
-  try {
-    await fetch(SUPA_URL + '/auth/v1/logout', {
-      method: 'POST',
-      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + (localStorage.getItem('sb_token') || '') }
-    });
-  } catch(e) {}
-  localStorage.removeItem('sb_token');
-  CURRENT_USER = null;
-  nav('home');
-}
-
-// Password Reset
-async function portalReset() {
-  const email = document.getElementById('reset-email').value.trim();
-  if (!email) { alert('Bitte E-Mail eingeben.'); return; }
-  try {
-    await fetch(SUPA_URL + '/auth/v1/recover', {
-      method: 'POST',
-      headers: { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    });
-    alert('Reset-Link wurde gesendet! Prüfe deine E-Mails.');
-    showPortalLogin();
-  } catch(e) { alert('Fehler: ' + e.message); }
-}
-
-// View switcher
-function showPortalLogin() {
-  document.getElementById('portal-login-view').classList.remove('hidden');
-  document.getElementById('portal-signup-view').classList.add('hidden');
-  document.getElementById('portal-reset-view').classList.add('hidden');
-}
-function showPortalSignup() {
-  document.getElementById('portal-login-view').classList.add('hidden');
-  document.getElementById('portal-signup-view').classList.remove('hidden');
-  document.getElementById('portal-reset-view').classList.add('hidden');
-}
-function showPortalReset() {
-  document.getElementById('portal-login-view').classList.add('hidden');
-  document.getElementById('portal-signup-view').classList.add('hidden');
-  document.getElementById('portal-reset-view').classList.remove('hidden');
-}
-
-// ── DEALER DASHBOARD ─────────────────────────────────────────────────────────
-async function loadDealerDashboard() {
-  if (!CURRENT_USER) { nav('dealer-portal'); return; }
-  const email = CURRENT_USER.email;
-  const company = CURRENT_USER.user_metadata?.company || email;
-  document.getElementById('dash-company').textContent = company;
-    document.getElementById('dash-email').textContent = email;
-
-  // Rolle aus dealers-Tabelle laden und "Mein Paket" + Admin-Link aktualisieren
-  try {
-    const token = localStorage.getItem('sb_token') || '';
-    const rr = await fetch(SUPA_URL + '/rest/v1/dealers?select=role,plan&email=eq.' + encodeURIComponent(email) + '&limit=1', {
-      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + token }
-    });
-    const dealerRows = await rr.json();
-    const dealerRole = dealerRows && dealerRows.length > 0 ? dealerRows[0].role : null;
-    const dealerPlan = dealerRows && dealerRows.length > 0 ? dealerRows[0].plan : null;
-    const planEl = document.getElementById('kpi-plan');
-    if (dealerRole === 'admin') {
-      if (planEl) { planEl.textContent = 'Admin'; planEl.style.color = '#ffdea5'; }
-      let adminLink = document.getElementById('dtab-admin');
-      if (!adminLink) {
-        adminLink = document.createElement('a');
-        adminLink.id = 'dtab-admin';
-        adminLink.className = 'flex items-center gap-3 px-4 py-3 text-yellow-400 hover:bg-surface-container-high rounded-lg text-sm font-bold transition-all cursor-pointer';
-        adminLink.innerHTML = '<span class="material-symbols-outlined" class="material-symbols-outlined text-xl" aria-hidden="true">admin_panel_settings</span>Admin-Panel';
-        adminLink.onclick = () => redirectByRole(email);
-        document.querySelector('#dealer-dashboard nav').appendChild(adminLink);
-      }
-    } else if (dealerPlan) {
-      if (planEl) planEl.textContent = dealerPlan;
-    }
-  } catch(e) { /* Plan-Anzeige ist nicht kritisch */ }
-
-
-  // Meine Fahrzeuge laden
-  try {
-    const token = localStorage.getItem('sb_token') || '';
-    const vehicles = await fetch(SUPA_URL + '/rest/v1/vehicles?dealer_email=eq.' + encodeURIComponent(email) + '&select=*&order=created_at.desc', {
-      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + token }
-    }).then(r => r.json());
-
-    const active = (vehicles || []).filter(v => v.status === 'active');
-    const avgDisc = active.length ? (active.reduce((s,v) => s + (parseFloat(v.discount_pct)||0), 0) / active.length).toFixed(1) : 0;
-    document.getElementById('kpi-active').textContent = active.length;
-    document.getElementById('kpi-discount').textContent = avgDisc + '%';
-
-    // Fahrzeug-Vorschau
-    const vPrev = document.getElementById('dash-vehicles-preview');
-    if (active.length === 0) {
-      vPrev.innerHTML = `<div class="col-span-3 text-center py-10 text-on-surface-variant"><p class="font-bold mb-2">Noch keine Fahrzeuge</p><button onclick="showDealerTab('upload')" class="metallic-gradient text-on-primary px-6 py-2 rounded font-headline font-bold text-xs uppercase tracking-widest hover:opacity-90">Erstes Fahrzeug einstellen →</button></div>`;
-    } else {
-      vPrev.innerHTML = active.slice(0,3).map(v => `
-        <div class="bg-surface-container-lowest rounded-xl p-4 border border-outline-variant/10">
-          <div class="aspect-video bg-surface-container-low rounded-lg mb-3 flex items-center justify-center overflow-hidden">
-            ${v.image_url ? `<img src="${v.image_url}" class="w-full h-full object-cover rounded-lg">` : '<span class="material-symbols-outlined" class="text-on-surface-variant" aria-hidden="true" style="font-size:48px">directions_car</span>'}
-          </div>
-          <div class="font-headline font-bold">${v.brand} ${v.model}</div>
-          <div class="text-sm text-on-surface-variant">${v.variant||''}</div>
-          <div class="flex justify-between mt-2">
-            <span class="text-secondary font-bold">${parseFloat(v.price||0).toLocaleString('de-DE')} €</span>
-            <span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded text-xs font-bold">-${v.discount_pct||0}%</span>
-          </div>
-        </div>`).join('');
-    }
-
-    // Inventar Tab befüllen
-    const invList = document.getElementById('dealer-inventory-list');
-    if ((vehicles||[]).length === 0) {
-      invList.innerHTML = `<div class="text-center py-10 text-on-surface-variant"><p class="font-bold mb-2">Noch keine Fahrzeuge eingestellt</p><button onclick="showDealerTab('upload')" class="metallic-gradient text-on-primary px-6 py-2 rounded font-headline font-bold text-xs uppercase tracking-widest">Jetzt einstellen →</button></div>`;
-    } else {
-      invList.innerHTML = (vehicles||[]).map(v => `
-        <div class="bg-surface-container-lowest rounded-xl p-5 flex justify-between items-center flex-wrap gap-3 border border-outline-variant/10 border-l-4 ${v.status==='active'?'border-l-green-500':v.status==='sold'?'border-l-secondary':'border-l-outline-variant'}">
-          <div class="flex items-center gap-4">
-            <div class="w-16 h-12 bg-surface-container-low rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
-              ${v.image_url ? `<img src="${v.image_url}" class="w-full h-full object-cover rounded-lg">` : '<span class="material-symbols-outlined" class="material-symbols-outlined text-on-surface-variant" aria-hidden="true">directions_car</span>'}
-            </div>
-            <div>
-              <div class="font-headline font-bold">${v.brand} ${v.model} ${v.variant||''}</div>
-              <div class="text-sm text-on-surface-variant">${parseFloat(v.price||0).toLocaleString('de-DE')} € · -${v.discount_pct||0}% · ${v.fuel_type||''}</div>
-              <div class="text-xs mt-1">
-                <span class="px-2 py-0.5 rounded font-bold uppercase tracking-widest ${v.status==='active'?'bg-green-100 text-green-700':v.status==='sold'?'bg-secondary-container text-on-secondary-container':'bg-surface-container-high text-on-surface-variant'}">${v.status==='active'?'Live':v.status==='sold'?'Verkauft':'In Prüfung'}</span>
-              </div>
-            </div>
-          </div>
-          <div class="flex gap-2">
-            <button onclick="markVehicleSold(${v.id})" class="px-3 py-1.5 bg-surface-container-high text-on-surface-variant rounded text-xs font-bold uppercase tracking-widest hover:bg-surface-container-highest transition-colors">Als verkauft</button>
-            <button onclick="deleteVehicle(${v.id})" class="px-3 py-1.5 border border-error/30 text-error rounded text-xs font-bold uppercase tracking-widest hover:bg-error/5 transition-colors">Löschen</button>
-          </div>
-        </div>`).join('');
-    }
-  } catch(e) { console.warn('Dashboard load error:', e); }
-
-  // Leads laden
-  try {
-    const leads = await db.select('inquiries', 'select=*&order=created_at.desc');
-    document.getElementById('kpi-leads').textContent = (leads||[]).length;
-
-    const renderLead = (l) => `
-      <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10 border-l-4 border-l-on-tertiary-container">
-        <div class="flex justify-between items-start flex-wrap gap-2">
-          <div>
-            <div class="font-headline font-bold">${l.name} <span class="text-on-surface-variant font-normal">→</span> ${l.vehicle||'Fahrzeug'}</div>
-            <div class="text-sm text-on-surface-variant mt-1">${l.email}${l.phone?' · '+l.phone:''}</div>
-            ${l.message?`<div class="text-sm mt-2 text-on-surface italic">"${l.message}"</div>`:''}
-          </div>
-          <div class="text-xs text-on-surface-variant">${new Date(l.created_at).toLocaleDateString('de-DE')}</div>
-        </div>
-      </div>`;
-
-    document.getElementById('dash-leads-preview').innerHTML = (leads||[]).slice(0,3).map(renderLead).join('') || '<p class="text-on-surface-variant">Noch keine Leads eingegangen.</p>';
-    document.getElementById('dealer-leads-list').innerHTML = (leads||[]).map(renderLead).join('') || '<div class="text-center py-10 text-on-surface-variant"><p class="font-bold">Noch keine Leads</p><p class="text-sm mt-1">Wenn Käufer Anfragen senden, erscheinen sie hier.</p></div>';
-  } catch(e) { console.warn('Leads load error:', e); }
-}
-
-// Dealer Tab switcher
-function showDealerTab(tab) {
-  ['dashboard','upload','inventory','leads'].forEach(t => {
-    document.getElementById('dealer-tab-' + t).classList.toggle('hidden', t !== tab);
-    const btn = document.getElementById('dtab-' + t);
-    if (btn) {
-      btn.classList.toggle('bg-surface-container-lowest', t === tab);
-      btn.classList.toggle('text-primary', t === tab);
-      btn.classList.toggle('font-bold', t === tab);
-      btn.classList.toggle('shadow-sm', t === tab);
-      btn.classList.toggle('text-on-surface-variant', t !== tab);
-    }
-  });
-}
-
-// Fahrzeug als verkauft markieren
-async function markVehicleSold(id) {
-  if (!confirm('Fahrzeug als verkauft markieren?')) return;
-  try {
-    const token = localStorage.getItem('sb_token') || '';
-    await fetch(SUPA_URL + '/rest/v1/vehicles?id=eq.' + id, {
-      method: 'PATCH',
-      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: 'sold' })
-    });
-    await loadDealerDashboard();
-  } catch(e) { alert('Fehler: ' + e.message); }
-}
-
-// Fahrzeug löschen
-async function deleteVehicle(id) {
-  if (!confirm('Fahrzeug wirklich löschen?')) return;
-  try {
-    const token = localStorage.getItem('sb_token') || '';
-    await fetch(SUPA_URL + '/rest/v1/vehicles?id=eq.' + id, {
-      method: 'DELETE',
-      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + token }
-    });
-    await loadDealerDashboard();
-  } catch(e) { alert('Fehler: ' + e.message); }
-}
-
-// ── BILDER UPLOAD ─────────────────────────────────────────────────────────────
-async function handleImageUpload(files) {
-  const token = localStorage.getItem('sb_token') || '';
-  const grid = document.getElementById('image-upload-grid');
-  for (const file of Array.from(files)) {
-    if (DEALER_IMAGES.length >= 8) break;
-    const ext = file.name.split('.').pop();
-    const path = `vehicles/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
-    try {
-      // Upload zu Supabase Storage
-      const r = await fetch(SUPA_URL + '/storage/v1/object/vehicle-images/' + path, {
-        method: 'POST',
-        headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + token, 'Content-Type': file.type },
-        body: file
-      });
-      if (!r.ok) throw new Error('Upload fehlgeschlagen');
-      const publicUrl = SUPA_URL + '/storage/v1/object/public/vehicle-images/' + path;
-      DEALER_IMAGES.push(publicUrl);
-      // Vorschau einfügen
-      const div = document.createElement('div');
-      div.className = 'aspect-square rounded-xl overflow-hidden relative group';
-      div.innerHTML = `<img src="${publicUrl}" class="w-full h-full object-cover"><button onclick="removeImage('${publicUrl}',this.parentElement)" class="absolute top-1 right-1 bg-black/60 text-white rounded-full w-6 h-6 text-xs hidden group-hover:flex items-center justify-center">✕</button>`;
-      grid.insertBefore(div, grid.firstChild);
-    } catch(e) {
-      console.warn('Image upload error:', e);
-      // Fallback: lokale Vorschau
-      const url = URL.createObjectURL(file);
-      DEALER_IMAGES.push(url);
-      const div = document.createElement('div');
-      div.className = 'aspect-square rounded-xl overflow-hidden';
-      div.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
-      grid.insertBefore(div, grid.firstChild);
-    }
-  }
-}
-
-function removeImage(url, el) {
-  DEALER_IMAGES = DEALER_IMAGES.filter(u => u !== url);
-  el.remove();
-}
-
-// ── DEALER UPLOAD FORMULAR ───────────────────────────────────────────────────
-function toggleEquip(name, btn) {
-  const ta = document.getElementById('d-up-equipment');
-  const current = ta.value.split(/[;,]/).map(e=>e.trim()).filter(Boolean);
-  const idx = current.findIndex(e => e.toLowerCase() === name.toLowerCase());
-  if (idx === -1) {
-    current.push(name);
-    btn.classList.add('bg-primary', 'text-white', 'border-primary');
-    btn.classList.remove('border-outline-variant');
-  } else {
-    current.splice(idx, 1);
-    btn.classList.remove('bg-primary', 'text-white', 'border-primary');
-    btn.classList.add('border-outline-variant');
-  }
-  ta.value = current.join('; ');
-}
-
-function dealerCalcDisc() {
-  const l = parseFloat(document.getElementById('d-up-list').value);
-  const s = parseFloat(document.getElementById('d-up-sale').value);
-  const reg = document.getElementById('d-up-reg').value;
-  const el = document.getElementById('d-disc-preview');
-
-  if (l && s && l > s) {
-    const pct = ((l - s) / l) * 100;
-    el.classList.remove('hidden');
-    document.getElementById('d-dp-pct').textContent = pct.toFixed(1) + '%';
-    document.getElementById('d-dp-save').textContent = fmt(l - s) + ' €';
-    if (pct < VALIDATION_RULES.MIN_DISCOUNT_PCT) {
-      const needed = Math.ceil(l * (1 - VALIDATION_RULES.MIN_DISCOUNT_PCT / 100));
-      showFieldError('d-up-sale', `Noch ${(VALIDATION_RULES.MIN_DISCOUNT_PCT - pct).toFixed(1)}% fehlen. Max. zulässig: ${fmt(needed)} €`);
-    } else {
-      showFieldSuccess('d-up-sale', `${pct.toFixed(1)}% Nachlass — Anforderung erfüllt ✓`);
-    }
-  } else if (l && s && s >= l) {
-    el.classList.add('hidden');
-    showFieldError('d-up-sale', 'Inseratspreis muss unter dem Listenneupreis liegen.');
-  } else {
-    el.classList.add('hidden');
-    if (s) clearFieldState('d-up-sale');
-  }
-
-  if (reg) {
-    const regDate = new Date(reg);
-    const now = new Date();
-    const months = (now.getFullYear() - regDate.getFullYear()) * 12 + (now.getMonth() - regDate.getMonth());
-    if (regDate > now) {
-      showFieldError('d-up-reg', 'Datum kann nicht in der Zukunft liegen.');
-    } else if (months > VALIDATION_RULES.MAX_AGE_MONTHS) {
-      showFieldError('d-up-reg', `Fahrzeug ist ${months} Monate alt — Maximum: ${VALIDATION_RULES.MAX_AGE_MONTHS} Monate.`);
-    } else {
-      showFieldSuccess('d-up-reg', `${months} Monate alt — Anforderung erfüllt ✓`);
-    }
-  }
-}
-
-async function dealerSubmitUpload() {
-  if (!CURRENT_USER) { nav('dealer-portal'); return; }
-  const b = document.getElementById('d-up-brand').value;
-  const m = document.getElementById('d-up-model').value;
-  const l = parseFloat(document.getElementById('d-up-list').value) || 0;
-  const s = parseFloat(document.getElementById('d-up-sale').value) || 0;
-  const reg = document.getElementById('d-up-reg').value || '';
-
-  if (!b || !m) {
-    showDealerUploadError('Bitte Hersteller und Modell angeben.');
-    return;
-  }
-
-  // Vollständige Validierung
-  const errors = validateVehicleData(l, s, reg);
-  if (errors.length > 0) {
-    ['d-up-list','d-up-sale','d-up-reg'].forEach(id => clearFieldState(id));
-    const fieldMap = { list: 'd-up-list', sale: 'd-up-sale', reg: 'd-up-reg' };
-    errors.forEach(e => showFieldError(fieldMap[e.field] || e.field, e.msg));
-    showDealerUploadError(
-      errors.map(e => e.msg).join('<br/>'),
-      'Fahrzeug kann nicht eingestellt werden:'
-    );
-    document.getElementById('d-up-list')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return;
-  }
-
-  const vehicle = {
-    brand: b, model: m,
-    variant: document.getElementById('d-up-variant').value || null,
-    first_registration: reg || null,
-    mileage: parseInt(document.getElementById('d-up-km').value) || 0,
-    fuel_type: document.getElementById('d-up-fuel').value,
-    transmission: document.getElementById('d-up-trans').value,
-    color: document.getElementById('d-up-color').value || null,
-    list_price: l, price: s,
-    discount_pct: Math.round(((l - s) / l) * 100 * 10) / 10,
-    description: document.getElementById('d-up-desc').value || null,
-    is_day_registration: document.getElementById('d-up-dayref').checked,
-    equipment: document.getElementById('d-up-equipment').value
-      .split(/[;,\n]/).map(e=>e.trim()).filter(e=>e.length>1),
-    dealer_email: CURRENT_USER.email,
-    image_url: DEALER_IMAGES.length > 0 ? DEALER_IMAGES[0] : null,
-    status: 'active', source: 'manual',
-  };
-  try {
-    await db.insert('vehicles', [vehicle]);
-    DEALER_IMAGES = [];
-    await loadDealerDashboard();
-    showDealerTab('inventory');
-    ['d-up-brand','d-up-model','d-up-variant','d-up-reg','d-up-km','d-up-fuel','d-up-trans','d-up-color','d-up-list','d-up-sale','d-up-desc'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = el.tagName === 'SELECT' ? el.options[0].value : '';
-      clearFieldState(id);
-    });
-    document.getElementById('image-upload-grid').innerHTML = `<div onclick="document.getElementById('img-input').click()" class="aspect-square bg-surface-container-high rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-surface-container-highest transition-colors border-2 border-dashed border-outline-variant"><span class="material-symbols-outlined text-outline text-3xl" aria-hidden="true">add_photo_alternate</span><span class="text-xs font-bold mt-2 uppercase tracking-widest text-on-surface-variant">Bild hinzufügen</span></div>`;
-  } catch(e) { alert('Fehler beim Speichern: ' + e.message); }
-}
-
-function showDealerUploadError(msg, title) {
-  const wrap = document.querySelector('#dealer-dashboard [data-upload-form]') || document.getElementById('dealer-dashboard');
-  let errBox = document.getElementById('d-upload-error');
-  if (!errBox) {
-    errBox = document.createElement('div');
-    errBox.id = 'd-upload-error';
-    errBox.className = 'mb-5 p-5 rounded-xl text-sm border';
-    errBox.style.cssText = 'background:#fff5f5; border-color:#ba1a1a;';
-    const listEl = document.getElementById('d-up-list');
-    if (listEl) listEl.closest('section')?.parentNode?.insertBefore(errBox, listEl.closest('section'));
-  }
-  errBox.innerHTML = `
-    <div class="flex items-start gap-3">
-      <span class="material-symbols-outlined flex-shrink-0 mt-0.5" aria-hidden="true" style="color:#ba1a1a; font-size:20px;">error</span>
-      <div>
-        <p class="font-bold mb-1" style="color:#ba1a1a;">${title || 'Fahrzeug kann nicht eingestellt werden:'}</p>
-        <p class="leading-relaxed" style="color:#7f1d1d;">${msg}</p>
-      </div>
-    </div>`;
-  errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-// ── DEALER CSV ────────────────────────────────────────────────────────────────
-function handleDealerCSVDrop(event) {
-  event.preventDefault();
-  const file = event.dataTransfer.files[0];
-  if (file) handleDealerCSVFile(file);
-}
-
-async function handleDealerCSVFile(file) {
-  if (!file || !file.name.match(/\.(csv|txt)$/i)) {
-    showDealerCSVStatus('error', 'Bitte .csv oder .txt Datei wählen'); return;
-  }
-  showDealerCSVStatus('loading', 'Lese Datei…');
-  const text = await file.text();
-  await dealerUploadCSV(text);
-}
-
-async function dealerUploadCSV(csvText) {
-  showDealerCSVStatus('loading', 'Importiere Fahrzeuge…');
-  const token = localStorage.getItem('sb_token') || '';
-  try {
-    const r = await fetch('/api/import-csv', {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/csv', 'Authorization': 'Bearer ' + token },
-      body: csvText
-    });
-    const result = await r.json();
-    if (!r.ok) { showDealerCSVStatus('error', result.error || 'Import fehlgeschlagen'); return; }
-    if (result.vehicles && result.vehicles.length > 0) {
-      function cleanDate(d) {
-        if (!d) return null;
-        const m = String(d).replace(/['"]/g,'').trim().match(/^(\d{4}-\d{2}-\d{2})/);
-        return m ? m[1] : null;
-      }
-      const rows = result.vehicles.map(v => ({
-        brand: v.brand||'Unbekannt', model: v.model||'Unbekannt',
-        variant: v.description||null,
-        first_registration: cleanDate(v.first_registration),
-        mileage: parseInt(v.mileage)||0,
-        fuel_type: v.fuel_type||'Benzin',
-        transmission: v.transmission||'Automatik',
-        color: v.color||null,
-        list_price: parseFloat(v.list_price)||0,
-        price: parseFloat(v.price)||0,
-        discount_pct: parseFloat(v.discount_pct)||0,
-        description: v.description||null,
-        is_day_registration: v.is_day_registration||false,
-        equipment: Array.isArray(v.equipment) ? v.equipment : [],
-        dealer_email: CURRENT_USER?.email||null,
-        status: 'active', source: 'csv_import',
-      }));
-      await db.insert('vehicles', rows);
-      await loadVehicles();
-      await loadDealerDashboard();
-    }
-    showDealerCSVStatus('success', null, null, result);
-  } catch(e) { showDealerCSVStatus('error', 'Fehler: ' + e.message); }
-}
-
-function showDealerCSVStatus(type, msg, details, result) {
-  const el = document.getElementById('dealer-csv-status');
-  el.classList.remove('hidden');
-  const colors = { loading:'border-blue-200 bg-blue-50 text-blue-700', success:'border-green-200 bg-green-50 text-green-700', error:'border-red-200 bg-red-50 text-red-700' };
-  if (type === 'success') {
-    el.innerHTML = `<div class="border rounded-lg p-4 ${colors.success}"><p class="font-bold">✓ ${result.imported} Fahrzeuge importiert · Ø ${result.summary?.avg_discount||0}% Nachlass · ${result.summary?.day_registrations||0} Tageszulassungen</p></div>`;
-  } else if (type === 'error') {
-    el.innerHTML = `<div class="border rounded-lg p-4 ${colors.error}"><p class="font-bold">${msg}</p></div>`;
-  } else {
-    el.innerHTML = `<div class="border rounded-lg p-4 ${colors.loading}"><p class="font-bold">${msg}</p></div>`;
-  }
-}
-
-// ── BEDARFSANALYSE ───────────────────────────────────────────────────────────
-const bedarfsFilters = { usage: null, body: null, fuel: null, budget: null };
-const bedarfsEquipment = new Set();
-
-function toggleBedarfsEquip(name, btn) {
-  if (bedarfsEquipment.has(name)) {
-    bedarfsEquipment.delete(name);
-    btn.classList.remove('border-primary', 'bg-primary', 'text-white');
-    btn.classList.add('border-outline-variant');
-  } else {
-    bedarfsEquipment.add(name);
-    btn.classList.remove('border-outline-variant');
-    btn.classList.add('border-primary', 'bg-primary', 'text-white');
-  }
-}
-
-function selectFilter(type, value, btn) {
-  bedarfsFilters[type] = value;
-  // Deselect siblings
-  btn.closest('[id^="q-"]').querySelectorAll('.filter-btn').forEach(b => {
-    b.classList.remove('border-primary', 'bg-primary', 'text-white');
-    b.classList.add('border-outline-variant');
-  });
-  // Select this
-  btn.classList.remove('border-outline-variant');
-  btn.classList.add('border-primary', 'bg-primary', 'text-white');
-}
-
-function runBedarfsanalyse() {
-  const resultsEl = document.getElementById('bedarfs-results');
-  const gridEl = document.getElementById('bedarfs-grid');
-  const titleEl = document.getElementById('bedarfs-results-title');
-  const emptyEl = document.getElementById('bedarfs-empty');
-
-  if (VEHICLES.length === 0) {
-    alert('Fahrzeuge werden noch geladen — bitte kurz warten.');
-    return;
-  }
-
-  // Filter anwenden
-  let results = [...VEHICLES];
-
-  // Antrieb
-  if (bedarfsFilters.fuel && bedarfsFilters.fuel !== 'egal') {
-    const fuelMap = { 'Hybrid': ['Hybrid', 'Plug-in-Hybrid'] };
-    const fuels = fuelMap[bedarfsFilters.fuel] || [bedarfsFilters.fuel];
-    results = results.filter(v => fuels.some(f => (v.fuel||'').toLowerCase().includes(f.toLowerCase())));
-  }
-
-  // Budget
-  if (bedarfsFilters.budget) {
-    const b = parseInt(bedarfsFilters.budget);
-    if (b === 25) results = results.filter(v => v.sale < 25000);
-    else if (b === 35) results = results.filter(v => v.sale >= 25000 && v.sale < 35000);
-    else if (b === 50) results = results.filter(v => v.sale >= 35000 && v.sale < 50000);
-    else if (b === 999) results = results.filter(v => v.sale >= 50000);
-  }
-
-  // Karosserie (Textsearch in Modell/Variante)
-  if (bedarfsFilters.body && bedarfsFilters.body !== 'egal') {
-    const bodyKeywords = {
-      'SUV': ['suv','geländewagen','touareg','q5','q7','x5','x3','gle','glc','tucson','tiguan','karoq','t-roc'],
-      'Kombi': ['combi','touring','avant','estate','variant','sw','allroad','kombi'],
-      'Limousine': ['limousine','sedan','saloon','a4','a6','3er','5er','c-klasse','e-klasse','golf','passat','octavia']
-    };
-    const keywords = bodyKeywords[bedarfsFilters.body] || [];
-    if (keywords.length > 0) {
-      const bodyResults = results.filter(v => {
-        const text = (v.brand + ' ' + v.model + ' ' + v.variant).toLowerCase();
-        return keywords.some(k => text.includes(k));
-      });
-      if (bodyResults.length > 0) results = bodyResults;
-    }
-  }
-
-  // Nutzung → beeinflusst Sortierung
-  if (bedarfsFilters.usage === 'city') {
-    results = results.filter(v => !['Diesel'].includes(v.fuel)).sort((a,b) => a.sale - b.sale);
-  } else if (bedarfsFilters.usage === 'highway' || bedarfsFilters.usage === 'commute') {
-    results = results.filter(v => ['Diesel','Hybrid'].includes(v.fuel) || results.length < 3);
-  }
-
-  // Immer nach Nachlass sortieren
-  results.sort((a, b) => disc(b) - disc(a));
-
-  // Ausstattungs-Filter
-  if (bedarfsEquipment.size > 0) {
-    const equipResults = results.filter(v => {
-      const eq = (v.equipment||[]).join(' ').toLowerCase();
-      return [...bedarfsEquipment].every(e => eq.includes(e.toLowerCase()));
-    });
-    if (equipResults.length > 0) results = equipResults;
-  }
-
-  // Fallback: wenn zu wenig Ergebnisse, alle nehmen
-  const showFallback = results.length === 0;
-  if (showFallback) results = [...VEHICLES].sort((a,b) => disc(b) - disc(a));
-
-  emptyEl.classList.toggle('hidden', !showFallback);
-
-  const count = results.length;
-  const fuelLabel = bedarfsFilters.fuel ? ` · ${bedarfsFilters.fuel}` : '';
-  const budgetLabel = bedarfsFilters.budget ? ` · bis ${bedarfsFilters.budget === '999' ? '50k+' : bedarfsFilters.budget + 'k'} €` : '';
-  titleEl.textContent = `${count} Empfehlung${count !== 1 ? 'en' : ''} für dich${fuelLabel}${budgetLabel}`;
-
-  gridEl.innerHTML = results.slice(0, 6).map(v => mkCard(v, `showDet(${v.id})`)).join('');
-  resultsEl.classList.remove('hidden');
-  resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-// ── NAV OVERRIDE für Dashboard ────────────────────────────────────────────────
-const _origNav = nav;
-// Wenn dealer-dashboard aufgerufen, Dashboard laden
-const _navPatched = async function(p) {
-  if (p === 'dealer-dashboard') {
-    if (!CURRENT_USER) { await _origNav('dealer-portal'); return; }
-  }
-  await _origNav(p);
-  if (p === 'dealer-dashboard') await loadDealerDashboard();
-};
-// nav global überschreiben
-window.nav = _navPatched;
-
-// Auth bei Seitenstart prüfen
-checkAuthState();
-
-// ─── Drag & Drop Handler ─────────────────────────────────────────────────────
-function handleCSVDrop(event) {
-  event.preventDefault();
-  document.getElementById('csv-dropzone').classList.remove('border-gold-400', 'bg-navy-800/50');
-  const file = event.dataTransfer.files[0];
-  if (file) handleCSVFile(file);
-}
-
-// ─── Datei verarbeiten ───────────────────────────────────────────────────────
-async function handleCSVFile(file) {
-  if (!file) return;
-  if (!file.name.match(/\.(csv|txt)$/i)) {
-    showCSVStatus('error', 'Bitte eine .csv oder .txt Datei auswählen');
-    return;
-  }
-
-  // Datei lesen
-  showCSVStatus('loading', `Lese "${file.name}"…`);
-
-  try {
-    const text = await file.text();
-    await uploadCSV(text, file.name);
-  } catch (err) {
-    showCSVStatus('error', 'Fehler beim Lesen der Datei: ' + err.message);
-  }
-}
-
-// ─── An API senden ────────────────────────────────────────────────────────────
-async function uploadCSV(csvText, filename) {
-  showCSVStatus('loading', 'Importiere Fahrzeuge…');
-
-  // Händler-Token aus localStorage (nach Login gesetzt)
-  const token = localStorage.getItem('dealer_token') || 'demo-token';
-
-  try {
-    const response = await fetch('/api/import-csv', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/csv',
-        'Authorization': `Bearer ${token}`,
-        'X-Filename': filename,
-      },
-      body: csvText,
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      showCSVStatus('error', result.error || 'Import fehlgeschlagen', result.details);
-      return;
-    }
-
-    // Erfolg — Fahrzeuge direkt in Supabase speichern
-    csvImportSuccess = true;
-    showCSVStatus('success', null, null, result);
-    if (result.vehicles && result.vehicles.length > 0) {
-      // Datum bereinigen: nur YYYY-MM-DD oder null
-      function cleanDate(d) {
-        if (!d) return null;
-        const m = String(d).replace(/['"]/g,'').trim().match(/^(\d{4}-\d{2}-\d{2})/);
-        return m ? m[1] : null;
-      }
-      const rows = result.vehicles.map(v => ({
-        brand: v.brand || 'Unbekannt',
-        model: v.model || 'Unbekannt',
-        variant: v.description || null,
-        first_registration: cleanDate(v.first_registration || v.registration_date),
-        mileage: parseInt(v.mileage) || 0,
-        fuel_type: v.fuel_type || 'Benzin',
-        transmission: v.transmission || 'Automatik',
-        color: v.color || null,
-        list_price: parseFloat(v.list_price) || 0,
-        price: parseFloat(v.price) || 0,
-        discount_pct: parseFloat(v.discount_pct) || 0,
-        description: v.description || null,
-        is_day_registration: v.is_day_registration || false,
-        status: 'active',
-        source: 'csv_import',
-      }));
-      try {
-        await db.insert('vehicles', rows);
-        await loadVehicles();
-      } catch(err) { console.warn('CSV Supabase insert failed:', err); }
-    }
-
-  } catch (err) {
-    showCSVStatus('error', 'Verbindungsfehler: ' + err.message);
-  }
-}
-
-// ─── Status anzeigen ─────────────────────────────────────────────────────────
-function showCSVStatus(type, message, details, result) {
-  const el = document.getElementById('csv-status');
-  el.classList.remove('hidden');
-
-  const icons = {
-    loading: 'hourglass_empty',
-    success: 'check_circle',
-    error: 'error',
-  };
-  const colors = {
-    loading: 'border-blue-500 bg-blue-500/10 text-blue-300',
-    success: 'border-green-500 bg-green-500/10 text-green-300',
-    error: 'border-red-500 bg-red-500/10 text-red-300',
-  };
-
-  let html = `
-    <div class="border rounded-lg p-4 ${colors[type]}">
-      <div class="flex items-start gap-3">
-        <span class="material-symbols-outlined ${type === 'loading' ? 'animate-spin' : ''}" aria-hidden="true">${icons[type]}</span>
-        <div class="flex-1">
-  `;
-
-  if (type === 'loading') {
-    html += `<p class="font-medium">${message}</p>`;
-  } else if (type === 'error') {
-    html += `<p class="font-medium text-red-300">${message}</p>`;
-    if (details && details.length > 0) {
-      html += `<ul class="mt-2 text-sm space-y-1">`;
-      details.slice(0, 5).forEach(d => { html += `<li>• ${d}</li>`; });
-      if (details.length > 5) html += `<li>… und ${details.length - 5} weitere Fehler</li>`;
-      html += `</ul>`;
-    }
-  } else if (type === 'success') {
-    html += `
-      <p class="font-medium text-green-300">
-        ✓ ${result.imported} Fahrzeuge importiert
-        ${result.skipped > 0 ? `<span class="text-yellow-400 text-sm ml-2">(${result.skipped} übersprungen)</span>` : ''}
-      </p>
-      <div class="mt-2 grid grid-cols-3 gap-3 text-sm">
-        <div class="bg-white/5 rounded p-2 text-center">
-          <div class="text-white font-bold text-lg">${result.imported}</div>
-          <div class="text-navy-400">Fahrzeuge</div>
-        </div>
-        <div class="bg-white/5 rounded p-2 text-center">
-          <div class="text-gold-400 font-bold text-lg">${result.summary?.avg_discount || 0}%</div>
-          <div class="text-navy-400">Ø Nachlass</div>
-        </div>
-        <div class="bg-white/5 rounded p-2 text-center">
-          <div class="text-white font-bold text-lg">${result.summary?.day_registrations || 0}</div>
-          <div class="text-navy-400">Tageszulassungen</div>
-        </div>
-      </div>
-    `;
-    if (result.errors && result.errors.length > 0) {
-      html += `
-        <details class="mt-2">
-          <summary class="text-sm cursor-pointer hover:text-yellow-300">
-            ${result.errors.length} Zeilen konnten nicht importiert werden
-          </summary>
-          <ul class="mt-1 text-sm space-y-1 text-yellow-400">
-            ${result.errors.slice(0, 10).map(e => `<li>• ${e}</li>`).join('')}
-          </ul>
-        </details>
-      `;
-    }
-  }
-
-  html += `</div></div></div>`;
-  el.innerHTML = html;
-}
-</script>
 
 <!-- BARRIEREFREIHEITSERKLÄRUNG -->
 <div data-page="barrierefreiheit">
