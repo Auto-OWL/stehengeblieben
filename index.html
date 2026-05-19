@@ -21,6 +21,8 @@ h1,h2,h3,.brand{font-family:'Manrope',sans-serif;}
 .card-hover{transition:transform 0.3s ease,box-shadow 0.3s ease;}
 .card-hover:hover{transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,0.08);}
 .admin-tab{transition:background 0.2s;}
+.stat-skeleton{animation:pulse 1.5s ease-in-out infinite;opacity:0.5;}
+@keyframes pulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;}
 .focus\:not-sr-only:focus{position:static;width:auto;height:auto;padding:inherit;margin:inherit;overflow:visible;clip:auto;white-space:normal;}
 *:focus-visible{outline:3px solid #457efa;outline-offset:2px;}
@@ -68,20 +70,29 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <div class="space-y-8">
         <div class="inline-flex items-center gap-2 bg-on-tertiary-container/10 border border-on-tertiary-container/20 px-4 py-2 rounded-full">
           <span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
-          <span class="text-on-tertiary-container font-bold text-xs uppercase tracking-widest">Neufahrzeuge · Tageszulassungen · Sofort verfügbar</span>
+          <span class="text-on-tertiary-container font-bold text-xs uppercase tracking-widest">Neuwagen · Bis 50% unter Listenpreis · Direkt vom Händler</span>
         </div>
         <h1 class="font-headline font-black text-6xl md:text-8xl tracking-tighter text-white leading-[0.88]">Neuwagen<br/><span class="text-secondary-fixed">unschlagbar</span><br/>günstig</h1>
-        <p class="text-on-primary-container text-lg leading-relaxed max-w-md">Langzeitsteher direkt vom Händler. Neufahrzeuge mit Tageszulassung - bis zu zwei Jahren alt, bis zu <span class="text-secondary-fixed font-bold">50% unter Listenpreis.</span></p>
+        <p class="text-on-primary-container text-lg leading-relaxed max-w-md">Neuwagen die zu lange beim Händler stehen — das wird für dich zum Vorteil. Bis zu <span class="text-secondary-fixed font-bold">50% unter Listenpreis,</span> sofort verfügbar.</p>
         <div class="flex flex-wrap gap-4">
           <button onclick="nav('inventory')" class="metallic-gradient text-on-primary px-8 py-4 rounded font-headline font-extrabold text-sm uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 shadow-xl shadow-black/30">
-            <span class="material-symbols-outlined" class="material-symbols-outlined text-sm" aria-hidden="true">directions_car</span>Fahrzeuge entdecken
+            <span class="material-symbols-outlined text-sm" aria-hidden="true">directions_car</span><span id="cta-vehicle-count">Alle Angebote ansehen</span>
+          </button>
+          <button onclick="document.getElementById('bedarfs-section').scrollIntoView({behavior:'smooth'})" class="border border-white/30 text-white px-8 py-4 rounded font-headline font-bold text-sm uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm" aria-hidden="true">tune</span>Welches Auto passt zu mir?
           </button>
         </div>
         <div class="flex gap-10 pt-6 border-t border-white/10">
-          <div><div class="font-headline font-black text-3xl text-white" id="stat-vehicles">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Fahrzeuge live</div></div>
-          <div><div class="font-headline font-black text-3xl text-secondary-fixed" id="stat-saving">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Ø Ersparnis</div></div>
-          <div><div class="font-headline font-black text-3xl text-white" id="stat-dealers">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Partnerhändler</div></div>
+          <div><div class="font-headline font-black text-3xl text-white" id="stat-vehicles" class="stat-skeleton">…</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Fahrzeuge live</div></div>
+          <div><div class="font-headline font-black text-3xl text-secondary-fixed" id="stat-saving" class="stat-skeleton">…</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Ø Ersparnis</div></div>
+          <div><div class="font-headline font-black text-3xl text-white" id="stat-dealers" class="stat-skeleton">…</div><div class="text-on-primary-container text-xs uppercase tracking-widest mt-1">Partnerhändler</div></div>
         </div>
+      </div>
+      <!-- Vertrauens-Badges -->
+      <div class="flex flex-wrap gap-x-6 gap-y-2 pb-2">
+        <div class="flex items-center gap-2 text-on-primary-container text-xs font-bold"><span class="material-symbols-outlined text-green-400 text-base" aria-hidden="true">verified</span>Nur geprüfte Händler</div>
+        <div class="flex items-center gap-2 text-on-primary-container text-xs font-bold"><span class="material-symbols-outlined text-green-400 text-base" aria-hidden="true">lock</span>Keine Datenweitergabe</div>
+        <div class="flex items-center gap-2 text-on-primary-container text-xs font-bold"><span class="material-symbols-outlined text-green-400 text-base" aria-hidden="true">euro</span>Kostenlos für Käufer</div>
       </div>
       <!-- Hero Card Preview -->
       <div class="hidden lg:block">
@@ -90,7 +101,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
             <span class="material-symbols-outlined text-white/10" aria-hidden="true" style="font-size:160px">directions_car</span>
             <div class="absolute bottom-5 left-5 bg-secondary-container text-on-secondary-container px-4 py-2 rounded font-headline font-extrabold text-xl">-27% Nachlass</div>
             <div class="absolute top-5 right-5 bg-black/60 backdrop-blur-sm text-white px-4 py-3 rounded space-y-1">
-              <div class="text-xs text-white/60 uppercase tracking-widest">stehengeblieben Preis</div>
+              <div class="text-xs text-white/60 uppercase tracking-widest">Rabatt-Preis</div>
               <div class="font-headline font-black text-2xl">39.900 €</div>
               <div class="text-white/60 text-sm line-through">54.990 €</div>
             </div>
@@ -121,6 +132,67 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   </section>
 
   <!-- How it works -->
+
+<!-- ===== LANGSTEHER ERKLÄRUNG ===== -->
+  <section class="py-20 bg-surface">
+    <div class="max-w-screen-2xl mx-auto px-6 md:px-8">
+
+      <!-- Headline -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div class="space-y-6">
+          <div class="inline-flex items-center gap-2 bg-secondary-container/40 border border-secondary/20 px-4 py-2 rounded-full">
+            <span class="w-2 h-2 rounded-full bg-secondary"></span>
+            <span class="text-secondary font-bold text-xs uppercase tracking-widest">Das steckt dahinter</span>
+          </div>
+          <h2 class="font-headline font-black text-4xl md:text-6xl tracking-tighter leading-[0.9]">Was ist ein<br/><span class="text-secondary">Langsteher?</span></h2>
+          <p class="text-on-surface-variant text-lg leading-relaxed">Ein Langsteher ist ein Neuwagen, der länger als üblich beim Händler auf dem Hof steht — und genau das wird zu deinem Vorteil.</p>
+          <p class="text-on-surface-variant leading-relaxed">Händler haben Kapital in diesen Fahrzeugen gebunden. Je länger ein Auto steht, desto mehr Druck entsteht, es zu verkaufen. Das Ergebnis: <strong class="text-on-surface">echte Rabatte von 20 bis 50% unter dem ursprünglichen Listenpreis</strong> — auf fabrikneue Fahrzeuge.</p>
+          <div class="bg-green-50 border border-green-200 rounded-xl p-5 flex gap-4">
+            <span class="material-symbols-outlined text-green-600 flex-shrink-0 mt-0.5" aria-hidden="true">check_circle</span>
+            <div>
+              <p class="font-bold text-green-800">Das Auto ist trotzdem neuwertig</p>
+              <p class="text-green-700 text-sm mt-1">Langsteher haben eine Tageszulassung — das bedeutet: technisch ein Neuwagen, offiziell mit minimalem Kilometerstand (oft unter 50 km). Die volle Herstellergarantie bleibt erhalten.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rechts: Das Prinzip -->
+        <div class="space-y-6">
+          <div class="bg-secondary-container/30 rounded-xl p-8 border border-secondary/20 flex gap-5 items-start">
+            <div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0 mt-1">
+              <span class="material-symbols-outlined text-secondary text-xl" aria-hidden="true">lightbulb</span>
+            </div>
+            <div>
+              <p class="font-headline font-bold text-xl tracking-tighter text-on-surface mb-2">Das Prinzip dahinter</p>
+              <p class="text-on-surface-variant leading-relaxed">Autohändler zahlen Zinsen auf ihren Lagerbestand. Je länger ein Auto steht, desto teurer wird es für den Händler — und desto günstiger für dich.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kennzahlen -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 pt-16 border-t border-outline-variant/10">
+        <div class="text-center space-y-2">
+          <div class="font-headline font-black text-4xl text-secondary">20–50%</div>
+          <div class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Typischer Rabatt</div>
+        </div>
+        <div class="text-center space-y-2">
+          <div class="font-headline font-black text-4xl text-on-surface">≤ 50 km</div>
+          <div class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Kilometerstand</div>
+        </div>
+        <div class="text-center space-y-2">
+          <div class="font-headline font-black text-4xl text-on-tertiary-container">100%</div>
+          <div class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Herstellergarantie</div>
+        </div>
+        <div class="text-center space-y-2">
+          <div class="font-headline font-black text-4xl text-on-surface">Sofort</div>
+          <div class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Verfügbar</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
   <section id="how-section" class="py-20 bg-surface-container-low">
     <div class="max-w-screen-2xl mx-auto px-6 md:px-8">
       <div class="text-center mb-16">
@@ -419,7 +491,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
             <p class="text-on-surface-variant leading-relaxed" id="d-desc"></p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-secondary"><span class="block text-xs uppercase font-bold text-on-surface-variant mb-1">Listenpreis</span><span class="text-xl font-headline font-bold text-on-surface-variant line-through" id="d-list"></span></div>
-              <div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-on-tertiary-container"><span class="block text-xs uppercase font-bold text-on-tertiary-container mb-1">stehengeblieben Preis</span><span class="text-2xl font-headline font-black text-primary" id="d-sale"></span></div>
+              <div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-on-tertiary-container"><span class="block text-xs uppercase font-bold text-on-tertiary-container mb-1">Ihr Preis</span><span class="text-2xl font-headline font-black text-primary" id="d-sale"></span></div>
               <div class="bg-tertiary-container p-5 rounded-lg text-on-tertiary-container"><span class="block text-xs uppercase font-bold mb-1">Ihre Ersparnis</span><span class="text-2xl font-headline font-black" id="d-saving"></span></div>
             </div>
           </div>
@@ -432,6 +504,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
           <div id="d-equipment-section" class="hidden space-y-4">
             <h3 class="font-headline font-extrabold text-2xl">Ausstattung</h3>
             <div id="d-equipment" class="flex flex-wrap gap-2"></div>
+          </div>
+          <!-- Ähnliche Fahrzeuge -->
+          <div id="d-similar-section" class="hidden space-y-6 pt-4 border-t border-outline-variant/10">
+            <div class="flex justify-between items-center">
+              <h3 class="font-headline font-extrabold text-2xl">Weitere Angebote</h3>
+              <button onclick="nav('inventory')" class="text-on-tertiary-container font-bold text-sm hover:underline flex items-center gap-1">
+                Alle ansehen <span class="material-symbols-outlined text-sm" aria-hidden="true">arrow_forward</span>
+              </button>
+            </div>
+            <div id="d-similar" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
           </div>
         </div>
         <!-- Sticky Right -->
@@ -469,6 +551,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Ihr Name *</label><input id="inq-name" type="text" placeholder="Max Mustermann" aria-required="true" aria-label="Ihr Name" autocomplete="name" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
       <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">E-Mail *</label><input id="inq-email" type="email" placeholder="max@email.de" aria-required="true" aria-label="Ihre E-Mail-Adresse" autocomplete="email" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
       <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Telefon</label><input id="inq-phone" type="tel" placeholder="+49 ..." aria-label="Ihre Telefonnummer" autocomplete="tel" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+      <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Ihre Nachricht</label><textarea id="inq-msg" rows="3" placeholder="Ich interessiere mich für dieses Fahrzeug und würde gerne mehr Details erfahren…" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20 resize-none"></textarea></div>
       <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Nachricht</label><textarea id="inq-msg" rows="3" placeholder="z.B. Wann ist eine Probefahrt möglich?" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20 resize-none"></textarea></div>
       <button onclick="submitInq()" class="w-full metallic-gradient text-on-primary py-4 font-headline font-extrabold text-sm rounded hover:opacity-90 active:scale-95 transition-all">Unverbindlich anfragen →</button>
       <p class="text-xs text-on-surface-variant text-center">Direkt an den Händler · Keine Gebühren</p>
@@ -752,8 +835,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
           <div class="brand font-black text-3xl tracking-tighter">stehengeblieben.de</div>
           <p class="text-on-primary-container text-lg leading-relaxed max-w-sm">Professionelles Inventar-Management und Lead-Tracking.</p>
           <div class="flex gap-6 pt-4 border-t border-white/10">
-            <div><div class="font-headline font-black text-2xl text-secondary-fixed" id="portal-stat-dealers">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Partner</div></div>
-            <div><div class="font-headline font-black text-2xl text-secondary-fixed" id="portal-stat-vehicles">—</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Listings</div></div>
+            <div><div class="font-headline font-black text-2xl text-secondary-fixed" id="portal-stat-dealers" class="stat-skeleton">…</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Partner</div></div>
+            <div><div class="font-headline font-black text-2xl text-secondary-fixed" id="portal-stat-vehicles" class="stat-skeleton">…</div><div class="text-on-primary-container text-xs uppercase tracking-widest">Listings</div></div>
           </div>
         </div>
       </div>
@@ -1699,6 +1782,24 @@ function showDet(id){
   } else {
     equipSection.classList.add('hidden');
   }
+  // Ähnliche Fahrzeuge
+  const simEl = document.getElementById('d-similar');
+  const simSec = document.getElementById('d-similar-section');
+  if(simEl && simSec && VEHICLES.length > 1) {
+    // Gleiche Marke bevorzugen, Status-Check tolerant (sold/deleted ausschließen)
+    const notSold = x => x.id !== v.id && x.status !== 'sold' && x.status !== 'deleted';
+    const similar = VEHICLES.filter(x => notSold(x) && x.brand === v.brand).slice(0, 3);
+    const needed = 3 - similar.length;
+    const usedIds = new Set([v.id, ...similar.map(x => x.id)]);
+    const fallback = needed > 0 ? VEHICLES.filter(x => notSold(x) && !usedIds.has(x.id)).slice(0, needed) : [];
+    const all = [...similar, ...fallback];
+    if(all.length > 0) {
+      simSec.classList.remove('hidden');
+      simEl.innerHTML = all.map(s => mkCard(s, `showDet('${s.id}')`)).join('');
+    } else {
+      simSec.classList.add('hidden');
+    }
+  }
 }
 
 // INQUIRY
@@ -1731,7 +1832,7 @@ async function submitReg(){
     await db.insert('dealers', [dealer]);
   } catch(err) { console.warn('Dealer save failed:', err); }
   DEALERS.push({...dealer,date:new Date().toLocaleDateString('de-DE')});
-  document.getElementById('reg-wrap').innerHTML=`<div class="text-center py-10 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl" aria-hidden="true">check_circle</span></div><h2 class="font-headline font-black text-3xl tracking-tighter">Registrierung erhalten!</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Wir melden uns innerhalb von 24 Stunden. Danach kannst du sofort Fahrzeuge hochladen.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all">Zurück zur Startseite</button></div>`;
+  document.getElementById('reg-wrap').innerHTML=`<div class="text-center py-10 space-y-4"><div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto"><span class="material-symbols-outlined text-green-600 text-3xl" aria-hidden="true">check_circle</span></div><h2 class="font-headline font-black text-3xl tracking-tighter">Registrierung erhalten!</h2><p class="text-on-surface-variant max-w-sm mx-auto leading-relaxed">Jede Registrierung wird manuell geprüft — das sichert die Qualität der Plattform. Wir melden uns innerhalb von 24 Stunden.</p><button onclick="nav('home')" class="metallic-gradient text-on-primary px-8 py-3 rounded font-headline font-bold text-sm uppercase tracking-widest hover:opacity-90 transition-all">Zurück zur Startseite</button></div>`;
 }
 
 // UPLOAD
@@ -2128,9 +2229,10 @@ async function loadStats() {
     const avgDisc = vCount > 0 ? Math.round(vData.reduce((s, v) => s + (parseFloat(v.discount_pct) || 0), 0) / vCount) : 0;
     const dData = await db.select('dealers', 'select=email&approved=eq.true&role=eq.dealer');
     const dCount = (dData || []).length;
-    ['stat-vehicles','portal-stat-vehicles'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=vCount>0?vCount+'+':'0'; });
-    ['stat-dealers','portal-stat-dealers'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=dCount>0?dCount:'0'; });
+    ['stat-vehicles','portal-stat-vehicles'].forEach(id => { const el=document.getElementById(id); if(el){el.textContent=vCount>0?vCount+'+':'0';el.classList.remove('stat-skeleton');} });
+    ['stat-dealers','portal-stat-dealers'].forEach(id => { const el=document.getElementById(id); if(el){el.textContent=dCount>0?dCount:'0';el.classList.remove('stat-skeleton');} });
     const ss=document.getElementById('stat-saving'); if(ss) ss.textContent=avgDisc>0?'Ø '+avgDisc+'%':'—';
+    const ctaEl=document.getElementById('cta-vehicle-count'); if(ctaEl&&vCount>0) ctaEl.textContent=vCount+' Angebote ansehen — bis zu '+Math.max(...(vData||[]).map(v=>parseFloat(v.discount_pct)||0)).toFixed(0)+'% Nachlass';
   } catch(e) { console.warn('loadStats error:', e.message); }
 }
 
@@ -3223,13 +3325,16 @@ async function triggerCsvSync() {
       <div class="space-y-8">
         <div class="inline-flex items-center gap-2 bg-on-tertiary-container/10 border border-on-tertiary-container/20 px-4 py-2 rounded-full">
           <span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
-          <span class="text-on-tertiary-container font-bold text-xs uppercase tracking-widest">Neufahrzeuge · Tageszulassungen · Sofort verfügbar</span>
+          <span class="text-on-tertiary-container font-bold text-xs uppercase tracking-widest">Neuwagen · Bis 50% unter Listenpreis · Direkt vom Händler</span>
         </div>
         <h1 class="font-headline font-black text-6xl md:text-8xl tracking-tighter text-white leading-[0.88]">Neuwagen<br/><span class="text-secondary-fixed">unschlagbar</span><br/>günstig</h1>
-        <p class="text-on-primary-container text-lg leading-relaxed max-w-md">Langzeitsteher direkt vom Händler. Neufahrzeuge mit Tageszulassung - bis zu zwei Jahren alt, bis zu <span class="text-secondary-fixed font-bold">50% unter Listenpreis.</span></p>
+        <p class="text-on-primary-container text-lg leading-relaxed max-w-md">Neuwagen die zu lange beim Händler stehen — das wird für dich zum Vorteil. Bis zu <span class="text-secondary-fixed font-bold">50% unter Listenpreis,</span> sofort verfügbar.</p>
         <div class="flex flex-wrap gap-4">
           <button onclick="nav('inventory')" class="metallic-gradient text-on-primary px-8 py-4 rounded font-headline font-extrabold text-sm uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 shadow-xl shadow-black/30">
-            <span class="material-symbols-outlined" class="material-symbols-outlined text-sm" aria-hidden="true">directions_car</span>Fahrzeuge entdecken
+            <span class="material-symbols-outlined text-sm" aria-hidden="true">directions_car</span><span id="cta-vehicle-count">Alle Angebote ansehen</span>
+          </button>
+          <button onclick="document.getElementById('bedarfs-section').scrollIntoView({behavior:'smooth'})" class="border border-white/30 text-white px-8 py-4 rounded font-headline font-bold text-sm uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm" aria-hidden="true">tune</span>Welches Auto passt zu mir?
           </button>
         </div>
         <div class="flex gap-10 pt-6 border-t border-white/10">
@@ -3245,7 +3350,7 @@ async function triggerCsvSync() {
             <span class="material-symbols-outlined text-white/10" aria-hidden="true" style="font-size:160px">directions_car</span>
             <div class="absolute bottom-5 left-5 bg-secondary-container text-on-secondary-container px-4 py-2 rounded font-headline font-extrabold text-xl">-27% Nachlass</div>
             <div class="absolute top-5 right-5 bg-black/60 backdrop-blur-sm text-white px-4 py-3 rounded space-y-1">
-              <div class="text-xs text-white/60 uppercase tracking-widest">stehengeblieben Preis</div>
+              <div class="text-xs text-white/60 uppercase tracking-widest">Rabatt-Preis</div>
               <div class="font-headline font-black text-2xl">39.900 €</div>
               <div class="text-white/60 text-sm line-through">54.990 €</div>
             </div>
@@ -3574,7 +3679,7 @@ async function triggerCsvSync() {
             <p class="text-on-surface-variant leading-relaxed" id="d-desc"></p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-secondary"><span class="block text-xs uppercase font-bold text-on-surface-variant mb-1">Listenpreis</span><span class="text-xl font-headline font-bold text-on-surface-variant line-through" id="d-list"></span></div>
-              <div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-on-tertiary-container"><span class="block text-xs uppercase font-bold text-on-tertiary-container mb-1">stehengeblieben Preis</span><span class="text-2xl font-headline font-black text-primary" id="d-sale"></span></div>
+              <div class="bg-surface-container-lowest p-5 rounded-lg border-l-4 border-on-tertiary-container"><span class="block text-xs uppercase font-bold text-on-tertiary-container mb-1">Ihr Preis</span><span class="text-2xl font-headline font-black text-primary" id="d-sale"></span></div>
               <div class="bg-tertiary-container p-5 rounded-lg text-on-tertiary-container"><span class="block text-xs uppercase font-bold mb-1">Ihre Ersparnis</span><span class="text-2xl font-headline font-black" id="d-saving"></span></div>
             </div>
           </div>
@@ -3587,6 +3692,16 @@ async function triggerCsvSync() {
           <div id="d-equipment-section" class="hidden space-y-4">
             <h3 class="font-headline font-extrabold text-2xl">Ausstattung</h3>
             <div id="d-equipment" class="flex flex-wrap gap-2"></div>
+          </div>
+          <!-- Ähnliche Fahrzeuge -->
+          <div id="d-similar-section" class="hidden space-y-6 pt-4 border-t border-outline-variant/10">
+            <div class="flex justify-between items-center">
+              <h3 class="font-headline font-extrabold text-2xl">Weitere Angebote</h3>
+              <button onclick="nav('inventory')" class="text-on-tertiary-container font-bold text-sm hover:underline flex items-center gap-1">
+                Alle ansehen <span class="material-symbols-outlined text-sm" aria-hidden="true">arrow_forward</span>
+              </button>
+            </div>
+            <div id="d-similar" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
           </div>
         </div>
         <!-- Sticky Right -->
@@ -3624,6 +3739,7 @@ async function triggerCsvSync() {
       <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Ihr Name *</label><input id="inq-name" type="text" placeholder="Max Mustermann" aria-required="true" aria-label="Ihr Name" autocomplete="name" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
       <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">E-Mail *</label><input id="inq-email" type="email" placeholder="max@email.de" aria-required="true" aria-label="Ihre E-Mail-Adresse" autocomplete="email" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
       <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Telefon</label><input id="inq-phone" type="tel" placeholder="+49 ..." aria-label="Ihre Telefonnummer" autocomplete="tel" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"></div>
+      <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Ihre Nachricht</label><textarea id="inq-msg" rows="3" placeholder="Ich interessiere mich für dieses Fahrzeug und würde gerne mehr Details erfahren…" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20 resize-none"></textarea></div>
       <div><label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Nachricht</label><textarea id="inq-msg" rows="3" placeholder="z.B. Wann ist eine Probefahrt möglich?" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20 resize-none"></textarea></div>
       <button onclick="submitInq()" class="w-full metallic-gradient text-on-primary py-4 font-headline font-extrabold text-sm rounded hover:opacity-90 active:scale-95 transition-all">Unverbindlich anfragen →</button>
       <p class="text-xs text-on-surface-variant text-center">Direkt an den Händler · Keine Gebühren</p>
