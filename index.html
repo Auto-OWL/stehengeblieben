@@ -1107,74 +1107,137 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
       <!-- DATENSCHNITTSTELLE TAB -->
       <div id="dealer-tab-datasync" class="hidden">
-        <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
-          <div>
-            <h1 class="font-headline font-black text-3xl tracking-tighter">Datenschnittstelle</h1>
-            <p class="text-on-surface-variant text-sm mt-1">Automatischer Import aus Ihrem DMS/CRM über CSV-Export-URL</p>
-          </div>
-          <div class="flex gap-3">
-            <button onclick="triggerCsvSync()" id="csv-sync-btn" class="border border-on-tertiary-container text-on-tertiary-container px-5 py-2.5 rounded font-headline font-bold text-xs uppercase tracking-widest hover:bg-on-tertiary-container/10 transition-all flex items-center gap-2"><span class="material-symbols-outlined text-sm" aria-hidden="true">sync</span>Jetzt synchronisieren</button>
-            <button onclick="saveCsvUrl()" class="metallic-gradient text-on-primary px-6 py-2.5 rounded font-headline font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2"><span class="material-symbols-outlined text-sm" aria-hidden="true">save</span>Speichern</button>
-          </div>
+        <div class="mb-8">
+          <h1 class="font-headline font-black text-3xl tracking-tighter">Datenschnittstelle</h1>
+          <p class="text-on-surface-variant text-sm mt-1">Automatischer Import Ihres Fahrzeugbestands — einmal einrichten, läuft dauerhaft</p>
         </div>
-        <div id="csv-status-banner" class="hidden mb-6 p-4 rounded-xl text-sm font-bold flex items-start gap-3"></div>
-        <div class="bg-tertiary-container/20 border border-on-tertiary-container/20 rounded-xl p-5 mb-6 flex gap-4">
-          <span class="material-symbols-outlined text-on-tertiary-container flex-shrink-0 mt-0.5" aria-hidden="true">info</span>
-          <div class="text-sm space-y-2">
-            <p class="font-bold">So richten Sie den automatischen Import ein:</p>
-            <ol class="text-on-surface-variant space-y-1 list-decimal list-inside">
-              <li>In Autrado: <strong>Exportdaten → Webserver → "Exportdatei auf Webserver bereitstellen"</strong> aktivieren</li>
-              <li>Autrado sendet Ihnen per E-Mail einen Download-Link zur CSV-Datei</li>
-              <li>Diesen Link unten eintragen — wir holen die Datei automatisch alle 6 Stunden ab</li>
-            </ol>
-            <p class="text-xs text-on-surface-variant pt-1">Fahrzeuge unter 20% Nachlass oder älter als 24 Monate werden übersprungen.</p>
-          </div>
+
+        <!-- Methoden-Umschalter -->
+        <div class="inline-flex bg-surface-container-high rounded-lg p-1 mb-6" role="tablist" aria-label="Schnittstellen-Methode">
+          <button onclick="setSyncMethod('ftp')" id="method-btn-ftp" class="px-5 py-2 rounded-md text-sm font-bold transition-all" role="tab" aria-selected="true">FTP-Zugang</button>
+          <button onclick="setSyncMethod('url')" id="method-btn-url" class="px-5 py-2 rounded-md text-sm font-bold transition-all text-on-surface-variant" role="tab" aria-selected="false">Download-Link</button>
         </div>
-        <div id="csv-sync-status" class="hidden mb-6 bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10">
+
+        <div id="sync-status-banner" class="hidden mb-6 p-4 rounded-xl text-sm font-bold flex items-start gap-3"></div>
+
+        <!-- Letzter Sync (gemeinsam für beide Methoden) -->
+        <div id="sync-status-box" class="hidden mb-6 bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10">
           <div class="flex items-center justify-between flex-wrap gap-4">
             <div>
               <p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-1">Letzter Sync</p>
-              <p id="csv-last-sync" class="font-headline font-bold text-base">—</p>
-              <p id="csv-last-message" class="text-sm text-on-surface-variant mt-1">—</p>
+              <p id="sync-last-at" class="font-headline font-bold text-base">—</p>
+              <p id="sync-last-message" class="text-sm text-on-surface-variant mt-1">—</p>
             </div>
             <div class="flex gap-6">
-              <div class="text-center"><div id="csv-stat-imported" class="font-headline font-black text-2xl text-on-tertiary-container">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Neu</div></div>
-              <div class="text-center"><div id="csv-stat-updated" class="font-headline font-black text-2xl text-secondary">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Aktualisiert</div></div>
-              <div class="text-center"><div id="csv-stat-deleted" class="font-headline font-black text-2xl text-error">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Entfernt</div></div>
-              <div class="text-center"><div id="csv-stat-skipped" class="font-headline font-black text-2xl text-on-surface-variant">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Übersprungen</div></div>
+              <div class="text-center"><div id="sync-stat-imported" class="font-headline font-black text-2xl text-on-tertiary-container">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Neu</div></div>
+              <div class="text-center"><div id="sync-stat-updated" class="font-headline font-black text-2xl text-secondary">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Aktualisiert</div></div>
+              <div class="text-center"><div id="sync-stat-deleted" class="font-headline font-black text-2xl text-error">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Entfernt</div></div>
+              <div class="text-center"><div id="sync-stat-skipped" class="font-headline font-black text-2xl text-on-surface-variant">0</div><div class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">Übersprungen</div></div>
             </div>
           </div>
         </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
-            <h2 class="font-headline font-bold text-lg tracking-tighter">Export-URL (von Autrado / DMS)</h2>
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="csv-url-input">Download-URL der CSV-Datei *</label>
-              <input id="csv-url-input" type="url" placeholder="https://export.autrado.de/export/export_12345.csv" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" aria-required="true" autocomplete="url"/>
-              <p class="text-xs text-on-surface-variant mt-2">Die URL aus der Autrado-Benachrichtigungsmail oder Ihrem DMS-Exportbereich</p>
-            </div>
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="csv-interval-select">Sync-Intervall</label>
-              <select id="csv-interval-select" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium appearance-none">
-                <option value="1">Stündlich</option>
-                <option value="3">Alle 3 Stunden</option>
-                <option value="6" selected>Alle 6 Stunden (empfohlen)</option>
-                <option value="12">Alle 12 Stunden</option>
-                <option value="24">Täglich</option>
-              </select>
+
+        <!-- ═══ FTP-METHODE ═══ -->
+        <div id="method-panel-ftp">
+          <div class="bg-tertiary-container/20 border border-on-tertiary-container/20 rounded-xl p-5 mb-6 flex gap-4">
+            <span class="material-symbols-outlined text-on-tertiary-container flex-shrink-0 mt-0.5" aria-hidden="true">info</span>
+            <div class="text-sm space-y-2">
+              <p class="font-bold">So richten Sie den automatischen FTP-Import ein:</p>
+              <ol class="text-on-surface-variant space-y-1 list-decimal list-inside">
+                <li>Fragen Sie Ihren DMS-Anbieter (z.B. Autrado) nach FTP-Zugangsdaten für den Export</li>
+                <li>Zugangsdaten unten eintragen — wir testen die Verbindung sofort</li>
+                <li>Einmal eingerichtet läuft der Import automatisch jeden Tag — ohne weiteres Zutun</li>
+              </ol>
+              <p class="text-xs text-on-surface-variant pt-1">Fahrzeuge unter 20% Nachlass oder älter als 24 Monate werden automatisch übersprungen.</p>
             </div>
           </div>
-          <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-4">
-            <h2 class="font-headline font-bold text-lg tracking-tighter">Sync-Regeln</h2>
-            <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-green-500 flex-shrink-0 mt-1.5"></span><p class="font-bold text-green-700">Neue Fahrzeuge werden hinzugefügt</p></div>
-            <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-on-tertiary-container flex-shrink-0 mt-1.5"></span><p class="font-bold text-on-tertiary-container">Preisänderungen werden aktualisiert</p></div>
-            <div class="flex items-start gap-3 p-3 bg-red-50 rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-error flex-shrink-0 mt-1.5"></span><p class="font-bold text-error">Verkaufte Fahrzeuge werden entfernt</p></div>
-            <div class="flex items-start gap-3 p-3 bg-surface-container-high rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-outline flex-shrink-0 mt-1.5"></span><p class="font-bold">Unter 20% / älter 24 Monate → übersprungen</p></div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+              <h2 class="font-headline font-bold text-lg tracking-tighter flex items-center gap-2"><span class="material-symbols-outlined text-on-tertiary-container" aria-hidden="true">dns</span>FTP-Zugangsdaten</h2>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="col-span-2">
+                  <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="ftp-host-input">Server / Host *</label>
+                  <input id="ftp-host-input" type="text" placeholder="ftp.autrado.de" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" aria-required="true"/>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="ftp-port-input">Port</label>
+                  <input id="ftp-port-input" type="number" placeholder="21" value="21" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20"/>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="ftp-secure-select">Verbindung</label>
+                  <select id="ftp-secure-select" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium appearance-none">
+                    <option value="0">FTP (Standard)</option>
+                    <option value="1">FTPS (verschlüsselt)</option>
+                  </select>
+                </div>
+                <div class="col-span-2">
+                  <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="ftp-user-input">Benutzername *</label>
+                  <input id="ftp-user-input" type="text" placeholder="autrado_export" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="username" aria-required="true"/>
+                </div>
+                <div class="col-span-2">
+                  <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="ftp-pass-input">Passwort *</label>
+                  <input id="ftp-pass-input" type="password" placeholder="••••••••" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" autocomplete="new-password" aria-required="true"/>
+                </div>
+                <div class="col-span-2">
+                  <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="ftp-path-input">Dateipfad auf dem Server *</label>
+                  <input id="ftp-path-input" type="text" placeholder="/export/stehengeblieben.csv" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" aria-required="true"/>
+                  <p class="text-xs text-on-surface-variant mt-2">Genauer Pfad zur CSV-Datei, von Ihrem DMS-Anbieter mitgeteilt</p>
+                </div>
+              </div>
+              <div class="flex gap-3 pt-2">
+                <button onclick="saveFtpConfig()" class="metallic-gradient text-on-primary px-6 py-3 rounded font-headline font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2 flex-1 justify-center"><span class="material-symbols-outlined text-sm" aria-hidden="true">save</span>Verbindung testen &amp; speichern</button>
+              </div>
+            </div>
+
+            <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-4">
+              <h2 class="font-headline font-bold text-lg tracking-tighter">Sync-Regeln</h2>
+              <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-green-500 flex-shrink-0 mt-1.5"></span><p class="font-bold text-green-700">Neue Fahrzeuge werden hinzugefügt</p></div>
+              <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-on-tertiary-container flex-shrink-0 mt-1.5"></span><p class="font-bold text-on-tertiary-container">Preisänderungen werden aktualisiert</p></div>
+              <div class="flex items-start gap-3 p-3 bg-red-50 rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-error flex-shrink-0 mt-1.5"></span><p class="font-bold text-error">Verkaufte Fahrzeuge werden entfernt</p></div>
+              <div class="flex items-start gap-3 p-3 bg-surface-container-high rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-outline flex-shrink-0 mt-1.5"></span><p class="font-bold">Unter 20% / älter 24 Monate → übersprungen</p></div>
+              <div class="flex items-start gap-3 p-3 bg-secondary-container/30 rounded-lg text-sm mt-4"><span class="material-symbols-outlined text-secondary text-base flex-shrink-0" aria-hidden="true">schedule</span><p>Automatischer Sync läuft täglich. Bei Bedarf jederzeit manuell anstoßen.</p></div>
+              <button onclick="triggerSync('ftp')" id="ftp-sync-btn" class="w-full border border-on-tertiary-container text-on-tertiary-container px-5 py-3 rounded font-headline font-bold text-xs uppercase tracking-widest hover:bg-on-tertiary-container/10 transition-all flex items-center gap-2 justify-center mt-2"><span class="material-symbols-outlined text-sm" aria-hidden="true">sync</span>Jetzt synchronisieren</button>
+            </div>
           </div>
         </div>
+
+        <!-- ═══ URL-METHODE ═══ -->
+        <div id="method-panel-url" class="hidden">
+          <div class="bg-tertiary-container/20 border border-on-tertiary-container/20 rounded-xl p-5 mb-6 flex gap-4">
+            <span class="material-symbols-outlined text-on-tertiary-container flex-shrink-0 mt-0.5" aria-hidden="true">info</span>
+            <div class="text-sm space-y-2">
+              <p class="font-bold">So richten Sie den automatischen Import per Download-Link ein:</p>
+              <ol class="text-on-surface-variant space-y-1 list-decimal list-inside">
+                <li>Falls Ihr DMS-Anbieter nur einen Download-Link statt FTP anbietet, hier eintragen</li>
+                <li>Die URL aus der Export-Benachrichtigung Ihres Anbieters einfügen</li>
+                <li>Der Import läuft danach automatisch täglich</li>
+              </ol>
+              <p class="text-xs text-on-surface-variant pt-1">Fahrzeuge unter 20% Nachlass oder älter als 24 Monate werden übersprungen.</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-5">
+              <h2 class="font-headline font-bold text-lg tracking-tighter">Export-URL</h2>
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2" for="csv-url-input">Download-URL der CSV-Datei *</label>
+                <input id="csv-url-input" type="url" placeholder="https://export.autrado.de/export/export_12345.csv" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm font-medium focus:ring-1 focus:ring-primary/20" aria-required="true" autocomplete="url"/>
+              </div>
+              <button onclick="saveCsvUrl()" class="metallic-gradient text-on-primary px-6 py-3 rounded font-headline font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2 w-full justify-center"><span class="material-symbols-outlined text-sm" aria-hidden="true">save</span>Speichern</button>
+            </div>
+            <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 space-y-4">
+              <h2 class="font-headline font-bold text-lg tracking-tighter">Sync-Regeln</h2>
+              <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-green-500 flex-shrink-0 mt-1.5"></span><p class="font-bold text-green-700">Neue Fahrzeuge werden hinzugefügt</p></div>
+              <div class="flex items-start gap-3 p-3 bg-red-50 rounded-lg text-sm"><span class="w-2 h-2 rounded-full bg-error flex-shrink-0 mt-1.5"></span><p class="font-bold text-error">Verkaufte Fahrzeuge werden entfernt</p></div>
+              <button onclick="triggerSync('url')" id="url-sync-btn" class="w-full border border-on-tertiary-container text-on-tertiary-container px-5 py-3 rounded font-headline font-bold text-xs uppercase tracking-widest hover:bg-on-tertiary-container/10 transition-all flex items-center gap-2 justify-center mt-2"><span class="material-symbols-outlined text-sm" aria-hidden="true">sync</span>Jetzt synchronisieren</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sync-Protokoll (gemeinsam) -->
         <div class="mt-6 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10">
           <h2 class="font-headline font-bold text-lg tracking-tighter mb-4">Sync-Protokoll</h2>
-          <div id="csv-sync-logs" class="space-y-2 text-sm text-on-surface-variant"><p>Noch kein Sync durchgeführt.</p></div>
+          <div id="sync-logs" class="space-y-2 text-sm text-on-surface-variant"><p>Noch kein Sync durchgeführt.</p></div>
         </div>
       </div>
 
@@ -2591,7 +2654,7 @@ function showDealerTab(tab) {
     }
   });
   if (tab === 'profile') loadProfile();
-  if (tab === 'datasync') loadCsvSyncStatus();
+  if (tab === 'datasync') setSyncMethod(ACTIVE_SYNC_METHOD || 'ftp');
 }
 
 // Fahrzeug als verkauft markieren
@@ -3202,88 +3265,163 @@ async function saveProfile() {
 }
 
 // ── CSV-URL Datenschnittstelle ─────────────────────────────────────────────────
-async function loadCsvSyncStatus() {
+// ── Methoden-Umschalter (FTP / URL) ───────────────────────────────────────────
+let ACTIVE_SYNC_METHOD = 'ftp';
+
+function setSyncMethod(method) {
+  ACTIVE_SYNC_METHOD = method;
+  document.getElementById('method-panel-ftp').classList.toggle('hidden', method !== 'ftp');
+  document.getElementById('method-panel-url').classList.toggle('hidden', method !== 'url');
+  const ftpBtn = document.getElementById('method-btn-ftp');
+  const urlBtn = document.getElementById('method-btn-url');
+  ftpBtn.classList.toggle('bg-surface-container-lowest', method === 'ftp');
+  ftpBtn.classList.toggle('shadow-sm', method === 'ftp');
+  ftpBtn.classList.toggle('text-on-surface-variant', method !== 'ftp');
+  ftpBtn.setAttribute('aria-selected', method === 'ftp');
+  urlBtn.classList.toggle('bg-surface-container-lowest', method === 'url');
+  urlBtn.classList.toggle('shadow-sm', method === 'url');
+  urlBtn.classList.toggle('text-on-surface-variant', method !== 'url');
+  urlBtn.setAttribute('aria-selected', method === 'url');
+  loadSyncStatus(method);
+}
+
+function showSyncBanner(html, type) {
+  const banner = document.getElementById('sync-status-banner');
+  const colors = {
+    info:    'background:#eff6ff;border:1px solid #457efa;color:#1d4ed8;',
+    success: 'background:#f0fdf4;border:1px solid #86efac;color:#166534;',
+    error:   'background:#fff5f5;border:1px solid #ba1a1a;color:#ba1a1a;',
+  };
+  banner.style.cssText = colors[type] || colors.info;
+  banner.innerHTML = html;
+  banner.classList.remove('hidden');
+}
+
+function renderSyncStatusBox(cfg) {
+  const box = document.getElementById('sync-status-box');
+  if (!cfg || !cfg.last_sync_at) { box.classList.add('hidden'); return; }
+  box.classList.remove('hidden');
+  document.getElementById('sync-last-at').textContent = new Date(cfg.last_sync_at).toLocaleString('de-DE');
+  document.getElementById('sync-last-message').textContent = cfg.last_sync_message || '—';
+  document.getElementById('sync-stat-imported').textContent = cfg.last_sync_imported || 0;
+  document.getElementById('sync-stat-updated').textContent  = cfg.last_sync_updated  || 0;
+  document.getElementById('sync-stat-deleted').textContent  = cfg.last_sync_deleted  || 0;
+  document.getElementById('sync-stat-skipped').textContent  = cfg.last_sync_skipped  || 0;
+  const el = document.getElementById('sync-last-at');
+  el.style.color = cfg.last_sync_status === 'error' ? '#ba1a1a' : (cfg.last_sync_status === 'success' ? '#16a34a' : '');
+}
+
+function renderSyncLogs(logs) {
+  const logsEl = document.getElementById('sync-logs');
+  if (logs && logs.length > 0) {
+    logsEl.innerHTML = logs.map(log => `<div class="flex items-start justify-between py-3 border-b border-outline-variant/10 last:border-0"><div class="flex items-center gap-3"><span class="material-symbols-outlined text-sm ${log.status==='success'?'text-green-600':'text-error'}" aria-hidden="true">${log.status==='success'?'check_circle':'error'}</span><div><p class="font-bold">${new Date(log.synced_at).toLocaleString('de-DE')}</p>${log.error_message?`<p class="text-error text-xs">${log.error_message}</p>`:`<p class="text-xs">+${log.imported} neu · ↺${log.updated} · −${log.deleted} · ${log.skipped} übersprungen</p>`}</div></div><span class="text-xs text-on-surface-variant">${log.duration_ms?(log.duration_ms/1000).toFixed(1)+'s':''}</span></div>`).join('');
+  } else {
+    logsEl.innerHTML = '<p class="text-on-surface-variant text-sm">Noch kein Sync durchgeführt.</p>';
+  }
+}
+
+async function loadSyncStatus(method) {
   if (!CURRENT_USER) return;
+  const endpoint = method === 'ftp' ? '/api/ftp-sync' : '/api/csv-url-sync';
   try {
-    const token=localStorage.getItem('sb_token')||'';
-    const r=await fetch('/api/csv-url-sync',{headers:{'Authorization':`Bearer ${token}`}});
-    if(!r.ok) return;
-    const data=await r.json();
-    if(data.config){
-      const c=data.config;
-      const intEl=document.getElementById('csv-interval-select'); if(intEl) intEl.value=c.sync_interval_hours||6;
-      if(c.last_sync_at){
-        document.getElementById('csv-sync-status').classList.remove('hidden');
-        document.getElementById('csv-last-sync').textContent=new Date(c.last_sync_at).toLocaleString('de-DE');
-        document.getElementById('csv-last-message').textContent=c.last_sync_message||'—';
-        document.getElementById('csv-stat-imported').textContent=c.last_sync_imported||0;
-        document.getElementById('csv-stat-updated').textContent=c.last_sync_updated||0;
-        document.getElementById('csv-stat-deleted').textContent=c.last_sync_deleted||0;
-        document.getElementById('csv-stat-skipped').textContent=c.last_sync_skipped||0;
-        const el=document.getElementById('csv-last-sync');
-        if(c.last_sync_status==='error') el.style.color='#ba1a1a';
-        if(c.last_sync_status==='success') el.style.color='#16a34a';
-      }
+    const token = localStorage.getItem('sb_token') || '';
+    const r = await fetch(endpoint, { headers: { 'Authorization': `Bearer ${token}` } });
+    if (!r.ok) { renderSyncStatusBox(null); renderSyncLogs([]); return; }
+    const data = await r.json();
+    renderSyncStatusBox(data.config);
+    renderSyncLogs(data.logs);
+    if (method === 'ftp' && data.config) {
+      const setVal = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
+      setVal('ftp-host-input', data.config.ftp_host);
+      setVal('ftp-port-input', data.config.ftp_port);
+      setVal('ftp-user-input', data.config.ftp_user);
+      setVal('ftp-path-input', data.config.remote_path);
     }
-    const logsEl=document.getElementById('csv-sync-logs');
-    if(logsEl&&data.logs&&data.logs.length>0){
-      logsEl.innerHTML=data.logs.map(log=>`<div class="flex items-start justify-between py-3 border-b border-outline-variant/10 last:border-0"><div class="flex items-center gap-3"><span class="material-symbols-outlined text-sm ${log.status==='success'?'text-green-600':'text-error'}" aria-hidden="true">${log.status==='success'?'check_circle':'error'}</span><div><p class="font-bold">${new Date(log.synced_at).toLocaleString('de-DE')}</p>${log.error_message?`<p class="text-error text-xs">${log.error_message}</p>`:`<p class="text-xs">+${log.imported} neu · ↺${log.updated} · −${log.deleted} · ${log.skipped} übersprungen</p>`}</div></div><span class="text-xs text-on-surface-variant">${log.duration_ms?(log.duration_ms/1000).toFixed(1)+'s':''}</span></div>`).join('');
-    } else if(logsEl){logsEl.innerHTML='<p class="text-on-surface-variant text-sm">Noch kein Sync. URL speichern um zu starten.</p>';}
-  } catch(e){console.warn('[loadCsvSyncStatus]',e.message);}
+  } catch (e) { console.warn('[loadSyncStatus]', e.message); }
+}
+
+// Wrapper für showDealerTab-Aufruf — lädt Status der aktuell aktiven Methode
+async function loadCsvSyncStatus() { await loadSyncStatus(ACTIVE_SYNC_METHOD); }
+
+async function saveFtpConfig() {
+  if (!CURRENT_USER) return;
+  const host = document.getElementById('ftp-host-input').value.trim();
+  const port = document.getElementById('ftp-port-input').value.trim();
+  const user = document.getElementById('ftp-user-input').value.trim();
+  const pass = document.getElementById('ftp-pass-input').value;
+  const secure = document.getElementById('ftp-secure-select').value === '1';
+  const remotePath = document.getElementById('ftp-path-input').value.trim();
+
+  if (!host || !user || !pass || !remotePath) {
+    showSyncBanner('<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">error</span><span>Bitte Server, Benutzername, Passwort und Dateipfad ausfüllen.</span>', 'error');
+    return;
+  }
+  showSyncBanner('<span class="material-symbols-outlined text-base flex-shrink-0 animate-spin" aria-hidden="true">sync</span><span>Verbindung wird getestet…</span>', 'info');
+
+  try {
+    const token = localStorage.getItem('sb_token') || '';
+    const r = await fetch('/api/save-ftp-config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ ftp_host: host, ftp_port: port, ftp_user: user, ftp_password: pass, ftp_secure: secure, remote_path: remotePath })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Fehler beim Speichern');
+    showSyncBanner('<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">check_circle</span><span>Verbindung erfolgreich — Zugangsdaten gespeichert. Erster Sync startet jetzt.</span>', 'success');
+    document.getElementById('ftp-pass-input').value = '';
+    setTimeout(() => triggerSync('ftp'), 1500);
+  } catch (e) {
+    showSyncBanner(`<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">error</span><span>${e.message}</span>`, 'error');
+  }
 }
 
 async function saveCsvUrl() {
-  if(!CURRENT_USER) return;
-  const banner=document.getElementById('csv-status-banner');
-  const url=document.getElementById('csv-url-input').value.trim();
-  const interval=document.getElementById('csv-interval-select').value;
-  if(!url||!url.startsWith('http')){
-    banner.style.cssText='background:#fff5f5;border:1px solid #ba1a1a;color:#ba1a1a;';
-    banner.innerHTML='<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">error</span><span>Bitte eine gültige URL eingeben.</span>';
-    banner.classList.remove('hidden'); return;
+  if (!CURRENT_USER) return;
+  const url = document.getElementById('csv-url-input').value.trim();
+  if (!url || !url.startsWith('http')) {
+    showSyncBanner('<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">error</span><span>Bitte eine gültige URL eingeben.</span>', 'error');
+    return;
   }
-  banner.style.cssText='background:#eff6ff;border:1px solid #457efa;color:#1d4ed8;';
-  banner.innerHTML='<span class="material-symbols-outlined text-base flex-shrink-0 animate-spin" aria-hidden="true">sync</span><span>URL wird gespeichert…</span>';
-  banner.classList.remove('hidden');
+  showSyncBanner('<span class="material-symbols-outlined text-base flex-shrink-0 animate-spin" aria-hidden="true">sync</span><span>URL wird gespeichert…</span>', 'info');
   try {
-    const token=localStorage.getItem('sb_token')||'';
-    const r=await fetch('/api/save-csv-url',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({csv_url:url,sync_interval_hours:interval})});
-    const data=await r.json();
-    if(!r.ok) throw new Error(data.error||'Fehler');
-    banner.style.cssText='background:#f0fdf4;border:1px solid #86efac;color:#166534;';
-    banner.innerHTML=`<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">check_circle</span><span>Gespeichert — erster Sync startet in Kürze.</span>`;
-    setTimeout(()=>triggerCsvSync(),2000);
-  } catch(e){
-    banner.style.cssText='background:#fff5f5;border:1px solid #ba1a1a;color:#ba1a1a;';
-    banner.innerHTML=`<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">error</span><span>${e.message}</span>`;
+    const token = localStorage.getItem('sb_token') || '';
+    const r = await fetch('/api/save-csv-url', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ csv_url: url, sync_interval_hours: 24 })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Fehler');
+    showSyncBanner('<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">check_circle</span><span>Gespeichert — erster Sync startet in Kürze.</span>', 'success');
+    setTimeout(() => triggerSync('url'), 1500);
+  } catch (e) {
+    showSyncBanner(`<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">error</span><span>${e.message}</span>`, 'error');
   }
 }
 
-async function triggerCsvSync() {
-  if(!CURRENT_USER) return;
-  const btn=document.getElementById('csv-sync-btn');
-  const banner=document.getElementById('csv-status-banner');
-  if(btn){btn.disabled=true;btn.innerHTML='<span class="material-symbols-outlined text-sm animate-spin" aria-hidden="true">sync</span>Synchronisiert…';}
-  banner.style.cssText='background:#eff6ff;border:1px solid #457efa;color:#1d4ed8;';
-  banner.innerHTML='<span class="material-symbols-outlined text-base flex-shrink-0 animate-spin" aria-hidden="true">sync</span><span>Importiere Fahrzeuge…</span>';
-  banner.classList.remove('hidden');
+async function triggerSync(method) {
+  if (!CURRENT_USER) return;
+  const btn = document.getElementById(method === 'ftp' ? 'ftp-sync-btn' : 'url-sync-btn');
+  const endpoint = method === 'ftp' ? '/api/ftp-sync' : '/api/csv-url-sync';
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin" aria-hidden="true">sync</span>Synchronisiert…'; }
+  showSyncBanner('<span class="material-symbols-outlined text-base flex-shrink-0 animate-spin" aria-hidden="true">sync</span><span>Verbinde und importiere Fahrzeuge…</span>', 'info');
   try {
-    const token=localStorage.getItem('sb_token')||'';
-    const r=await fetch('/api/csv-url-sync',{method:'POST',headers:{'Authorization':`Bearer ${token}`}});
-    const data=await r.json();
-    if(!r.ok) throw new Error(data.error||'Sync fehlgeschlagen');
-    const result=data.results?.[0];
-    if(result?.success){
-      banner.style.cssText='background:#f0fdf4;border:1px solid #86efac;color:#166534;';
-      banner.innerHTML=`<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">check_circle</span><span>+${result.imported} neu · ↺${result.updated} · −${result.deleted} · ${result.skipped} übersprungen</span>`;
+    const token = localStorage.getItem('sb_token') || '';
+    const r = await fetch(endpoint, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Sync fehlgeschlagen');
+    const result = data.results?.[0];
+    if (result?.success) {
+      showSyncBanner(`<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">check_circle</span><span>+${result.imported} neu · ↺${result.updated} aktualisiert · −${result.deleted} entfernt · ${result.skipped} übersprungen</span>`, 'success');
       await loadVehicles();
-    } else throw new Error(result?.error||'Sync fehlgeschlagen');
-    await loadCsvSyncStatus();
-  } catch(e){
-    banner.style.cssText='background:#fff5f5;border:1px solid #ba1a1a;color:#ba1a1a;';
-    banner.innerHTML=`<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">error</span><span>${e.message}</span>`;
+    } else {
+      throw new Error(result?.error || 'Sync fehlgeschlagen');
+    }
+    await loadSyncStatus(method);
+  } catch (e) {
+    showSyncBanner(`<span class="material-symbols-outlined text-base flex-shrink-0" aria-hidden="true">error</span><span>${e.message}</span>`, 'error');
   } finally {
-    if(btn){btn.disabled=false;btn.innerHTML='<span class="material-symbols-outlined text-sm" aria-hidden="true">sync</span>Jetzt synchronisieren';}
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined text-sm" aria-hidden="true">sync</span>Jetzt synchronisieren'; }
   }
 }
 </script>
