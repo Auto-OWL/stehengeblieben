@@ -15,6 +15,7 @@
   ],
   "crons": [
     { "path": "/api/keepalive", "schedule": "0 8 */3 * *" },
-    { "path": "/api/csv-url-sync", "schedule": "0 8 * * *" }
+    { "path": "/api/csv-url-sync", "schedule": "0 8 * * *" },
+    { "path": "/api/ftp-sync", "schedule": "0 5 * * *" }
   ]
 }
