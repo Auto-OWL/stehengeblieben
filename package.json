@@ -1,0 +1,8 @@
+{
+  "name": "stehengeblieben",
+  "version": "1.0.0",
+  "description": "stehengeblieben.de - Tageszulassungen & Langzeitsteher",
+  "dependencies": {
+    "basic-ftp": "^5.0.5"
+  }
+}
