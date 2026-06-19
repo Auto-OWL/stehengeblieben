@@ -1,83 +1,314 @@
 /**
  * stehengeblieben.de — FTP Sync Engine
- * POST /api/ftp-sync
- * POST /api/ftp-sync?dealer=email   → einzelnen Händler
- * GET  /api/ftp-sync?dealer=email   → Status abfragen
+ * ─────────────────────────────────────
+ * GET  /api/ftp-sync              → Status & Logs abfragen (Händler-JWT)
+ * POST /api/ftp-sync              → Manueller Sync (Händler-JWT)
+ * POST /api/ftp-sync?dealer=EMAIL → Cron-Sync für einzelnen/alle Händler (X-Cron-Secret)
  *
- * Sync-Logik:
- *   interne_nummer in CSV + nicht in DB  → INSERT
- *   interne_nummer in CSV + in DB        → UPDATE wenn Preis/Daten geändert
- *   interne_nummer NICHT in CSV + in DB  → soft DELETE (status='sold')
- *   Kriterien nicht erfüllt              → skip + log
+ * Architektur: Vercel verbindet sich AKTIV als FTP-Client zum Server des
+ * Händlers/DMS-Anbieters (z.B. Autrado) und lädt die Export-CSV herunter.
+ * Es wird keine eingehende FTP-Verbindung benötigt — nur ausgehend.
+ *
+ * Vercel Cron läuft 1x täglich (Hobby-Plan-Limit für Cron-Jobs).
+ * Händler können zusätzlich jederzeit manuell synchronisieren.
  */
 
-const crypto    = require('crypto');
-const FTPClient = require('basic-ftp').Client;
+const { Client } = require('basic-ftp');
+const crypto = require('crypto');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
 
 const SUPA_URL    = process.env.SUPABASE_URL;
 const SUPA_KEY    = process.env.SUPABASE_SERVICE_KEY;
-const ENC_KEY     = process.env.FTP_ENCRYPTION_KEY;
-const HMAC_SECRET = process.env.FTP_HMAC_SECRET;
-const CRON_SECRET = process.env.CRON_SECRET; // optionaler Schutz für Cron-Aufrufe
+const ENC_KEY_HEX = process.env.FTP_ENCRYPTION_KEY;
+const CRON_SECRET = process.env.CRON_SECRET;
 
-// Validierungsregeln
 const MIN_DISCOUNT_PCT = 20;
 const MAX_AGE_MONTHS   = 24;
 
-// ── Entschlüsselung ───────────────────────────────────────────────────────────
-function decrypt(ciphertext) {
-  const key     = Buffer.from(ENC_KEY, 'hex');
-  const iv      = Buffer.from(ciphertext.slice(0, 32), 'hex');
-  const tag     = Buffer.from(ciphertext.slice(32, 64), 'hex');
-  const enc     = Buffer.from(ciphertext.slice(64), 'hex');
-  const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
-  decipher.setAuthTag(tag);
-  return decipher.update(enc) + decipher.final('utf8');
+// ── Verschlüsselung (AES-256-GCM) ────────────────────────────────────────────
+function getKey() {
+  return Buffer.from(ENC_KEY_HEX, 'hex');
 }
 
-// ── HMAC verifizieren ─────────────────────────────────────────────────────────
-function verifyHmac(data, signature) {
-  const expected = crypto
-    .createHmac('sha256', Buffer.from(HMAC_SECRET, 'hex'))
-    .update(JSON.stringify(data))
-    .digest('hex');
-  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+function encryptPassword(plain) {
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv('aes-256-gcm', getKey(), iv);
+  let enc = cipher.update(plain, 'utf8', 'hex');
+  enc += cipher.final('hex');
+  const tag = cipher.getAuthTag().toString('hex');
+  return `${iv.toString('hex')}:${tag}:${enc}`;
+}
+
+function decryptPassword(payload) {
+  const [ivHex, tagHex, enc] = payload.split(':');
+  const decipher = crypto.createDecipheriv('aes-256-gcm', getKey(), Buffer.from(ivHex, 'hex'));
+  decipher.setAuthTag(Buffer.from(tagHex, 'hex'));
+  let dec = decipher.update(enc, 'hex', 'utf8');
+  dec += decipher.final('utf8');
+  return dec;
 }
 
 // ── Supabase Helper ───────────────────────────────────────────────────────────
-async function supaGet(path) {
-  const r = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
-    headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` }
+async function supaGet(q) {
+  const r = await fetch(`${SUPA_URL}/rest/v1/${q}`, {
+    headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` }
   });
-  if (!r.ok) throw new Error(await r.text());
+  if (!r.ok) throw new Error(`Supabase GET: ${await r.text()}`);
   return r.json();
 }
 async function supaPost(path, body) {
   const r = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
     method: 'POST',
-    headers: {
-      'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`,
-      'Content-Type': 'application/json', 'Prefer': 'return=minimal'
-    },
+    headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
     body: JSON.stringify(body)
   });
-  if (!r.ok) throw new Error(await r.text());
+  if (!r.ok) throw new Error(`Supabase POST: ${await r.text()}`);
 }
 async function supaPatch(path, body) {
   const r = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
     method: 'PATCH',
-    headers: {
-      'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`,
-      'Content-Type': 'application/json', 'Prefer': 'return=minimal'
-    },
+    headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
     body: JSON.stringify(body)
   });
-  if (!r.ok) throw new Error(await r.text());
+  if (!r.ok) throw new Error(`Supabase PATCH: ${await r.text()}`);
 }
 
-// ── Mobile.de CSV Parser ──────────────────────────────────────────────────────
-// Felder laut Mobile.de Extended CSV Spec (Feldnummern 0-642)
+// ── FTP Download ──────────────────────────────────────────────────────────────
+async function downloadViaFTP(cfg) {
+  const client = new Client(15000); // 15s Timeout
+  client.ftp.verbose = false;
+  const tmpFile = path.join(os.tmpdir(), `ftp_${Date.now()}_${Math.random().toString(36).slice(2)}.csv`);
+  try {
+    await client.access({
+      host: cfg.ftp_host,
+      port: cfg.ftp_port || 21,
+      user: cfg.ftp_user,
+      password: decryptPassword(cfg.ftp_password_enc),
+      secure: !!cfg.ftp_secure,
+    });
+    await client.downloadTo(tmpFile, cfg.remote_path);
+    let text;
+    try { text = fs.readFileSync(tmpFile, 'utf8'); }
+    catch { text = fs.readFileSync(tmpFile, 'latin1'); }
+    if (!text || text.length < 100) throw new Error('Heruntergeladene Datei ist leer oder zu klein');
+    return text;
+  } finally {
+    client.close();
+    try { fs.unlinkSync(tmpFile); } catch (e) {}
+  }
+}
+
+// ── Mobile.de Extended CSV Parser (identisch zur URL-Sync-Logik) ─────────────
 function parseCSV(csvText) {
+  const lines = csvText.split('\n').map(l => l.trim()).filter(l => l.length > 5);
+  const vehicles = [];
+  for (const line of lines) {
+    const fields = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (c === '"') { if (inQ && line[i + 1] === '"') { cur += '"'; i++; } else inQ = !inQ; }
+      else if (c === ';' && !inQ) { fields.push(cur.trim()); cur = ''; }
+      else cur += c;
+    }
+    fields.push(cur.trim());
+    if (fields.length < 15) continue;
+
+    function p(v) { return parseFloat(String(v || '0').replace(',', '.')) || 0; }
+    function parseDate(d) {
+      if (!d) return null;
+      const s = String(d).replace(/['"]/g, '').trim();
+      const m2 = s.match(/^(\d{2})\.(\d{4})$/); if (m2) return `${m2[2]}-${m2[1]}-01`;
+      const m3 = s.match(/^(\d{2})\.(\d{2})\.(\d{4})$/); if (m3) return `${m3[3]}-${m3[2]}-${m3[1]}`;
+      return null;
+    }
+    const fuelMap = { '1': 'Benzin', '2': 'Diesel', '3': 'Autogas', '4': 'Erdgas', '6': 'Elektro', '7': 'Hybrid', '8': 'Wasserstoff', '10': 'Hybrid-Diesel', '0': 'Andere' };
+    const transMap = { '1': 'Schaltgetriebe', '2': 'Halbautomatik', '3': 'Automatik', '0': 'Andere' };
+
+    vehicles.push({
+      internal_id: fields[1] || '',
+      brand: fields[3] || '',
+      model: fields[4] || '',
+      price: p(fields[10]),
+      list_price: p(fields[287]) || p(fields[10]),
+      first_registration: parseDate(fields[8]),
+      mileage: parseInt(fields[9]) || 0,
+      fuel_type: fuelMap[fields[109]] || 'Benzin',
+      transmission: transMap[fields[110]] || 'Automatik',
+      color: fields[16] || null,
+      description: fields[25] || null,
+      is_day_registration: fields[112] === '1',
+    });
+  }
+  return vehicles;
+}
+
+function validate(v) {
+  const reasons = [];
+  if (!v.brand || !v.model) reasons.push('Marke/Modell fehlt');
+  if (!v.first_registration) reasons.push('Erstzulassung fehlt');
+  if (!v.list_price || v.list_price <= 0) reasons.push('Listenpreis fehlt');
+  if (!v.price || v.price <= 0) reasons.push('Preis fehlt');
+  if (reasons.length) return { valid: false, reasons };
+
+  if (v.price >= v.list_price) reasons.push('Preis >= Listenpreis');
+  const disc = ((v.list_price - v.price) / v.list_price) * 100;
+  if (disc < MIN_DISCOUNT_PCT) reasons.push(`Nachlass ${disc.toFixed(1)}% < ${MIN_DISCOUNT_PCT}%`);
+
+  const reg = new Date(v.first_registration);
+  const now = new Date();
+  const months = (now.getFullYear() - reg.getFullYear()) * 12 + (now.getMonth() - reg.getMonth());
+  if (reg > now) reasons.push('EZ in der Zukunft');
+  if (months > MAX_AGE_MONTHS) reasons.push(`${months} Monate alt > ${MAX_AGE_MONTHS}`);
+
+  if (reasons.length) return { valid: false, reasons };
+  v.discount_pct = Math.round(disc * 10) / 10;
+  return { valid: true, reasons: [] };
+}
+
+// ── Haupt-Sync für einen Händler ──────────────────────────────────────────────
+async function syncDealer(cfg) {
+  const start = Date.now();
+  const stats = { imported: 0, updated: 0, deleted: 0, skipped: 0, skipped_reasons: [] };
+
+  const csvText = await downloadViaFTP(cfg);
+  const csvVehicles = parseCSV(csvText);
+  if (csvVehicles.length === 0) throw new Error('CSV enthält keine verwertbaren Fahrzeuge');
+
+  const existing = await supaGet(
+    `vehicles?dealer_email=eq.${encodeURIComponent(cfg.dealer_email)}&select=id,internal_id,price,list_price,status&status=neq.deleted`
+  );
+  const existingMap = new Map(existing.map(v => [v.internal_id, v]));
+  const csvIds = new Set();
+
+  for (const v of csvVehicles) {
+    if (!v.internal_id) { stats.skipped++; continue; }
+    csvIds.add(v.internal_id);
+
+    const { valid, reasons } = validate(v);
+    if (!valid) {
+      stats.skipped++;
+      stats.skipped_reasons.push({ id: v.internal_id, brand: v.brand, model: v.model, reasons });
+      continue;
+    }
+
+    const record = { ...v, dealer_email: cfg.dealer_email, status: 'active', source: 'ftp_sync', updated_at: new Date().toISOString() };
+    delete record.internal_id;
+
+    const ex = existingMap.get(v.internal_id);
+    if (!ex) {
+      await supaPost('vehicles', { ...record, internal_id: v.internal_id, created_at: new Date().toISOString() });
+      stats.imported++;
+    } else if (parseFloat(ex.price) !== v.price || parseFloat(ex.list_price) !== v.list_price) {
+      await supaPatch(`vehicles?id=eq.${ex.id}`, { ...record, internal_id: v.internal_id });
+      stats.updated++;
+    }
+  }
+
+  for (const [internalId, ex] of existingMap) {
+    if (!csvIds.has(internalId) && ex.status === 'active') {
+      await supaPatch(`vehicles?id=eq.${ex.id}`, { status: 'sold', updated_at: new Date().toISOString() });
+      stats.deleted++;
+    }
+  }
+
+  const duration = Date.now() - start;
+
+  await supaPatch(`dealer_ftp_configs?dealer_email=eq.${encodeURIComponent(cfg.dealer_email)}`, {
+    last_sync_at: new Date().toISOString(),
+    last_sync_status: 'success',
+    last_sync_message: `+${stats.imported} neu · ↺${stats.updated} aktualisiert · −${stats.deleted} entfernt · ${stats.skipped} übersprungen`,
+    last_sync_imported: stats.imported,
+    last_sync_updated: stats.updated,
+    last_sync_deleted: stats.deleted,
+    last_sync_skipped: stats.skipped,
+  });
+
+  await supaPost('ftp_sync_logs', {
+    dealer_email: cfg.dealer_email,
+    status: 'success',
+    ...stats,
+    skipped_reasons: stats.skipped_reasons.slice(0, 50),
+    duration_ms: duration,
+  });
+
+  return stats;
+}
+
+// ── Request Handler ───────────────────────────────────────────────────────────
+module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', 'https://stehengeblieben.de');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Cron-Secret');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (!SUPA_URL || !SUPA_KEY || !ENC_KEY_HEX) return res.status(500).json({ error: 'Serverkonfiguration unvollständig' });
+
+  const targetDealer = req.query.dealer || null;
+
+  // ── GET: Status abfragen ───────────────────────────────────────────────────
+  if (req.method === 'GET') {
+    const token = (req.headers.authorization || '').replace('Bearer ', '').trim();
+    if (!token) return res.status(401).json({ error: 'Nicht autorisiert' });
+    const userRes = await fetch(`${SUPA_URL}/auth/v1/user`, { headers: { apikey: SUPA_KEY, Authorization: `Bearer ${token}` } });
+    if (!userRes.ok) return res.status(401).json({ error: 'Ungültiger Token' });
+    const { email } = await userRes.json();
+
+    try {
+      const configs = await supaGet(
+        `dealer_ftp_configs?dealer_email=eq.${encodeURIComponent(email)}&select=ftp_host,ftp_port,ftp_user,remote_path,last_sync_at,last_sync_status,last_sync_message,last_sync_imported,last_sync_updated,last_sync_deleted,last_sync_skipped,is_active`
+      );
+      const logs = await supaGet(`ftp_sync_logs?dealer_email=eq.${encodeURIComponent(email)}&order=synced_at.desc&limit=10`);
+      return res.status(200).json({ config: configs[0] || null, logs });
+    } catch (e) { return res.status(500).json({ error: e.message }); }
+  }
+
+  // ── POST: Sync ausführen ───────────────────────────────────────────────────
+  if (req.method === 'POST') {
+    const cronSecret = req.headers['x-cron-secret'];
+    let dealerEmail = null;
+
+    if (cronSecret) {
+      if (CRON_SECRET && cronSecret !== CRON_SECRET) return res.status(401).json({ error: 'Ungültiges Cron-Secret' });
+      dealerEmail = targetDealer;
+    } else {
+      const token = (req.headers.authorization || '').replace('Bearer ', '').trim();
+      if (!token) return res.status(401).json({ error: 'Nicht autorisiert' });
+      const userRes = await fetch(`${SUPA_URL}/auth/v1/user`, { headers: { apikey: SUPA_KEY, Authorization: `Bearer ${token}` } });
+      if (!userRes.ok) return res.status(401).json({ error: 'Ungültiger Token' });
+      dealerEmail = (await userRes.json()).email;
+    }
+
+    const query = dealerEmail
+      ? `dealer_ftp_configs?dealer_email=eq.${encodeURIComponent(dealerEmail)}&is_active=eq.true`
+      : `dealer_ftp_configs?is_active=eq.true`;
+
+    let configs;
+    try { configs = await supaGet(query); } catch (e) { return res.status(500).json({ error: e.message }); }
+    if (!configs || configs.length === 0) return res.status(404).json({ error: 'Keine aktive FTP-Konfiguration vorhanden' });
+
+    const results = [];
+    for (const cfg of configs) {
+      try {
+        const stats = await syncDealer(cfg);
+        results.push({ dealer: cfg.dealer_email, success: true, ...stats });
+      } catch (err) {
+        console.error(`[ftp-sync] Fehler für ${cfg.dealer_email}:`, err.message);
+        try {
+          await supaPatch(`dealer_ftp_configs?dealer_email=eq.${encodeURIComponent(cfg.dealer_email)}`, {
+            last_sync_at: new Date().toISOString(), last_sync_status: 'error', last_sync_message: err.message,
+          });
+          await supaPost('ftp_sync_logs', { dealer_email: cfg.dealer_email, status: 'error', error_message: err.message, duration_ms: 0 });
+        } catch (logErr) { console.error('[ftp-sync] Log-Fehler:', logErr.message); }
+        results.push({ dealer: cfg.dealer_email, success: false, error: err.message });
+      }
+    }
+    return res.status(200).json({ synced: results.length, results });
+  }
+
+  return res.status(405).json({ error: 'Method not allowed' });
+};function parseCSV(csvText) {
   // ISO-8859-15 → bereits als UTF-8 gelesen, Semikolon-getrennt
   const lines = csvText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
   const vehicles = [];
